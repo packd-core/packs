@@ -54,13 +54,13 @@ export const AssetsForm = () => {
                 isOpen={isAddTokenModalOpen}
                 setIsOpen={setIsAddTokenModalOpen}
                 onAdd={(address, amount) => {
-                    mintStore.addModule({address, value: amount, moduleAddress: addresses.ERC20Module})
+                    mintStore.addModule({address, value: amount, moduleAddress: addresses.ERC20Module, type: 'ERC20'})
                 }}/>}
             {isAddNftModalOpen && <AddNftModal
                 isOpen={isAddNftModalOpen}
                 setIsOpen={setIsAddNftModalOpen}
                 onAdd={(address, tokenId) => {
-                    mintStore.addModule({address, value: tokenId, moduleAddress: addresses.ERC721Module})
+                    mintStore.addModule({address, value: tokenId, moduleAddress: addresses.ERC721Module, type: 'ERC721'})
                 }}/>}
             <ContentTitle>Contents</ContentTitle>
             <div className="flex flex-col w-full gap-2">

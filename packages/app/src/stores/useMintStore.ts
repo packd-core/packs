@@ -5,6 +5,7 @@ export type Module = {
     isApproved?: boolean,
     moduleAddress: Address,
     address: Address,
+    type?: 'ERC20' | 'ERC721';
     value: bigint
 }
 type ClaimKey = {
@@ -24,12 +25,19 @@ type MintState = {
     reset: () => void
 }
 
-export const useMintStore = create<MintState>()((set) => ({
+export const useMintStore = create<MintState>()((set, get) => ({
     eth: BigInt(0),
     setEth: (amount) => set((state) => ({eth: amount})),
     modules: [],
     claimKey: null,
-    addModule: (module) => set((state) => ({modules: [...state.modules, module]})),
+    addModule: (module) => set((state) => {
+        const existingModule = state.modules.find(m => m.moduleAddress === module.moduleAddress && m.address === module.address && m.type === module.type);
+        if (existingModule && module.type === 'ERC20') {
+            existingModule.value += module.value;
+            return ({modules: [...state.modules]});
+        }
+        return ({modules: [...state.modules, module]});
+    }),
     removeModule: (module) => set((state) => ({modules: state.modules.filter(m => m !== module)})),
     setApproved: (module) => set((state) => ({modules: state.modules.map(m => m === module ? {...m, isApproved: true} : m)})),
     setClaimKey: (claimKey) => set((state) => ({claimKey})),
