@@ -29,7 +29,7 @@ function ApproveToken({module}: { module: Module }) {
         if (isSuccess){
             refetch()
         }
-    },[isSuccess,refetch()]);
+    },[isSuccess,refetch]);
     const {isLoading} = useWaitForTransaction({hash: dataApprove?.hash})
     const isApproved = useMemo(() => (dataAllowance ?? 0) >= module.value, [dataAllowance, module])
     const setApproved = useMintStore(state => state.setApproved)
