@@ -127,7 +127,6 @@ const MintPageContent = () => {
         }
     }, [isAllApproved, step, nextStep]);
     return useMemo(() => {
-        console.log('create content, step:', step)
         switch (step) {
             case 0:
                 return <AssetsForm/>;
