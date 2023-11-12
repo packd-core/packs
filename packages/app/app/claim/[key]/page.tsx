@@ -1,6 +1,6 @@
 "use client"
 import {LoadingCard} from "@/app/components/content/LoadingCard";
-import {Address, useAccount, useWaitForTransaction} from "wagmi";
+import {Address, useAccount, useNetwork, useSwitchNetwork, useWaitForTransaction} from "wagmi";
 import {useHydrated} from "@/src/hooks/useHydrated";
 import CurrentChain from "@/app/components/web3/CurrentChain";
 import {Card} from "@/app/components/Card";
@@ -14,21 +14,25 @@ import {PackClaimedCard} from "@/app/claim/[key]/steps/PackClaimedCard";
 import {useDecodeUrl} from "@/src/hooks/useUrlEncodeDecode";
 import {useEffect, useMemo} from "react";
 import useEnsOrFormattedAddress from "@/src/hooks/useEnsOrAddress";
+import Button from "@/app/components/button/Button";
 
 
-export default function ClaimPage({params: { key }}: any) {
+export default function ClaimPage({params: {key}}: any) {
     const {isConnected, isConnecting, address} = useAccount();
-    const {tokenId,version,chainId,privateKey} = useDecodeUrl(key);
+    const {chain} = useNetwork();
+    const {tokenId, version, chainId, privateKey} = useDecodeUrl(key);
     const setMintedTokenId = useClaimState(state => state.setMintedTokenId);
     const mintedTokenId = useClaimState(state => state.mintedTokenId);
     const resetStepper = useClaimState(state => state.reset);
     const setPrivateKey = useClaimState(state => state.setPrivateKey);
+    const setChainId = useClaimState(state => state.setChainId);
     useEffect(() => {
         resetStepper();
         setMintedTokenId(BigInt(tokenId))
         setPrivateKey(privateKey)
+        setChainId(chainId)
         // TODO: Set and validate chain Id
-    }, [privateKey, resetStepper, setMintedTokenId, setPrivateKey, tokenId]);
+    }, [chainId, privateKey, resetStepper, setChainId, setMintedTokenId, setPrivateKey, tokenId]);
 
     const isLoaded = useHydrated()
 
@@ -44,7 +48,7 @@ export default function ClaimPage({params: { key }}: any) {
         data: receipt,
         isLoading,
         isSuccess,
-    } = useWaitForTransaction({hash});
+    } = useWaitForTransaction({hash, enabled: !!hash});
     useEffect(() => {
         if (isSuccess) {
             useClaimState.getState().nextStep();
@@ -58,6 +62,7 @@ export default function ClaimPage({params: { key }}: any) {
             title="Connecting"
             text='Waiting for network...'/>
     }
+
     if (isLoading && hash) return (
         <LoadingCard
             title="Your pack is on the way..."
@@ -65,7 +70,7 @@ export default function ClaimPage({params: { key }}: any) {
             transactionHash={hash}/>
 
     )
-    if (step === 4){
+    if (step === 4) {
         return <PackClaimedCard/>
     }
     if (isSendingToRelayer) {
@@ -76,22 +81,40 @@ export default function ClaimPage({params: { key }}: any) {
     return <Card
         className={'mx-auto w-full'}
         containerClassName=' overflow-y-auto'
-        controls={ <Controls/>}>
+        controls={<Controls/>}>
         <div className="flex flex-col items-center gap-2">
             <div className="p-2 rounded-full bg-gray-800 flex justify-center items-center">
                 <SenderToUser className='w-20 h-10'/>
             </div>
-            <h1 className="text-lg sm:text-xl md:text-2xl"><span className="text-red-500">{ownerName}</span> sent you a pack</h1>
+            <h1 className="text-lg sm:text-xl md:text-2xl"><span
+                className="text-red-500">{ownerName ?? 'Someone'}</span> sent you a
+                pack</h1>
             <CurrentChain className='my-4'/>
-            <ClaimContent step={step}/>
+
+            {
+                chainId !== chain?.id ?
+                    <WrongChain chainId={chainId}/> : <ClaimContent step={step}/>
+            }
 
 
         </div>
     </Card>
 }
 
+const WrongChain = ({chainId}: { chainId: number }) => {
+    const {chains = []} = useNetwork()
+    const {switchNetwork} = useSwitchNetwork({chainId})
+    const chain = useMemo(() => chains.find(chain => chain.id === chainId), [chainId, chains])
+    const chainName = useMemo(() => chain?.name ?? 'Unknown Network', [chain]);
+    return <div className='flex flex-col items-center'>
+        <h1 className='text-center font-semibold px-10 '>Your Pack is on the <span className='text-red-500'>{chainName}</span> chain. Please switch to that chain to
+            claim it.</h1>
+        <Button variant={'primary'} onClick={() => switchNetwork && switchNetwork(chainId)} className='block my-10'>Switch
+            to {chainName}</Button>
+    </div>
+}
 
-const ClaimContent = ({step}: {step: number}) => {
+const ClaimContent = ({step}: { step: number }) => {
     return useMemo(() => {
         switch (step) {
             case 0:
