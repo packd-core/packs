@@ -31,7 +31,6 @@ export default function ClaimPage({params: {key}}: any) {
         setMintedTokenId(BigInt(tokenId))
         setPrivateKey(privateKey)
         setChainId(chainId)
-        // TODO: Set and validate chain Id
     }, [chainId, privateKey, resetStepper, setChainId, setMintedTokenId, setPrivateKey, tokenId]);
 
     const isLoaded = useHydrated()
