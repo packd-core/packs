@@ -3,11 +3,11 @@ import {Address, useNetwork} from "wagmi";
 import {useMemo} from "react";
 
 type Contracts = keyof typeof addresses["31337"];
-export default function usePackdAddresses() {
-    const { chain } = useNetwork();
+export default function usePackdAddresses(chainId?: number) {
+    const {chain} = useNetwork();
     return useMemo(() => {
-        return getAddressesByChainId(chain?.id ?? 0);
-    }, [chain]);
+        return getAddressesByChainId(chainId ?? chain?.id ?? 0);
+    }, [chain?.id, chainId]);
 }
 
 function getAddressesByChainId(chainId: number) {
