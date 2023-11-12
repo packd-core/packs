@@ -12,7 +12,7 @@ import {SignForm} from "@/app/claim/[key]/steps/SignForm";
 import ReviewClaimForm from "@/app/claim/[key]/steps/ReviewClaimForm";
 import {PackClaimedCard} from "@/app/claim/[key]/steps/PackClaimedCard";
 import {useDecodeUrl} from "@/src/hooks/useUrlEncodeDecode";
-import {useEffect} from "react";
+import {useEffect, useMemo} from "react";
 import useEnsOrFormattedAddress from "@/src/hooks/useEnsOrAddress";
 
 
@@ -83,17 +83,30 @@ export default function ClaimPage({params: { key }}: any) {
             </div>
             <h1 className="text-lg sm:text-xl md:text-2xl"><span className="text-red-500">{ownerName}</span> sent you a pack</h1>
             <CurrentChain className='my-4'/>
-            {step === 0 && <InitialForm/>}
-            {step === 1 && <ConnectWalletForm/>}
-            {step === 2 && <SignForm/>}
-            {step === 3 && <ReviewClaimForm/>}
-
+            <ClaimContent step={step}/>
 
 
         </div>
     </Card>
 }
 
+
+const ClaimContent = ({step}: {step: number}) => {
+    return useMemo(() => {
+        switch (step) {
+            case 0:
+                return <InitialForm/>
+            case 1:
+                return <ConnectWalletForm/>
+            case 2:
+                return <SignForm/>
+            case 3:
+                return <ReviewClaimForm/>
+            default:
+                return <div>Unknown state</div>
+        }
+    }, [step])
+}
 
 function Controls() {
     return useClaimState(state => state.controls);
