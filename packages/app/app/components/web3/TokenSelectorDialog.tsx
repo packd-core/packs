@@ -1,12 +1,11 @@
 import {useEffect, useMemo, useState} from 'react'
-import usePackdAddresses from "@/src/hooks/usePackdAddresses";
 import {BsChevronDown, BsSearch, BsX} from "react-icons/bs";
 import {Address, useAccount, useBalance, useToken} from "wagmi";
 import Modal from "@/app/components/dialog/Modal";
 import Icon from '~/chain.svg'
-import {isAddress} from "viem";
 import {formatUnits, parseUnits} from "ethers";
 import clsxm from "@/src/lib/clsxm";
+import {TokenData, useFilteredTokenList} from "@/src/hooks/useTokenList";
 
 export default function TokenInput({token, value, onTokenSelected, onValueChanged, autoOpenModal}: {
     token?: Address,
@@ -23,7 +22,7 @@ export default function TokenInput({token, value, onTokenSelected, onValueChange
         }
     }, [autoOpenModal, token]);
     const {data: tokenData} = useToken({address: token, enabled: !!token})
-    const {data: balance, isLoading} = useBalance({
+    const {data: balance} = useBalance({
         address: address as Address,
         token: token as Address,
         enabled: !!token
@@ -32,14 +31,14 @@ export default function TokenInput({token, value, onTokenSelected, onValueChange
         if (!onValueChanged) {
             return true;
         }
-       return value && value > 0 && (value <= (balance?.value ?? BigInt(0)));
+        return value && value > 0 && (value <= (balance?.value ?? BigInt(0)));
     }, [value, balance?.value, onValueChanged]);
 
     return <div>
-        <TokenSelectorDialog isOpen={isOpen} setIsOpen={setIsOpen} onAdd={(address, name) => {
+        <TokenSelectorDialog isOpen={isOpen} setIsOpen={setIsOpen} onAdd={(t) => {
             setIsOpen(false);
-            onTokenSelected?.(address);
-            if (address != token) {
+            onTokenSelected?.(t.address);
+            if (t.address != token) {
                 onValueChanged?.(0n)
             }
         }}/>
@@ -54,7 +53,7 @@ export default function TokenInput({token, value, onTokenSelected, onValueChange
             <input
                 placeholder="amount"
                 disabled={!token || !onValueChanged}
-                value={onValueChanged == undefined ? formatUnits(value ?? 0n, tokenData?.decimals ?? 18): undefined}
+                value={onValueChanged == undefined ? formatUnits(value ?? 0n, tokenData?.decimals ?? 18) : undefined}
                 className={clsxm('text-right w-full pl-12 text-xs py-2', !isValidAmount && 'text-red-500')}
                 onChange={(e) => {
                     const value = e.target.value;
@@ -74,37 +73,19 @@ export default function TokenInput({token, value, onTokenSelected, onValueChange
 export function TokenSelectorDialog({isOpen, setIsOpen, onAdd}: {
     isOpen: boolean,
     setIsOpen: (isOpen: boolean) => void,
-    onAdd: (address: Address, name: string) => void
+    onAdd: (token: TokenData) => void
 }) {
     return <Modal render={closeModal => <TokenSelectorFrom onAdd={onAdd} closeModal={closeModal}/>} isOpen={isOpen}
                   setIsOpen={setIsOpen}/>
 }
 
+
 export function TokenSelectorFrom({closeModal, onAdd}: {
     closeModal: () => void,
-    onAdd: (address: Address, name: string) => void
+    onAdd: (token: TokenData) => void
 }) {
-    const [selected, setSelected] = useState('')
-    const [query, setQuery] = useState('')
-    const addresses = usePackdAddresses();
-    const data = useMemo(() => [
-        {name: 'Mock Token A', symbol: 'MTK A', address: addresses?.ERC20MockA},
-        {name: 'Mock Token B', symbol: 'MTK B', address: addresses?.ERC20MockB},
-    ].filter(value => !!value.address), [addresses?.PackMain])
 
-    const [filteredTokens, setFilteredTokens] = useState(data)
-    const normalizeToken = (s?:string)=> s?.toLowerCase()?.replace(/\s+/g, '') ?? '';
-    const includesQuery = (prop:string) => normalizeToken(prop).includes(normalizeToken(query));
-    const bySymbolNameOrAddress = (item:{name:string, symbol:string, address:string}) => Object.values(item).some(includesQuery)
-    useEffect(() => {
-        setFilteredTokens(query === ''? data :data.filter(bySymbolNameOrAddress))
-    }, [query, data]);
-
-    useEffect(() => {
-        if (isAddress(query) && filteredTokens.length === 0) {
-            setFilteredTokens([{name: 'Unknown',symbol: 'unknown', address: query}])
-        }
-    }, [query, filteredTokens]);
+    const {filteredTokens, setQuery} = useFilteredTokenList();
 
     return (
         <div className='flex flex-col bg-[#202020] rounded-3xl gap-2 text-white p-4'>
@@ -122,10 +103,12 @@ export function TokenSelectorFrom({closeModal, onAdd}: {
                 <BsSearch className='absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400'/>
             </div>
             <div className="border-gray-500 border-b-[1px]">{''}</div>
-            <div className="flex flex-col gap-2 h-60">
+            <div className="flex flex-col gap-2 h-60 overflow-y-auto">
                 {filteredTokens.map((item) => (
-                    <TokenSearchItem onClick={() => onAdd(item.address, item.name)} key={item.address}
-                                     tokenAddress={item.address} name={item.name}/>
+                    <TokenSearchItem onClick={() => onAdd(item)}
+                                     key={item.address}
+                                     token={item}
+                    />
                 ))}
             </div>
 
@@ -133,27 +116,37 @@ export function TokenSelectorFrom({closeModal, onAdd}: {
     )
 }
 
-function TokenSearchItem({tokenAddress, name, onClick}: { tokenAddress: string, name: string, onClick: () => void }) {
+function TokenSearchItem({token, onClick}: {
+    token: TokenData
+    onClick: () => void
+}) {
     const {address} = useAccount()
     const {data: balance} = useBalance({
-        address: address as Address,
-        token: tokenAddress as Address,
+        address: address,
+        token: token.address,
+        cacheTime: 20000,
         enabled: !!address
     })
-    const {data, isLoading, isError} = useToken({address: tokenAddress as Address})
 
+    const {data, isLoading, isError} = useToken({address: token.address, cacheTime: 20000})
+    const name = useMemo(() => {
+        return token?.name ?? data?.name ?? (isError ? 'Error: The provided address is not a token' : undefined) ?? 'Loading...';
+    }, [token.name, data?.name, isError]);
     return <button
         onClick={onClick}
         disabled={isLoading || isError}
         className=" text-left flex items-center p-1 hover:border-gray-500 p rounded-lg border border-transparent">
-        <Icon className='h-6 mr-2'/>
-        {isLoading && <span className='text-xs text-gray-400'>Loading...</span>}
-        {!isLoading && isError && <span className='text-xs text-red-500'>Error: The provided address is not a token</span>}
-        {!isLoading && !isError && <>
+        {token.logoURI ? <img src={token.logoURI} alt={name} className='h-6 mr-2'/> : <Icon className='h-6 mr-2'/>}
+
+        <>
             <div className='flex flex-col grow'>
-                <span className='text-card-title'>{data?.name}: {data?.symbol}</span>
-                <span className='text-xs text-gray-400'>{tokenAddress}</span>
+                <span
+                    className={clsxm('text-card-title', isError && 'text-red-500 text-xs')}>{name} {data?.symbol ? `: ${data?.symbol}` : ''}</span>
+                {!token.name && <span className='text-xs text-gray-400'>{token.address}</span>}
             </div>
-            <span className='text-card-title'>{balance?.formatted}</span></>}
+        </>
+
+        {isLoading && <span className='text-xs text-gray-400'>Loading...</span>}
+        {!isLoading && !isError && <span className='text-card-title'>{balance?.formatted}</span>}
     </button>
 }
