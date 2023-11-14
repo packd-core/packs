@@ -6,11 +6,10 @@ import {usePackState} from "@/app/mint/usePackState";
 import usePackdAddresses from "@/src/hooks/usePackdAddresses";
 import {useNetwork} from "wagmi";
 import {useMintStore, Module} from "@/src/stores/useMintStore";
-import Erc721Card from "@/app/mint/modules/Erc721Module";
-import Erc20Card from "@/app/mint/modules/Erc20Module";
 import {ContentCard} from "@/app/components/content/ContentCard";
 import useMintPack from "@/src/hooks/useMintPack";
 import {formatEther} from "ethers";
+import {Modules} from "@/app/mint/modules/Modules";
 
 
 export const ReviewForm = () => {
@@ -68,7 +67,6 @@ export const ReviewForm = () => {
 };
 
 export function ReviewData({eth, modules}: { eth: bigint, modules: Module[] }) {
-    const addresses = usePackdAddresses();
     return <>
         <ContentCard className="self-stretch">
             <div className="flex justify-between">
@@ -77,19 +75,6 @@ export function ReviewData({eth, modules}: { eth: bigint, modules: Module[] }) {
             <input className="text-right w-full " disabled={true}
                    value={formatEther(eth ?? 0)}/>
         </ContentCard>
-        {modules.map((module, index) => {
-            if (module.moduleAddress === addresses.ERC721Module) {
-                return <Erc721Card key={module.address + module.value}
-                                   module={module}/>
-            }
-            if (module.moduleAddress === addresses.ERC20Module) {
-                return <Erc20Card key={module.address + module.value}
-                                  module={module}/>
-            }
-            return <ContentCard key={module.address + module.value}>
-                <ContentTitle>Unknown module</ContentTitle>
-            </ContentCard>;
-        })
-        }
+        <Modules modules={modules}  />
     </>
 }

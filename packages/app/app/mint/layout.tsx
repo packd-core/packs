@@ -19,8 +19,7 @@ export default function MintLayout({children}: {
     useEffect(() => {
         resetMint();
         resetStepper();
-        // eslint-disable-next-line
-    }, []);
+    }, [resetMint, resetStepper]);
     return (
         <main>
             <Wrapper className='flex items-center mb-12'>
