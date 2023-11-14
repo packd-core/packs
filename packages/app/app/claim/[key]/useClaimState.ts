@@ -27,6 +27,8 @@ type ClaimState = {
     previousStep: () => void,
     controls: ReactNode,
     setControls: (controls: ReactNode) => void,
+    setChainId: (chainId: number) => void,
+    chainId?: number,
     reset: () => void
 
 }
@@ -43,6 +45,8 @@ export const useClaimState = create<ClaimState>()((set) => ({
     owner: undefined,
     sendingToRelayer: false,
     packData: undefined,
+    chainId: undefined,
+    setChainId: (chainId) => set((state) => ({chainId})),
     setPackData: (packData) => set((state) => ({packData})),
     setSendingToRelayer: (sendingToRelayer) => set((state) => ({sendingToRelayer})),
     setOwner: (owner) => set((state) => ({owner})),
