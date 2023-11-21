@@ -1,5 +1,5 @@
 import {ContentTitle} from "@/app/components/content/ContentRow";
-import {useEffect} from "react";
+import {useEffect, useMemo} from "react";
 import Button from "@/app/components/button/Button";
 import {FiArrowLeft, FiArrowRight} from "react-icons/fi";
 import {usePackState} from "@/app/mint/usePackState";
@@ -8,8 +8,9 @@ import {useNetwork} from "wagmi";
 import {useMintStore, Module} from "@/src/stores/useMintStore";
 import {ContentCard} from "@/app/components/content/ContentCard";
 import useMintPack from "@/src/hooks/useMintPack";
-import {formatEther} from "ethers";
+import {formatEther, formatUnits} from "ethers";
 import {Modules} from "@/app/mint/modules/Modules";
+import {useEstimateGas} from "@/src/hooks/useEstimateGas";
 
 
 export const ReviewForm = () => {
@@ -21,7 +22,10 @@ export const ReviewForm = () => {
     const modules = useMintStore(state => state.modules)
     const amountEth = useMintStore(state => state.eth)
     const {chain} = useNetwork();
-    const {write, isLoading, error, data} = useMintPack();
+    const {write, isLoading, error, data, config} = useMintPack();
+    const {estimatedGas, isLoading: isGasLoading, isError: isGasError} = useEstimateGas({config: config.request})
+    const gasPrice = useMemo(() => estimatedGas ? ((formatUnits(estimatedGas, chain?.nativeCurrency?.decimals ?? 18) || '-') + chain?.nativeCurrency?.symbol) : 'Loading', [chain?.nativeCurrency?.decimals, chain?.nativeCurrency?.symbol, estimatedGas])
+
     useEffect(() => {
         if (data?.hash) {
             setHash(data!.hash)
@@ -59,7 +63,7 @@ export const ReviewForm = () => {
                 </tr>
                 <tr>
                     <td className='text-gray-500'>Gas fees</td>
-                    <td className="text-right">~0.000493 ETH</td>
+                    <td className="text-right">~ {gasPrice}</td>
                 </tr>
                 </tbody>
             </table>

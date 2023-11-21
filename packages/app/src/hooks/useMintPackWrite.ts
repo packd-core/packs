@@ -31,7 +31,6 @@ export function useMintPackWrite(
     const {write, data, error, isLoading, isError} = usePackMainPack(config);
 
 
-
     return {
         write,
         prepareError,
@@ -40,6 +39,6 @@ export function useMintPackWrite(
         error,
         isLoading,
         isError,
-
+        config
     };
 }
