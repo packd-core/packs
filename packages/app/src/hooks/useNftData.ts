@@ -1,6 +1,6 @@
-import {Address} from "wagmi";
+import {Address, useNetwork} from "wagmi";
 import {useErc721TokenUri} from "@/app/abi/generated";
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 
 export type NftData = {
     description?: string,
@@ -27,3 +27,14 @@ export function useNftData({tokenId, address, chainId}: {tokenId: bigint, addres
     }, [data]);
     return {data, nftData, isLoading: isLoading || isNftDataLoading, isError: isError || (!isNftDataLoading && !isLoading && !nftData)}
 }
+
+
+export function useOpenSeaLink({address, tokenId}: {address: Address, tokenId: bigint}) {
+    const {chain} = useNetwork()
+    return useMemo(() => {
+        if (!chain) {
+            return ''
+        }
+        return `https://opensea.io/assets/${chain?.network}/${address}/${tokenId}`
+    },[address, chain, tokenId])
+ }
