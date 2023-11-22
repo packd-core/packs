@@ -2,13 +2,16 @@ import {Module} from "@/src/stores/useMintStore";
 import {ContentCard} from "@/app/components/content/ContentCard";
 import {BsX} from "react-icons/bs";
 import {useErc721Name} from "@/app/abi/generated";
-import {useNftData} from "@/src/hooks/useNftData";
+import {useNftData, useOpenSeaLink} from "@/src/hooks/useNftData";
 import {LoadingCard} from "@/app/components/content/LoadingCard";
 import {CgSpinner} from "react-icons/cg";
+import {useNetwork} from "wagmi";
+import {ExternalLink} from "@/app/components/links/ExternalLink";
 
 export default function Erc721Card({onClick, module}: { onClick?: () => void, module: Module }) {
     const {data: tokenName} = useErc721Name({address: module.address});
-    const {nftData, isLoading} = useNftData({address: module.address, tokenId: module.value})
+    const {nftData, isLoading} = useNftData({address: module.address!, tokenId: module.value!})
+    const openSeaLink = useOpenSeaLink({address: module.address!, tokenId: module.value!})
     // const {nftData, isLoading} = useNftData({tokenId: 5n, address: '0x5b90d70e55c6c2e45d969bacf0335916df7a2009', chainId: 1})
     return <ContentCard className="self-stretch">
         <div className='flex gap-2 relative'>
@@ -20,7 +23,7 @@ export default function Erc721Card({onClick, module}: { onClick?: () => void, mo
             {!isLoading && <div className='flex flex-col items-start relative'>
                 {onClick && <button className="hover:text-primary-500 right-0 top-0 absolute" onClick={onClick}><BsX/></button>}
 
-                <div className="mt-2">
+                <div>
                     <div className="font-bold grow line-clamp-1 pr-4">
                         {tokenName} #{module.value?.toString()} - {nftData?.name}
                     </div>
@@ -30,7 +33,11 @@ export default function Erc721Card({onClick, module}: { onClick?: () => void, mo
                        <span className='font-normal'> {nftData?.description}</span>
                    </span>
                 </div>
+                <div>
+                    <ExternalLink className='text-xs' href={openSeaLink}>View on Opensea</ExternalLink>
+                </div>
             </div>}
         </div>
     </ContentCard>;
 }
+
