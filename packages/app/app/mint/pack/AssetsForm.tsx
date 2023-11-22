@@ -28,7 +28,38 @@ export const AssetsForm = () => {
     const modules = useMintStore(state => state.modules);
     const isAllModulesValid = useMemo(() => modules.every(m => m.isValid), [modules]);
     useAssetsControls({isEthAmountValid, isAllModulesValid});
+    const moduleComp = useMemo(() => modules.map((module) => {
+        if (module.moduleAddress === addresses.ERC721Module) {
+            return <Erc721Card key={module.id}
+                               onClick={() => mintStore.removeModule(module)}
+                               module={module}/>
+        }
+        if (module.moduleAddress === addresses.ERC20Module) {
+            return <ContentCard className="self-stretch" key={module.id}>
+                <div className="flex justify-between">
+                    <span className="text-card-title">Token</span>
+                    <button className="hover:text-primary-500 pl-2" onClick={() => mintStore.removeModule(module) }><BsX/></button>
+                </div>
+                <TokenInput
+                    token={module.address}
+                    value={module.value}
+                    onValueChanged={
+                        (value, isValid) => {
+                            mintStore.updateModule({
+                                ...module,
+                                value,
+                                isValid
+                            })
+                        }
+                    }
+                />
+            </ContentCard>
+        }
 
+        return <ContentCard key={module.id}>
+            <ContentTitle>Unknown module</ContentTitle>
+        </ContentCard>;
+    }), [addresses.ERC20Module, addresses.ERC721Module, mintStore, modules])
     return (
         <>
             <ContentTitle>Contents</ContentTitle>
@@ -49,40 +80,8 @@ export const AssetsForm = () => {
                         }}
                     />
                 </ContentCard>
-                {modules.map((module) => {
-                    if (module.moduleAddress === addresses.ERC721Module) {
-                        return <Erc721Card key={module.id}
-                                           onClick={() => mintStore.removeModule(module)}
-                                           module={module}/>
-                    }
-                    if (module.moduleAddress === addresses.ERC20Module) {
-                        console.log(module)
-                        return <ContentCard className="self-stretch" key={module.id}>
-                            <div className="flex justify-between">
-                                <span className="text-card-title">Token</span>
-                                <button className="hover:text-primary-500 pl-2" onClick={() => mintStore.removeModule(module) }><BsX/></button>
-                            </div>
-                            <TokenInput
-                                token={module.address}
-                                value={module.value}
-                                onValueChanged={
-                                    (value, isValid) => {
-                                        console.log(value, isValid)
-                                        mintStore.updateModule({
-                                            ...module,
-                                            value,
-                                            isValid
-                                        })
-                                    }
-                                }
-                            />
-                        </ContentCard>
-                    }
-
-                    return <ContentCard key={module.id}>
-                        <ContentTitle>Unknown module</ContentTitle>
-                    </ContentCard>;
-                })
+                {
+                    moduleComp
                 }
 
                 <AddAssetSelector/>
