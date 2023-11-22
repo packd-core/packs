@@ -146,8 +146,6 @@ const useAssetsControls = ({isEthAmountValid, isAllModulesValid}: { isEthAmountV
                 leftIcon={<FiArrowLeft className='text-inherit inline'/>}>
                 Back
             </Button>
-            {isEthAmountValid ? '✅' : '❌'}
-            {isAllModulesValid ? '✅' : '❌'}
             <Button
                 onClick={nextStep}
                 disabled={!isEthAmountValid || !isAllModulesValid}
