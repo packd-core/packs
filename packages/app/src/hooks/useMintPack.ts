@@ -2,8 +2,8 @@ import {Address, useAccount} from "wagmi";
 import usePackdAddresses from "@/src/hooks/usePackdAddresses";
 import {useMintStore} from "@/src/stores/useMintStore";
 import {useEffect, useMemo, useState} from "react";
-import {useMintPackWrite} from "@/src/hooks/useMintPackWrite";
 import {ethers} from "ethers";
+import {useMintPackWrite} from "@/src/hooks/useMintPackWrite";
 
 export default function useMintPack() {
     const {address} = useAccount();

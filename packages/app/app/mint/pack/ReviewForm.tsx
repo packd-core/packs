@@ -1,16 +1,16 @@
 import {ContentTitle} from "@/app/components/content/ContentRow";
-import {useEffect} from "react";
+import {useEffect, useMemo} from "react";
 import Button from "@/app/components/button/Button";
 import {FiArrowLeft, FiArrowRight} from "react-icons/fi";
 import {usePackState} from "@/app/mint/usePackState";
 import usePackdAddresses from "@/src/hooks/usePackdAddresses";
 import {useNetwork} from "wagmi";
 import {useMintStore, Module} from "@/src/stores/useMintStore";
-import Erc721Card from "@/app/mint/modules/Erc721Module";
-import Erc20Card from "@/app/mint/modules/Erc20Module";
 import {ContentCard} from "@/app/components/content/ContentCard";
 import useMintPack from "@/src/hooks/useMintPack";
-import {formatEther} from "ethers";
+import {formatEther, formatUnits} from "ethers";
+import {Modules} from "@/app/mint/modules/Modules";
+import {useEstimateGas} from "@/src/hooks/useEstimateGas";
 
 
 export const ReviewForm = () => {
@@ -22,7 +22,10 @@ export const ReviewForm = () => {
     const modules = useMintStore(state => state.modules)
     const amountEth = useMintStore(state => state.eth)
     const {chain} = useNetwork();
-    const {write, isLoading, error, data} = useMintPack();
+    const {write, isLoading, error, data, config} = useMintPack();
+    const {estimatedGas, isLoading: isGasLoading, isError: isGasError} = useEstimateGas({config: config.request})
+    const gasPrice = useMemo(() => estimatedGas ? ((formatUnits(estimatedGas, chain?.nativeCurrency?.decimals ?? 18) || '-') + chain?.nativeCurrency?.symbol) : 'Loading', [chain?.nativeCurrency?.decimals, chain?.nativeCurrency?.symbol, estimatedGas])
+
     useEffect(() => {
         if (data?.hash) {
             setHash(data!.hash)
@@ -60,7 +63,7 @@ export const ReviewForm = () => {
                 </tr>
                 <tr>
                     <td className='text-gray-500'>Gas fees</td>
-                    <td className="text-right">~0.000493 ETH</td>
+                    <td className="text-right">~ {gasPrice}</td>
                 </tr>
                 </tbody>
             </table>
@@ -68,7 +71,6 @@ export const ReviewForm = () => {
 };
 
 export function ReviewData({eth, modules}: { eth: bigint, modules: Module[] }) {
-    const addresses = usePackdAddresses();
     return <>
         <ContentCard className="self-stretch">
             <div className="flex justify-between">
@@ -77,19 +79,6 @@ export function ReviewData({eth, modules}: { eth: bigint, modules: Module[] }) {
             <input className="text-right w-full " disabled={true}
                    value={formatEther(eth ?? 0)}/>
         </ContentCard>
-        {modules.map((module, index) => {
-            if (module.moduleAddress === addresses.ERC721Module) {
-                return <Erc721Card key={module.address + module.value}
-                                   module={module}/>
-            }
-            if (module.moduleAddress === addresses.ERC20Module) {
-                return <Erc20Card key={module.address + module.value}
-                                  module={module}/>
-            }
-            return <ContentCard key={module.address + module.value}>
-                <ContentTitle>Unknown module</ContentTitle>
-            </ContentCard>;
-        })
-        }
+        <Modules modules={modules}  />
     </>
 }
