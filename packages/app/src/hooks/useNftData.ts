@@ -8,14 +8,13 @@ export type NftData = {
     name?: string,
 }
 
-export function useNftData({tokenId, address}: {tokenId: bigint, address:Address}) {
-    //0x5b90d70e55c6c2e45d969bacf0335916df7a2009#readContract
-    //tokenId: 5
-    const {data, isLoading, isError} = useErc721TokenUri({address, chainId: 1, args: [tokenId]})
+export function useNftData({tokenId, address, chainId}: {tokenId: bigint, address:Address, chainId?: number}) {
+    const {data, isLoading, isError} = useErc721TokenUri({address,args: [tokenId], chainId})
     const [nftData, setNftData] = useState<NftData>()
-
+    const [isNftDataLoading, setIsNftDataLoading] = useState(false)
     useEffect(() => {
         if (data) {
+            setIsNftDataLoading(true)
             fetch(`/api/nftData?url=${data}`, {mode: 'no-cors'}).then((response) => {
                 if (!response.ok) {
                     return;
@@ -23,8 +22,8 @@ export function useNftData({tokenId, address}: {tokenId: bigint, address:Address
                 response.json().then((json) => {
                     setNftData(json)
                 })
-            })
+            }).finally(() => setIsNftDataLoading(false));
         }
     }, [data]);
-    return {data, nftData, isLoading, isError};
+    return {data, nftData, isLoading: isLoading || isNftDataLoading, isError: isError || (!isNftDataLoading && !isLoading && !nftData)}
 }
