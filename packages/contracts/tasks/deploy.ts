@@ -7,14 +7,14 @@ const info = logger("info", "task");
 
 subtask(
   "deploy",
-  "Deploy the contracts to the selected chain (defaults to localhost)"
+  "Deploy the contracts to the selected chain (defaults to localhost)",
 ).setAction(async (args, hre) => {
   info("Subtask deploy");
   const systemConfig = getSystemConfig(hre);
   return await deploySystem(
     hre,
     await hre.ethers.provider.getSigner(),
-    systemConfig
+    systemConfig,
   );
 });
 
@@ -24,7 +24,7 @@ task("deploy").setAction(async (_, __, runSuper) => {
 
 task(
   "deploy-dev-env",
-  "Deploy all contracts, send ETH  and mint ERC20 to test accounts"
+  "Deploy all contracts, send ETH  and mint ERC20 to test accounts",
 ).setAction(async (args, hre) => {
   info("deploy-dev-env");
   await hre.run("deploy", args);
@@ -40,7 +40,7 @@ task("fund:account", "Send ETH, ERC20Mocks, and NFTsMocks to an account")
     const isLocal =
       hre.network.name === "hardhat" || hre.network.name === "localhost";
 
-    let addresses = {
+    const addresses = {
       erc20MockA: isLocal
         ? "0x7D0B2154C5c709b3Cc8489286e023Cf75a38E0B5"
         : await getDeployedAddress(hre, "ERC20MockA"),

@@ -1,16 +1,26 @@
+import "@nomicfoundation/hardhat-toolbox";
 import { config as dotenvConfig } from "dotenv";
+import type { HardhatUserConfig } from "hardhat/config";
+import "hardhat-tracer";
+
 dotenvConfig({ path: __dirname + "/.env" });
 
 import "./tasks";
-
-import type { HardhatUserConfig } from "hardhat/config";
-import "@nomicfoundation/hardhat-toolbox";
 
 const accounts =
   process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [];
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.20",
+  defaultNetwork: "hardhat",
+  solidity: {
+    version: "0.8.20",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 1000,
+      },
+    },
+  },
   networks: {
     hardhat: {
       chainId: 31337,

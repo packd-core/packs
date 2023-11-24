@@ -1,11 +1,16 @@
 import fs from "fs/promises";
 import type { BaseContract } from "ethers";
 import type { HardhatRuntimeEnvironment } from "hardhat/types";
+export interface DeployedAddresses {
+  [key: number]: {
+    [key: string]: string;
+  };
+}
 
 export const saveAddress = async (
   hre: HardhatRuntimeEnvironment,
   contract: BaseContract,
-  name: string
+  name: string,
 ) => {
   const chainId = hre.network.config.chainId ?? 31337;
 
@@ -13,7 +18,7 @@ export const saveAddress = async (
   const abi = JSON.stringify(
     JSON.parse(contract.interface.formatJson()),
     undefined,
-    2
+    2,
   ); // hack to format the json
   const address = await contract.getAddress();
 
@@ -23,9 +28,11 @@ export const saveAddress = async (
   let currentContent = "{}";
   try {
     currentContent = (await fs.readFile(addressesFile, "utf-8")) || "{}";
-  } catch {}
+  } catch (error) {
+    console.log(error);
+  }
 
-  const currentRoot = JSON.parse(currentContent);
+  const currentRoot: DeployedAddresses = JSON.parse(currentContent);
   const currentChainSection = currentRoot[chainId];
   const addresses = {
     ...currentRoot,
@@ -40,16 +47,18 @@ export const saveAddress = async (
 
 export const getDeployedAddress = async (
   hre: HardhatRuntimeEnvironment,
-  name: string
-) => {
+  name: string,
+): Promise<string | null> => {
   const chainId = hre.network.config.chainId ?? 31337;
   const addressesFile = "../app/app/abi/addresses.json";
   let currentContent = "{}";
   try {
     currentContent = (await fs.readFile(addressesFile, "utf-8")) || "{}";
-  } catch {}
+  } catch (error) {
+    console.log(error);
+  }
 
-  const currentRoot = JSON.parse(currentContent);
+  const currentRoot: DeployedAddresses = JSON.parse(currentContent);
   if (!currentRoot[chainId]) {
     return null;
   }

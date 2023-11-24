@@ -24,7 +24,7 @@ describe("PackMain", function () {
     const keySignManager = new KeySignManager(
       systemConfig.packConfig.registryChainId,
       systemConfig.packConfig.salt,
-      await packMain.getAddress()
+      await packMain.getAddress(),
     );
 
     return { packMain, alice, bob, deployer, keySignManager, relayer };
@@ -44,7 +44,7 @@ describe("PackMain", function () {
       const { packMain, alice, keySignManager } = await loadFixture(setup);
 
       const aliceBalanceBefore = await ethers.provider.getBalance(
-        alice.address
+        alice.address,
       );
 
       // Mint a new pack using createPack function
@@ -52,7 +52,7 @@ describe("PackMain", function () {
         packMain,
         alice,
         keySignManager,
-        value
+        value,
       );
 
       // Check correct state
@@ -72,16 +72,12 @@ describe("PackMain", function () {
       const value2 = 2;
       const { packMain, alice, keySignManager } = await loadFixture(setup);
 
-      const aliceBalanceBefore = await ethers.provider.getBalance(
-        alice.address
-      );
-
       // Mint a new pack using createPack function
       const { packInstance: packInstance1 } = await createPack(
         packMain,
         alice,
         keySignManager,
-        value1
+        value1,
       );
 
       // Check correct state
@@ -97,7 +93,7 @@ describe("PackMain", function () {
         packMain,
         alice,
         keySignManager,
-        value2
+        value2,
       );
 
       // Check correct state
@@ -112,7 +108,7 @@ describe("PackMain", function () {
       const ethBalanceAccount1Recheck =
         await ethers.provider.getBalance(accountAddress1);
       expect(ethBalanceAccount1Recheck).to.equal(
-        ethers.parseEther(value1.toString())
+        ethers.parseEther(value1.toString()),
       );
     });
     it("Should not mint a new pack without ETH", async function () {
@@ -121,7 +117,7 @@ describe("PackMain", function () {
       // Mint pack without ETH
       const value = 0;
       await expect(
-        createPack(packMain, alice, keySignManager, value)
+        createPack(packMain, alice, keySignManager, value),
       ).to.be.revertedWithCustomError(packMain, "InvalidEthValue");
     });
     it("Should not mint a new pack with a non-whitelisted Module", async function () {
@@ -130,7 +126,9 @@ describe("PackMain", function () {
       // Mint pack with a non-whitelisted Module
       const value = 1;
       await expect(
-        createPack(packMain, alice, keySignManager, value, [ethers.ZeroAddress])
+        createPack(packMain, alice, keySignManager, value, [
+          ethers.ZeroAddress,
+        ]),
       ).to.be.revertedWithCustomError(packMain, "ModulesNotWhitelisted");
     });
     it("Should whitelist a new Module", async function () {
@@ -141,7 +139,7 @@ describe("PackMain", function () {
 
       // Check that is whitelisted
       expect(await packMain.modulesWhitelist(ethers.ZeroAddress)).to.equal(
-        true
+        true,
       );
 
       // Mint pack with a non-whitelisted Module
@@ -149,7 +147,9 @@ describe("PackMain", function () {
 
       // Should still fail but not with the error of modules not whitelisted
       await expect(
-        createPack(packMain, alice, keySignManager, value, [ethers.ZeroAddress])
+        createPack(packMain, alice, keySignManager, value, [
+          ethers.ZeroAddress,
+        ]),
       ).to.be.revertedWithCustomError(packMain, "InvalidLengthOfData");
     });
 
@@ -162,14 +162,14 @@ describe("PackMain", function () {
         packMain,
         alice,
         keySignManager,
-        value
+        value,
       );
 
       // Check correct state
       expect(await packInstance.packState(0)).to.equal(1); // 1 is the enum value for Created
 
       const aliceBalanceBefore = await ethers.provider.getBalance(
-        alice.address
+        alice.address,
       );
 
       // Revoke pack
@@ -190,7 +190,7 @@ describe("PackMain", function () {
         packMain,
         alice,
         keySignManager,
-        value
+        value,
       );
       expect(await packInstance.packState(0)).to.equal(1); // 1 is the enum value for Created
       // Pack is really created
@@ -198,7 +198,7 @@ describe("PackMain", function () {
       const packInstanceBob = packMain.connect(bob);
       await expect(packInstanceBob.revoke(0, [])).to.be.revertedWithCustomError(
         packMain,
-        "OnlyOwnerOf"
+        "OnlyOwnerOf",
       );
     });
     it("Should open a pack", async function () {
@@ -210,7 +210,7 @@ describe("PackMain", function () {
         packMain,
         alice,
         keySignManager,
-        value
+        value,
       );
 
       // Check correct state
@@ -224,14 +224,14 @@ describe("PackMain", function () {
         await keySignManager.generateClaimSignature(
           claimPrivateKey,
           ["uint256", "address"],
-          [0, bob.address]
+          [0, bob.address],
         );
       // Create SigClaimer
       const { claimSignature: sigClaimer } =
         await keySignManager.generateClaimSignature(
           bob,
           ["uint256", "uint256"],
-          [0, 0]
+          [0, 0],
         );
 
       const claimData: ClaimData = {
@@ -270,7 +270,7 @@ describe("PackMain", function () {
         packMain,
         alice,
         keySignManager,
-        value
+        value,
       );
 
       // Check correct state
@@ -281,13 +281,13 @@ describe("PackMain", function () {
         await keySignManager.generateClaimSignature(
           claimPrivateKey,
           ["uint256", "address"],
-          [0, bob.address]
+          [0, bob.address],
         );
       const { claimSignature: sigClaimer } =
         await keySignManager.generateClaimSignature(
           bob,
           ["uint256", "uint256"],
-          [0, 0]
+          [0, 0],
         );
 
       const claimData: ClaimData = {
@@ -327,7 +327,7 @@ describe("PackMain", function () {
         packMain,
         alice,
         keySignManager,
-        value
+        value,
       );
 
       // Check correct state
@@ -338,14 +338,14 @@ describe("PackMain", function () {
         await keySignManager.generateClaimSignature(
           claimPrivateKey,
           ["uint256", "address"],
-          [0, bob.address]
+          [0, bob.address],
         );
 
       const { claimSignature: sigClaimer } =
         await keySignManager.generateClaimSignature(
           bob,
           ["uint256", "uint256"],
-          [0, maxRefundValue]
+          [0, maxRefundValue],
         );
 
       const claimData: ClaimData = {
@@ -360,7 +360,7 @@ describe("PackMain", function () {
       // Get balances before
       const bobBalanceBefore = await ethers.provider.getBalance(bob.address);
       const relayerBalanceBefore = await ethers.provider.getBalance(
-        relayer.address
+        relayer.address,
       );
 
       // Change account to relayer
@@ -378,7 +378,7 @@ describe("PackMain", function () {
       const bobBalanceAfter = await ethers.provider.getBalance(bob.address);
       expect(bobBalanceAfter).to.gt(bobBalanceBefore);
       const relayerBalanceAfter = await ethers.provider.getBalance(
-        relayer.address
+        relayer.address,
       );
       expect(relayerBalanceAfter).to.gt(relayerBalanceBefore);
     });
@@ -394,7 +394,7 @@ describe("PackMain", function () {
         packMain,
         alice,
         keySignManager,
-        value
+        value,
       );
 
       // Check correct state
@@ -405,14 +405,14 @@ describe("PackMain", function () {
         await keySignManager.generateClaimSignature(
           claimPrivateKey,
           ["uint256", "address"],
-          [0, bob.address]
+          [0, bob.address],
         );
 
       const { claimSignature: sigClaimer } =
         await keySignManager.generateClaimSignature(
           bob,
           ["uint256", "uint256"],
-          [0, maxRefundValue]
+          [0, maxRefundValue],
         );
 
       const claimData: ClaimData = {
@@ -427,7 +427,7 @@ describe("PackMain", function () {
       // Change account to relayer
       const packInstanceRelayer = packMain.connect(relayer);
       await expect(
-        packInstanceRelayer.open(claimData, [])
+        packInstanceRelayer.open(claimData, []),
       ).to.be.revertedWithCustomError(packMain, "InvalidRefundValue");
     });
     it("Should not open a pack, relayer tries to steal pack content", async function () {
@@ -442,7 +442,7 @@ describe("PackMain", function () {
         packMain,
         alice,
         keySignManager,
-        value
+        value,
       );
 
       // Check correct state
@@ -453,14 +453,14 @@ describe("PackMain", function () {
         await keySignManager.generateClaimSignature(
           claimPrivateKey,
           ["uint256", "address"],
-          [0, bob.address]
+          [0, bob.address],
         );
 
       const { claimSignature: sigClaimer } =
         await keySignManager.generateClaimSignature(
           bob,
           ["uint256", "uint256"],
-          [0, maxRefundValue]
+          [0, maxRefundValue],
         );
 
       const claimData: ClaimData = {
@@ -475,7 +475,7 @@ describe("PackMain", function () {
       // Change account to relayer
       const packInstanceRelayer = packMain.connect(relayer);
       await expect(
-        packInstanceRelayer.open(claimData, [])
+        packInstanceRelayer.open(claimData, []),
       ).to.be.revertedWithCustomError(packMain, "InvalidOwnerSignature");
     });
   });

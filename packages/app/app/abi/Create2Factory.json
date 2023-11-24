@@ -1,29 +1,5 @@
 [
   {
-    "type": "error",
-    "name": "Create2EmptyBytecode",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "Create2FailedDeployment",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "Create2InsufficientBalance",
-    "inputs": [
-      {
-        "type": "uint256",
-        "name": "balance"
-      },
-      {
-        "type": "uint256",
-        "name": "needed"
-      }
-    ]
-  },
-  {
     "type": "event",
     "anonymous": false,
     "name": "Deployed",

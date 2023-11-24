@@ -2,13 +2,10 @@
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
-import "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 
 import "./interfaces/IERC6551Registry.sol";
-import "./interfaces/IERC6551Account.sol";
-import "./interfaces/IERC6551Executable.sol";
+import "erc6551/interfaces/IERC6551Executable.sol";
 
 import "./PackNFT.sol";
 import "./ClaimData.sol";
@@ -50,7 +47,7 @@ contract PackMain is PackNFT, Ownable {
 
     // ---------- Constants -------------------
     uint256 public constant VERSION = 1;
-    uint256 public constant CALL_OPERATION = 0; // Only call operations are supported for ERC6551
+    uint8 public constant CALL_OPERATION = 0; // Only call operations are supported for ERC6551
 
     // ---------- ERC6551-related ------------
     IERC6551Registry public immutable registry;
@@ -86,7 +83,7 @@ contract PackMain is PackNFT, Ownable {
         uint256 registryChainId_,
         uint256 salt_,
         address[] memory modulesWhitelist_
-    ) PackNFT(baseTokenURI_, name_, symbol_) Ownable(initialOwner_) {
+    ) PackNFT(baseTokenURI_, name_, symbol_) Ownable() {
         // Check that the registry and implementation are not the zero address
         if (registry_ == address(0) || implementation_ == address(0)) {
             revert InvalidAddress();
@@ -100,6 +97,8 @@ contract PackMain is PackNFT, Ownable {
 
         // Set the modules whitelist
         setModulesWhitelist(modulesWhitelist_, true);
+
+        _transferOwnership(initialOwner_);
     }
 
     /**
@@ -126,7 +125,8 @@ contract PackMain is PackNFT, Ownable {
     }
 
     /**
-     * @dev Function to pack a new NFT. This function is responsible for creating a new NFT and assigning it to the owner.
+     * @dev Function to pack a new NFT.
+     * This function is responsible for creating a new NFT and assigning it to the owner.
      * This function also creates a new account for the NFT and transfers some ETH to the new account.
      * Finally, it loops through the modules and executes the data.
      * @param to_ The address to which the new NFT will be assigned.
@@ -197,7 +197,8 @@ contract PackMain is PackNFT, Ownable {
     }
 
     /**
-     * @dev This function revokes a pack. It is only callable by the owner of the pack and only if the pack is in the 'Created' state.
+     * @dev This function revokes a pack.
+     * It is only callable by the owner of the pack and only if the pack is in the 'Created' state.
      * @param tokenId_ The unique identifier of the pack to be revoked.
      * @param moduleData The data associated with the pack's modules.
      * @notice The moduleData array must be the same length as the modules array.
@@ -214,12 +215,12 @@ contract PackMain is PackNFT, Ownable {
             );
         }
 
-        _revokePack(tokenId_);
-
         // Send ETH to owner
         address payable thisAccount = payable(account(tokenId_));
         uint256 value = thisAccount.balance;
         _executeTransfer(thisAccount, msg.sender, value);
+
+        _revokePack(tokenId_);
 
         // Loop through the modules and execute the data
         for (uint256 i = 0; i < packModules[tokenId_].length; i++) {
@@ -310,8 +311,9 @@ contract PackMain is PackNFT, Ownable {
     }
 
     /**
-     * @dev This is an internal function that handles the transfer of ETH from the account to the owner and refunds the relayer.
-     * @param data This is a memory structure that contains all the necessary data for the transfer and refund operation.
+     * @dev This is an internal function that handles the transfer of ETH from the account to the owner and
+     *  refunds the relayer.
+     * @param data This is a memory structure that contains all the necessary data for transfer and refund operation.
      */
     function _transferAndRefund(ClaimData memory data) internal {
         // Refund the relayer
@@ -349,7 +351,8 @@ contract PackMain is PackNFT, Ownable {
 
     /**
      * @dev This is an internal function that validates the signatures associated with a claim.
-     * It uses the SignatureValidator to check the signatures against the claim data, registry chain ID, salt, contract address, and public key associated with the token ID.
+     * It uses the SignatureValidator to check the signatures against the claim data, registry chain ID, salt,
+     * contract address, and public key associated with the token ID.
      * @param data The claim data to validate.
      */
     function _validateSignatures(ClaimData memory data) internal view {
