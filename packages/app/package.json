@@ -25,6 +25,7 @@
     "clsx": "^2.0.0",
     "eslint": "8.49.0",
     "eslint-config-next": "13.5.1",
+    "moralis": "^2.23.2",
     "next": "13.5.1",
     "postcss": "8.4.30",
     "prettier": "^3.0.3",
@@ -37,8 +38,8 @@
     "typescript": "5.2.2",
     "viem": "^1.11.0",
     "wagmi": "^1.4.7",
-    "zustand": "^4.4.3",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "zustand": "^4.4.3"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
