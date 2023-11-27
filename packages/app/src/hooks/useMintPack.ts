@@ -11,7 +11,7 @@ export default function useMintPack() {
     const modules = useMintStore(state => state.modules)
     const claimPublicKey = useMintStore(state => state.claimKey?.public)
     const moduleList = useMemo(() => modules.map((module) => module.moduleAddress), [modules]);
-    const moduleDataPromise = useMemo(() => Promise.all(modules.map((module) => generateMintData([[module.address, module.value]]))), [modules]);
+    const moduleDataPromise = useMemo(() => Promise.all(modules.map((module) => generateMintData([[module.address!, module.value!]]))), [modules]);
     const [moduleData,setModuleData] = useState<string[]>([])
     useEffect(() => {
         moduleDataPromise.then((data) => {
