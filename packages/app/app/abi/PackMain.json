@@ -33,7 +33,7 @@
         "name": "registryChainId_"
       },
       {
-        "type": "uint256",
+        "type": "bytes32",
         "name": "salt_"
       },
       {
@@ -748,7 +748,7 @@
     "inputs": [],
     "outputs": [
       {
-        "type": "uint256",
+        "type": "bytes32",
         "name": ""
       }
     ]

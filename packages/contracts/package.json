@@ -6,7 +6,7 @@
     "author": "PACKD",
     "license": "MIT",
     "scripts": {
-        "clean": "rimraf ./artifacts ./dist  ./cache ./coverage ./types/generated ./coverage.json",
+        "clean": "rimraf ./artifacts ./dist  ./cache ./coverage ./types/generated ./coverage.json && yarn preinstall",
         "compile": "yarn compile:sol && yarn compile:ts",
         "compile:sol": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat compile --config hardhat.config.ts",
         "compile:ts": "npx tsc",

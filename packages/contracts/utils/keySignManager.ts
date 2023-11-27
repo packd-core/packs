@@ -1,12 +1,12 @@
-import type { Signer } from "ethers";
+import type { BytesLike, Signer } from "ethers";
 import { ethers } from "ethers";
 
 export class KeySignManager {
   private packdMainAddress: string;
   private registryChainId: any;
-  private salt: any;
+  private salt: BytesLike;
 
-  constructor(registryChainId: number, salt: number, packdMainAddress: string) {
+  constructor(registryChainId: number, salt: BytesLike, packdMainAddress: string) {
     this.registryChainId = registryChainId;
     this.salt = salt;
     this.packdMainAddress = packdMainAddress;

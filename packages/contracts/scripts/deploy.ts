@@ -1,4 +1,4 @@
-import { resolveAddress, type Signer } from "ethers";
+import { ethers, resolveAddress, type Signer } from "ethers";
 import type { HardhatRuntimeEnvironment } from "hardhat/types";
 
 import {
@@ -261,7 +261,7 @@ export async function deploySystem(
       await packRegistry.getAddress(),
       await packAccount.getAddress(),
       systemConfig.packConfig.registryChainId,
-      systemConfig.packConfig.salt,
+      ethers.encodeBytes32String(systemConfig.packConfig.salt.toString()),
       [await erc20Module.getAddress(), await erc721Module.getAddress()],
     ],
     deploymentOverrides,

@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 
-import "./interfaces/IERC6551Registry.sol";
+import "erc6551/interfaces/IERC6551Registry.sol";
 import "erc6551/interfaces/IERC6551Executable.sol";
 
 import "./PackNFT.sol";
@@ -53,7 +53,7 @@ contract PackMain is PackNFT, Ownable {
     IERC6551Registry public immutable registry;
     address public immutable implementation;
     uint256 public immutable registryChainId;
-    uint256 public immutable salt;
+    bytes32 public immutable salt;
 
     mapping(uint256 => address) public claimPublicKey;
     mapping(uint256 => address[]) public packModules;
@@ -81,7 +81,7 @@ contract PackMain is PackNFT, Ownable {
         address registry_,
         address implementation_,
         uint256 registryChainId_,
-        uint256 salt_,
+        bytes32 salt_,
         address[] memory modulesWhitelist_
     ) PackNFT(baseTokenURI_, name_, symbol_) Ownable() {
         // Check that the registry and implementation are not the zero address
@@ -167,11 +167,10 @@ contract PackMain is PackNFT, Ownable {
         // Create the account for the NFT
         newAccount = registry.createAccount(
             implementation,
+            salt,
             registryChainId,
             address(this),
-            tokenId,
-            salt,
-            "" // initData
+            tokenId
         );
 
         // Transfer some ETH to newAccount
@@ -303,10 +302,10 @@ contract PackMain is PackNFT, Ownable {
         return
             registry.account(
                 implementation,
+                salt,
                 registryChainId,
                 address(this),
-                tokenId,
-                salt
+                tokenId
             );
     }
 

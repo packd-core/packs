@@ -23,7 +23,7 @@ describe("PackMain", function () {
     // Set PackMain address in KeySignManager
     const keySignManager = new KeySignManager(
       systemConfig.packConfig.registryChainId,
-      systemConfig.packConfig.salt,
+      ethers.encodeBytes32String(systemConfig.packConfig.salt.toString()),
       await packMain.getAddress(),
     );
 

@@ -13,7 +13,7 @@ library SignatureValidator {
     function validateSignatures(
         ClaimData memory data,
         uint256 registryChainId,
-        uint256 salt,
+        bytes32 salt,
         address addr,
         address claimPublicKey
     ) internal view returns (bool) {
