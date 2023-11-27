@@ -1,6 +1,5 @@
 import {ContentCard} from "@/app/components/content/ContentCard";
 import Button from "@/app/components/button/Button";
-import Help from "~/help.svg";
 import {HelpItem} from "@/app/components/content/HelpItem";
 import {ContentTitle} from "@/app/components/content/ContentRow";
 import {usePackState} from "@/app/mint/usePackState";
@@ -23,7 +22,7 @@ function ApproveToken({module}: { module: Module }) {
     const {address} = useAccount()
     const {data: tokenData} = useToken({address: module.address})
     const {data: dataAllowance, refetch} = useErc20Allowance({address: module.address, args: [address!, addresses.PackMain], staleTime: 5},)
-    const {config} = usePrepareErc20Approve({address: module.address, args: [addresses.PackMain, module.value]})
+    const {config} = usePrepareErc20Approve({address: module.address, args: [addresses.PackMain, module.value!]})
     const {data: dataApprove, write, isSuccess} = useErc20Approve(config)
     useEffect(() => {
         if (isSuccess){
@@ -31,7 +30,7 @@ function ApproveToken({module}: { module: Module }) {
         }
     },[isSuccess,refetch]);
     const {isLoading} = useWaitForTransaction({hash: dataApprove?.hash})
-    const isApproved = useMemo(() => (dataAllowance ?? 0) >= module.value, [dataAllowance, module])
+    const isApproved = useMemo(() => (dataAllowance ?? 0) >= module.value!, [dataAllowance, module])
     const setApproved = useMintStore(state => state.setApproved)
     useEffect(() => {
         if (isApproved) {
@@ -39,7 +38,7 @@ function ApproveToken({module}: { module: Module }) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isApproved, setApproved]);
-    return <ApproveItem name={tokenData?.name ?? 'Loading...'} address={module.address} isLoading={isLoading}
+    return <ApproveItem name={tokenData?.name ?? 'Loading...'} address={module.address!} isLoading={isLoading}
                         isApproved={isApproved} onClick={() => write && write()}/>;
 
 }
@@ -47,9 +46,9 @@ function ApproveToken({module}: { module: Module }) {
 function ApproveNft({module}: { module: Module }) {
     const addresses = usePackdAddresses();
     const {data: name} = useErc721Name({address: module.address})
-    const {data: dataApprovedFor} = useErc721GetApproved({address: module.address, args: [module.value], watch: true})
+    const {data: dataApprovedFor} = useErc721GetApproved({address: module.address, args: [module.value!], watch: true})
     const isApproved = useMemo(() => dataApprovedFor === addresses.PackMain, [dataApprovedFor, addresses.PackMain]);
-    const {config} = usePrepareErc721Approve({address: module.address, args: [addresses.PackMain, module.value]})
+    const {config} = usePrepareErc721Approve({address: module.address, args: [addresses.PackMain, module.value!]})
     const {data, write} = useErc721Approve(config);
     const {isLoading} = useWaitForTransaction({hash: data?.hash})
     const setApproved = useMintStore(state => state.setApproved)
