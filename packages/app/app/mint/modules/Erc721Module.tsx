@@ -16,11 +16,11 @@ export default function Erc721Card({onClick, module}: { onClick?: () => void, mo
     return <ContentCard className="self-stretch">
         <div className='flex gap-2 relative'>
             {isLoading && <div className="absolute inset-0 bg-gray-800 bg-opacity-50 z-10 flex items-center justify-center"> <CgSpinner className='h-8 w-8 animate-spin'/></div>}
-            <div className="w-20 h-20 flex justify-center items-center">
+            <div className="w-20 h-20 flex justify-center items-center rounded-lg bg-back">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={nftData?.image} alt={nftData?.name} className='rounded-lg'/>
             </div>
-            {!isLoading && <div className='flex flex-col items-start relative'>
+            {!isLoading && <div className='flex flex-col items-start relative grow'>
                 {onClick && <button className="hover:text-primary-500 right-0 top-0 absolute" onClick={onClick}><BsX/></button>}
 
                 <div>
