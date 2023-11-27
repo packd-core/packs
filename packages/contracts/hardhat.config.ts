@@ -9,9 +9,9 @@ import "./tasks";
 
 // Ensure that we have all the environment variables we need.
 const mnemonic: string | undefined = process.env.MNEMONIC;
-if (!mnemonic) {
-  throw new Error("Please set your MNEMONIC in a .env file");
-}
+// if (!mnemonic) {
+//   throw new Error("Please set your MNEMONIC in a .env file");
+// }
 
 const accounts =
   process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [];
