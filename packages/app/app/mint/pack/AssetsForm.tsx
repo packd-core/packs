@@ -8,13 +8,10 @@ import {parseEther} from "ethers";
 import clsxm from "@/src/lib/clsxm";
 import {useMintStore} from "@/src/stores/useMintStore";
 import usePackdAddresses from "@/src/hooks/usePackdAddresses";
-import AddTokenModal from "@/app/mint/pack/AddTokenModal";
 import AddNftModal from "@/app/mint/pack/AddNftModal";
 import {usePackState} from "@/app/mint/usePackState";
 import {FiArrowLeft, FiArrowRight} from "react-icons/fi";
-import {Modules} from "@/app/mint/modules/Modules";
 import Erc721Card from "@/app/mint/modules/Erc721Module";
-import Erc20Card from "@/app/mint/modules/Erc20Module";
 import {BsX} from "react-icons/bs";
 import TokenInput, {TokenSelectorDialog} from "@/app/components/web3/TokenSelectorDialog";
 
