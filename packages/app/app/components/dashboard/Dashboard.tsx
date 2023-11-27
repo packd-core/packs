@@ -130,15 +130,15 @@ function Modules({data, isError, isLoading}: { data?: RawCreationData, isLoading
         name={'Error...'}/>
     return <> {modules.map((module, index) => {
         if (module.moduleAddress === addresses.ERC721Module) {
-            return <PackModuleErc721 key={module.address + module.value}
+            return <PackModuleErc721 key={'' + module.address + module.value}
                                      module={module}/>
         }
         if (module.moduleAddress === addresses.ERC20Module) {
-            return <PackModuleErc20 key={module.address + module.value}
+            return <PackModuleErc20 key={'' + module.address + module.value}
                                     module={module}/>
         }
 
-        return <ContentCard key={module.address + module.value}>
+        return <ContentCard key={'' + module.address + module.value}>
             <ContentTitle>Unknown module</ContentTitle>
         </ContentCard>;
     })}</>
@@ -148,7 +148,7 @@ function PackModuleErc20({module}: { module: Module }) {
     const {data: tokenData} = useToken({address: module.address})
     return <PackModuleItem
         icon={<GiToken/>}
-        value={formatUnits(module.value?.toString(), tokenData?.decimals ?? 18)}
+        value={module.value ? formatUnits(module.value?.toString(), tokenData?.decimals ?? 18):''}
         name={tokenData?.symbol ?? 'Loading...'}/>
 }
 
@@ -156,7 +156,7 @@ function PackModuleErc721({module}: { module: Module }) {
     const {data: tokenName} = useErc721Name({address: module.address});
     return <PackModuleItem
         icon={<RiNftLine/>}
-        value={module.value.toString()} name={tokenName ?? 'Loading...'}/>
+        value={module.value?.toString() ?? ''} name={tokenName ?? 'Loading...'}/>
 }
 
 function PackModuleItem({name, value, icon}: { name: string, value: string, icon?: ReactNode }) {
