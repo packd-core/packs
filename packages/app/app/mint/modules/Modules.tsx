@@ -11,17 +11,17 @@ export const Modules = ({modules, onRemoveModule}: { modules: Module[], onRemove
 
     return useMemo(() => modules.map((module) => {
         if (module.moduleAddress === addresses.ERC721Module) {
-            return <Erc721Card key={module.address + module.value}
+            return <Erc721Card key={'' + module.address + module.value}
                                onClick={onRemoveModule ? () => onRemoveModule(module) : undefined}
                                module={module}/>
         }
         if (module.moduleAddress === addresses.ERC20Module) {
-            return <Erc20Card key={module.address + module.value}
+            return <Erc20Card key={'' + module.address + module.value}
                               onClick={onRemoveModule ? () => onRemoveModule(module) : undefined}
                               module={module}/>
         }
 
-        return <ContentCard key={module.address + module.value}>
+        return <ContentCard key={'' + module.address + module.value}>
             <ContentTitle>Unknown module</ContentTitle>
         </ContentCard>;
     }), [addresses, modules, onRemoveModule]);
