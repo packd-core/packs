@@ -1,4 +1,4 @@
-import { resolveAddress, ZeroAddress, type Signer } from "ethers";
+import { resolveAddress, type Signer } from "ethers";
 import type { HardhatRuntimeEnvironment } from "hardhat/types";
 
 import {
@@ -13,13 +13,11 @@ import {
   ERC721Mock__factory,
   ERC721Module,
   Multicall3,
-  PackAccount,
   PackAccountV2,
   PackMain,
-  PackRegistry,
-} from "../typechain-types";
+  PackRegistry
+} from "../types";
 
-import { EntryPoint } from "@account-abstraction/contracts/types";
 import { SystemConfig } from "../utils/deployConfig";
 import {
   deployContract,

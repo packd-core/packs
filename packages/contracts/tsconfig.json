@@ -7,9 +7,18 @@
     "strict": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "outDir": "./dist/"
+    "outDir": "./dist/",
+    "declaration": true,
+    "declarationMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": ["es2020"],
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "sourceMap": true
   },
-  "exclude": ["node_modules", "lib"],
+  "exclude": ["../../node_modules","node_modules", "lib"],
   "files": ["./hardhat.config.ts"],
-  "include": ["scripts/**/*", "tasks/**/*", "test/**/*", "utils/**/*"]
+  "include": ["scripts/**/*", "tasks/**/*", "test/**/*", "utils/**/*", "types/generated/"]
 }

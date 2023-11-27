@@ -14,7 +14,7 @@ import {
 
 import debug from "debug";
 import type { HardhatRuntimeEnvironment } from "hardhat/types";
-import { Create2Factory } from "../typechain-types";
+import { Create2Factory } from "../types";
 import { saveAddress, getDeployedAddress } from "./saveAddress";
 
 interface Create2Options {

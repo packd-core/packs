@@ -3,7 +3,7 @@ import hre, { ethers } from "hardhat";
 import type { Signer } from "ethers";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 
-import type { PackMain, ERC20Module, ERC20Mock } from "../typechain-types";
+import type { PackMain, ERC20Module, ERC20Mock } from "../types";
 
 import { KeySignManager } from "../utils/keySignManager";
 import { getSystemConfig } from "../utils/deployConfig";

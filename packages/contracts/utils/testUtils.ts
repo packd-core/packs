@@ -1,6 +1,6 @@
 import type { Signer } from "ethers";
 import { ethers } from "hardhat";
-import type { PackMain } from "../typechain-types";
+import type { PackMain } from "../types";
 import type { KeySignManager } from "./keySignManager";
 
 export async function createPack(

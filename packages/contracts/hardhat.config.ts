@@ -7,6 +7,12 @@ dotenvConfig({ path: __dirname + "/.env" });
 
 import "./tasks";
 
+// Ensure that we have all the environment variables we need.
+const mnemonic: string | undefined = process.env.MNEMONIC;
+if (!mnemonic) {
+  throw new Error("Please set your MNEMONIC in a .env file");
+}
+
 const accounts =
   process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [];
 
@@ -21,11 +27,15 @@ const config: HardhatUserConfig = {
       },
     },
   },
+  typechain: {
+    outDir: "types/generated",
+    target: "ethers-v6",
+},  
   networks: {
     hardhat: {
       chainId: 31337,
       accounts: {
-        mnemonic: process.env.MNEMONIC,
+        mnemonic,
       },
     },
     // Faucet RPC, etc : https://docs.scroll.io/en/developers/developer-quickstart/#hardhat
