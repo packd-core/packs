@@ -10,11 +10,11 @@ import { getSystemConfig } from "../utils/deployConfig";
 import { createPack } from "../utils/testUtils";
 import { deploySystem } from "../scripts/deploy";
 import {
-  ClaimData,
   generateMintData,
   generateRevokeData,
   generateClaimData,
 } from "../utils/erc20moduleData";
+import type { ClaimData } from "../utils/claimData";
 import { getCommonSigners } from "../utils/signers";
 
 const systemConfig = getSystemConfig(hre);
@@ -33,7 +33,7 @@ describe("PackMain, ERC20Module", function () {
     const keySignManager = new KeySignManager(
       systemConfig.packConfig.registryChainId,
       ethers.encodeBytes32String(systemConfig.packConfig.salt.toString()),
-      await packMain.getAddress(),
+      await packMain.getAddress()
     );
 
     return {
@@ -55,7 +55,7 @@ describe("PackMain, ERC20Module", function () {
     packMain: PackMain,
     erc20Module: ERC20Module,
     erc20Mocks: { mock: ERC20Mock; value: bigint }[],
-    keySignManager: KeySignManager,
+    keySignManager: KeySignManager
   ) => {
     const moduleDataArray: [string, bigint][] = [];
     for (const { mock, value } of erc20Mocks) {
@@ -74,7 +74,7 @@ describe("PackMain, ERC20Module", function () {
       keySignManager,
       erc20Mocks.reduce((acc, { value }) => acc + value, 0n),
       modules,
-      [moduleData],
+      [moduleData]
     );
     return { packInstance, erc20Mocks, alice, claimPrivateKey };
   };
@@ -86,7 +86,7 @@ describe("PackMain, ERC20Module", function () {
         await loadFixture(setup);
 
       const aliceBalanceBefore = await ethers.provider.getBalance(
-        alice.address,
+        alice.address
       );
 
       // Mint a new pack using createPack function
@@ -96,7 +96,7 @@ describe("PackMain, ERC20Module", function () {
         packMain,
         erc20Module,
         [{ mock: erc20MockA, value }],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -129,11 +129,11 @@ describe("PackMain, ERC20Module", function () {
         packMain,
         erc20Module,
         [{ mock: erc20MockA, value }],
-        keySignManager,
+        keySignManager
       );
 
       const aliceBalanceBefore = await ethers.provider.getBalance(
-        alice.address,
+        alice.address
       );
 
       // Check correct state
@@ -175,7 +175,7 @@ describe("PackMain, ERC20Module", function () {
         packMain,
         erc20Module,
         [{ mock: erc20MockA, value }],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -188,7 +188,7 @@ describe("PackMain, ERC20Module", function () {
         await ethers.provider.getBalance(accountAddress);
       expect(ethBalanceAccount).to.equal(value);
       const aliceBalanceBefore = await ethers.provider.getBalance(
-        alice.address,
+        alice.address
       );
       // Check that the erc20 tokens are in the pack
       const erc20BalanceAccount = await erc20MockA.balanceOf(accountAddress);
@@ -203,14 +203,21 @@ describe("PackMain, ERC20Module", function () {
         await keySignManager.generateClaimSignature(
           claimPrivateKey,
           ["uint256", "address"],
-          [0, bob.address],
+          [0, bob.address]
         );
+
+      const moduleData = await generateClaimData([
+        await erc20MockA.getAddress(),
+      ]);
+
+      const moduleDataBytes = KeySignManager.getModuleDataBytes([moduleData]);
+
       // Create SigClaimer
       const { claimSignature: sigClaimer } =
         await keySignManager.generateClaimSignature(
           bob,
-          ["uint256", "uint256"],
-          [0, 0],
+          ["uint256", "uint256", "bytes"],
+          [0, 0, moduleDataBytes]
         );
 
       const claimData: ClaimData = {
@@ -220,15 +227,12 @@ describe("PackMain, ERC20Module", function () {
         sigClaimer: sigClaimer,
         refundValue: BigInt(0),
         maxRefundValue: BigInt(0),
+        moduleData: [moduleData],
       };
-
-      const moduleData = await generateClaimData([
-        await erc20MockA.getAddress(),
-      ]);
 
       // Change account to bob
       const packInstanceBob = packMain.connect(bob);
-      await packInstanceBob.open(claimData, [moduleData]);
+      await packInstanceBob.open(claimData);
 
       // Check correct state
       expect(await packInstanceBob.packState(0)).to.equal(2); // 2 is the enum value for Opened
@@ -273,7 +277,7 @@ describe("PackMain, ERC20Module", function () {
         packMain,
         erc20Module,
         [{ mock: erc20MockA, value }],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -284,13 +288,19 @@ describe("PackMain, ERC20Module", function () {
         await keySignManager.generateClaimSignature(
           claimPrivateKey,
           ["uint256", "address"],
-          [0, bob.address],
+          [0, bob.address]
         );
+
+      const moduleData = await generateClaimData([
+        await erc20MockA.getAddress(),
+      ]);
+
+      const encodedModuleData = KeySignManager.getModuleDataBytes([moduleData]);
       const { claimSignature: sigClaimer } =
         await keySignManager.generateClaimSignature(
           bob,
-          ["uint256", "uint256"],
-          [0, maxRefundValue],
+          ["uint256", "uint256", "bytes"],
+          [0, maxRefundValue, encodedModuleData]
         );
 
       const claimData: ClaimData = {
@@ -300,17 +310,14 @@ describe("PackMain, ERC20Module", function () {
         sigClaimer: sigClaimer,
         refundValue: BigInt(0),
         maxRefundValue: maxRefundValue,
+        moduleData: [moduleData],
       };
 
       const bobBalanceBefore = await ethers.provider.getBalance(bob.address);
 
-      const moduleData = await generateClaimData([
-        await erc20MockA.getAddress(),
-      ]);
-
       // Change account to relayer
       const packInstanceRelayer = packMain.connect(relayer);
-      await packInstanceRelayer.open(claimData, [moduleData]);
+      await packInstanceRelayer.open(claimData);
 
       // Check correct state
       expect(await packInstanceRelayer.packState(0)).to.equal(2); // 2 is the enum value for Opened
@@ -356,7 +363,7 @@ describe("PackMain, ERC20Module", function () {
           { mock: erc20MockA, value: valueA },
           { mock: erc20MockB, value: valueB },
         ],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -397,7 +404,7 @@ describe("PackMain, ERC20Module", function () {
           { mock: erc20MockA, value: valueA },
           { mock: erc20MockB, value: valueB },
         ],
-        keySignManager,
+        keySignManager
       );
 
       const accountAddress = await packInstance.account(0);
@@ -456,7 +463,7 @@ describe("PackMain, ERC20Module", function () {
           { mock: erc20MockA, value: valueA },
           { mock: erc20MockB, value: valueB },
         ],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -474,19 +481,25 @@ describe("PackMain, ERC20Module", function () {
       const erc20BalanceAccountB = await erc20MockB.balanceOf(accountAddress);
       expect(erc20BalanceAccountB).to.equal(valueB);
 
+      const moduleData = await generateClaimData([
+        await erc20MockA.getAddress(),
+        await erc20MockB.getAddress(),
+      ]);
+
+      const encodedModuleData = KeySignManager.getModuleDataBytes([moduleData]);
       // Create SigOwner
       const { claimSignature: sigOwner } =
         await keySignManager.generateClaimSignature(
           claimPrivateKey,
           ["uint256", "address"],
-          [0, bob.address],
+          [0, bob.address]
         );
       // Create SigClaimer
       const { claimSignature: sigClaimer } =
         await keySignManager.generateClaimSignature(
           bob,
-          ["uint256", "uint256"],
-          [0, 0],
+          ["uint256", "uint256", "bytes"],
+          [0, 0, encodedModuleData]
         );
 
       const claimData: ClaimData = {
@@ -496,16 +509,12 @@ describe("PackMain, ERC20Module", function () {
         sigClaimer: sigClaimer,
         refundValue: BigInt(0),
         maxRefundValue: BigInt(0),
+        moduleData: [moduleData],
       };
-
-      const moduleData = await generateClaimData([
-        await erc20MockA.getAddress(),
-        await erc20MockB.getAddress(),
-      ]);
 
       // Change account to bob
       const packInstanceBob = packMain.connect(bob);
-      await packInstanceBob.open(claimData, [moduleData]);
+      await packInstanceBob.open(claimData);
 
       // Check correct state
       expect(await packInstanceBob.packState(0)).to.equal(2); // 2 is the enum value for Opened

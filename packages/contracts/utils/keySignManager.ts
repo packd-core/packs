@@ -6,7 +6,11 @@ export class KeySignManager {
   private registryChainId: any;
   private salt: BytesLike;
 
-  constructor(registryChainId: number, salt: BytesLike, packdMainAddress: string) {
+  constructor(
+    registryChainId: number,
+    salt: BytesLike,
+    packdMainAddress: string
+  ) {
     this.registryChainId = registryChainId;
     this.salt = salt;
     this.packdMainAddress = packdMainAddress;
@@ -38,7 +42,7 @@ export class KeySignManager {
   async generateClaimKey(
     signerOrSignature: Signer | string,
     types: string[],
-    values: any[],
+    values: any[]
   ) {
     const { allTypes, allValues } = await this.getMessage(types, values);
     let signature;
@@ -47,7 +51,7 @@ export class KeySignManager {
       signature = signerOrSignature;
     } else if ("signMessage" in signerOrSignature) {
       signature = await signerOrSignature.signMessage(
-        ethers.getBytes(ethers.solidityPackedKeccak256(allTypes, allValues)),
+        ethers.getBytes(ethers.solidityPackedKeccak256(allTypes, allValues))
       );
     } else {
       throw new Error("Invalid signerOrSignature type");
@@ -62,7 +66,7 @@ export class KeySignManager {
   async generateClaimSignature(
     claimPrivateKey: string | Signer,
     types: string[],
-    values: any[],
+    values: any[]
   ) {
     const { allTypes, allValues } = await this.getMessage(types, values);
     const messageToSign = ethers.solidityPackedKeccak256(allTypes, allValues);
@@ -71,14 +75,23 @@ export class KeySignManager {
 
     if (typeof claimPrivateKey === "string")
       claimSignature = await new ethers.Wallet(claimPrivateKey).signMessage(
-        ethers.getBytes(messageToSign),
+        ethers.getBytes(messageToSign)
       );
     else if ("signMessage" in claimPrivateKey)
       claimSignature = await claimPrivateKey.signMessage(
-        ethers.getBytes(messageToSign),
+        ethers.getBytes(messageToSign)
       );
     else throw new Error("Invalid claimPrivateKey type");
 
     return { claimSignature };
+  }
+
+  static getModuleDataBytes(moduleData: Array<any>) {
+    const bytesArray = moduleData.map((data) => ethers.getBytes(data));
+
+    const coder = ethers.AbiCoder.defaultAbiCoder();
+    const encoded = coder.encode(["bytes[]"], [bytesArray]);
+
+    return encoded;
   }
 }

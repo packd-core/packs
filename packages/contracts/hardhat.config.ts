@@ -30,7 +30,7 @@ const config: HardhatUserConfig = {
   typechain: {
     outDir: "types/generated",
     target: "ethers-v6",
-},  
+  },
   networks: {
     hardhat: {
       chainId: 31337,

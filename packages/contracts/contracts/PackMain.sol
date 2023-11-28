@@ -242,13 +242,11 @@ contract PackMain is PackNFT, Ownable {
     /**
      * @dev Function to open a pack
      * @param data The data associated with the pack to be opened.
-     * @param moduleData The data associated with the pack's modules.
      * @notice The moduleData array must be the same length as the modules array.
      * @notice This is normally sent by a relayer, so the relayer will be refunded the refundValue.
      */
     function open(
-        ClaimData memory data,
-        bytes[] calldata moduleData
+        ClaimData memory data
     ) public tokenInState(data.tokenId, PackState.Created) {
         // Checks for valid signatures
         _validateSignatures(data);
@@ -269,7 +267,7 @@ contract PackMain is PackNFT, Ownable {
                     data.tokenId,
                     account(data.tokenId),
                     data.claimer,
-                    moduleData[i]
+                    data.moduleData[i]
                 )
             );
         }

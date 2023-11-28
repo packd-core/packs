@@ -39,11 +39,14 @@ library SignatureValidator {
             revert InvalidOwnerSignature();
         }
 
+        bytes memory moduleData = abi.encode(data.moduleData);
+
         bytes32 messageHashClaimer = ECDSA.toEthSignedMessageHash(
             keccak256(
                 abi.encodePacked(
                     data.tokenId,
                     data.maxRefundValue,
+                    moduleData,
                     registryChainId,
                     salt,
                     addr
