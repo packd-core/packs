@@ -307,6 +307,25 @@
   },
   {
     "type": "function",
+    "name": "accountNonce",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": ""
+      }
+    ],
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
     "name": "approve",
     "constant": false,
     "payable": false,

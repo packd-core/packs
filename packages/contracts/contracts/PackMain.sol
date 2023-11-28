@@ -57,6 +57,7 @@ contract PackMain is PackNFT, Ownable {
 
     mapping(uint256 => address) public claimPublicKey;
     mapping(uint256 => address[]) public packModules;
+    mapping(address => uint256) public accountNonce;
 
     // Modules whitelist
     mapping(address => bool) public modulesWhitelist;
@@ -163,6 +164,7 @@ contract PackMain is PackNFT, Ownable {
         // Set params
         claimPublicKey[tokenId] = claimPublicKey_;
         packModules[tokenId] = modules;
+        accountNonce[msg.sender]++;
 
         // Create the account for the NFT
         newAccount = registry.createAccount(
