@@ -15,7 +15,7 @@ export default function PackLinkDetails({claimKey, showContentButton, showConten
     return <div className='flex flex-col gap-8 items-center max-w-full'>
         <p>Copy and share the Claim Link:</p>
         <div
-            className="bg-gray-600 px-2 py-1 rounded-lg font-semibold text-white text-sm flex items-center max-w-full ">
+            className="bg-[#099276] px-2 py-1 rounded-lg font-semibold text-white text-sm flex items-center max-w-full ">
             <div className="shrink grow break-all ">{link}</div>
             <CopyTextButton classNames="pl-2" text={link}/>
         </div>
