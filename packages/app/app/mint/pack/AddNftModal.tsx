@@ -1,7 +1,7 @@
 import {Address, useAccount} from "wagmi";
 import {useCallback, useMemo, useState} from "react";
 import Modal from "@/app/components/dialog/Modal";
-import {BsX} from "react-icons/bs";
+import {BsSearch, BsX} from "react-icons/bs";
 import {isAddress} from "viem";
 import clsxm from "@/src/lib/clsxm";
 import {useErc721Name, useErc721OwnerOf} from "@/app/abi/generated";
@@ -22,10 +22,17 @@ export default function AddNftModal({isOpen, setIsOpen, onAdd}: {
         args: [tokenId ?? BigInt(-1)]
     })
 
+
+
     const hasToken = useMemo(() => address == nftOwner, [address, nftOwner]);
     const {data: tokenName} = useErc721Name({address: nftAddress});
 
-    const {nftList, isLoading} = useNftsOfAddress();
+    const {nftList: unfilteredNftList, isLoading} = useNftsOfAddress();
+    const [filter, setFilter] = useState('');
+
+    const nftList = useMemo(() => {
+        return unfilteredNftList?.filter((nft) => Object.values(nft).some((val) => typeof val === 'string' && val.toLowerCase().includes(filter?.toLowerCase() ?? '')))
+    }, [filter, unfilteredNftList]);
 
     const [isManual, setIsManual] = useState(false);
 
@@ -35,7 +42,8 @@ export default function AddNftModal({isOpen, setIsOpen, onAdd}: {
         onAdd(nftAddress, tokenId!);
     }, [setIsOpen, onAdd, nftAddress, tokenId, hasToken]);
     return (
-        <Modal render={closeModal =>
+        <Modal panelClassNames='max-w-md md:max-w-lg'
+        render={closeModal =>
             <div className='flex flex-col bg-[#202020] rounded-3xl gap-2 text-white p-4'>
                 <div className="flex justify-between">
                     <span className='text-card-title'>Select NFT</span>
@@ -44,6 +52,22 @@ export default function AddNftModal({isOpen, setIsOpen, onAdd}: {
                 <div className="border-gray-500 border-b-[1px]">{''}</div>
 
                 <div className="flex flex-col gap-2">
+                    {!isManual &&
+                        <>
+                            <div className="relative">
+                                <input className=' w-full pl-8 text-xs py-2'
+                                       placeholder={"Search name or paste address"}
+                                       onChange={(e) => {
+                                           const value = e.target.value;
+                                           setFilter(value)
+                                       }}/>
+                                <BsSearch className='absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400'/>
+
+                            </div>
+                            <div className="border-gray-500 border-b-[1px]">{''}</div>
+                        </>
+
+                        }
                     {isManual && <>
                         <div className="flex justify-between">
                             <span className='text-card-title'>NFT address</span>
@@ -80,23 +104,27 @@ export default function AddNftModal({isOpen, setIsOpen, onAdd}: {
                                    }
                                }}/>
                     </>}
-
-
-                    <div className="flex flex-col gap-2 h-72 overflow-y-auto">
-                        {isLoading && <div className="flex justify-center  items-center h-full">
+                    {isLoading && <div className="flex flex-col gap-2 h-72 overflow-y-auto">
+                        <div className="flex justify-center  items-center h-full">
                             <AiOutlineLoading3Quarters className='animate-spin h-8'/>
-                        </div>}
-                        {
+                        </div>
+                    </div>}
 
-                            nftList?.map((nft, ind) => {
-                                return <NftSearchItem key={ind} item={nft} onClick={() => {
-                                    onAdd(nft.token_address, BigInt(nft.token_id));
-                                    closeModal();
-                                }
-                                }/>
-                            })
-                        }
-                    </div>
+                    {
+                       !isLoading && <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-2 h-96 overflow-y-auto">
+
+                            {
+
+                                nftList?.map((nft, ind) => {
+                                    return <NftSearchItem key={ind} item={nft} onClick={() => {
+                                        onAdd(nft.token_address, BigInt(nft.token_id));
+                                        closeModal();
+                                    }
+                                    }/>
+                                })
+                            }
+                        </div>
+                    }
 
                 </div>
             </div>
@@ -110,23 +138,28 @@ function NftSearchItem({item, onClick}: {
     onClick: () => void
 }) {
 
-    return <button
-        onClick={onClick}
-        className=" text-left flex items-center p-1 hover:border-gray-500 p rounded-lg border border-transparent">
-        {/*{token.logoURI ? <img src={token.logoURI} alt={name} className='h-6 mr-2'/> : <Icon className='h-6 mr-2'/>}*/}
+    return <div className='hover:border-primary-50 border-transparent border rounded-lg overflow-clip'>
+        <button
+            onClick={onClick}
+            className="w-full h-full text-left flex flex-col  bg-gray-800">
+            {/*{token.logoURI ? <img src={token.logoURI} alt={name} className='h-6 mr-2'/> : <Icon className='h-6 mr-2'/>}*/}
 
-        <>
-            <div className='flex gap-2 grow items-center'>
-                <div className='w-8 h-8 rounded overflow-hidden bg-back'>
-                    {item.media?.original_media_url && <img src={item.media!.original_media_url!} alt={item.name ?? ''}
-                                                            className={'object-contain w-full h-full'}/>}
+
+            <div className='flex flex-col gap-2 grow justify-end w-full'>
+                <div className='w-full overflow-hidden bg-gray-800 grow aspect-square'>
+                    {item.media?.original_media_url && <img loading={"lazy"} src={item.media!.original_media_url!} alt={item.name ?? ''}
+                                                            className={'object-contain w-full h-full text-center text-sm'}/>}
                 </div>
-                <span className='text-xs text-gray-400'>{item.name}</span>
+                <span className='text-xs text-gray-400 px-2'>{item.name}</span>
+                <div className='w-full flex px-2 pb-2'>
+                    <span
+                        className='text-xs text-gray-400 text-ellipsis overflow-hidden shrink'>#{item.token_id}</span>
+                </div>
             </div>
-        </>
 
-        <span
-            className='text-xs text-gray-400 text-ellipsis overflow-hidden max-w-[100px]'>tokenId: {item.token_id}</span>
-    </button>
+
+        </button>
+    </div>
+
 }
 
