@@ -111,7 +111,7 @@ export default function AddNftModal({isOpen, setIsOpen, onAdd}: {
                     </div>}
 
                     {
-                       !isLoading && <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-2 h-96 overflow-y-auto">
+                       !isLoading && !!nftList?.length && <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-2 h-96 overflow-y-auto">
 
                             {
 
@@ -123,8 +123,15 @@ export default function AddNftModal({isOpen, setIsOpen, onAdd}: {
                                     }/>
                                 })
                             }
+
                         </div>
                     }
+
+                    { !isLoading && !nftList?.length && <div className="flex justify-center items-center w-full  h-72">
+                        <span className='text-gray-400'>You do not have any NFTs in your wallet</span>
+                    </div>
+                    }
+
 
                 </div>
             </div>
