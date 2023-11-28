@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
         const response = await Moralis.EvmApi.nft.getWalletNFTs({
             "chain": Number(chain),
             "format": "decimal",
-            "limit": 50,
+            "limit": 100,
             "excludeSpam": true,
             "mediaItems": true,
             "address": address as string,
