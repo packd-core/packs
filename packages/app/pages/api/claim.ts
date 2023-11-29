@@ -30,8 +30,8 @@ const RelayerRequestSchema = z.object({
     claimer: z.string(),
     sigClaimer: z.string(),
     maxRefundValue: z.string(),
-  }),
-  moduleData: z.array(z.string()),
+    moduleData: z.string().array(),
+  })
 });
 
 export type RelayerRequest = z.infer<typeof RelayerRequestSchema>;
@@ -78,9 +78,7 @@ export default async function handler(
       {
         ...tx.args,
         refundValue: tx.args.maxRefundValue,
-      },
-      tx.moduleData
-    );
+      });
 
     const margin = 15n;
 
@@ -119,7 +117,6 @@ export default async function handler(
         ...tx.args,
         refundValue: weiEstimate,
       },
-      tx.moduleData,
       {
         gasLimit: gasCostEstimate,
       }
