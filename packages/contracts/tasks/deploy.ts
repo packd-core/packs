@@ -51,22 +51,12 @@ task("fund:account", "Send ETH, ERC20Mocks, and NFTsMocks to an account")
   .setAction(async (args, hre) => {
     info("fund:account");
     const account = args.account;
-    const isLocal =
-      hre.network.name === "hardhat" || hre.network.name === "localhost";
 
     const addresses = {
-      erc20MockA: isLocal
-        ? "0x3365b5466fa1B621eAEe8c013De6595C53396278"
-        : await getDeployedAddress(hre, "ERC20MockA"),
-      erc20MockB: isLocal
-        ? "0xc2BdF6a06582849da3539754EfE186B23bB4F10F"
-        : await getDeployedAddress(hre, "ERC20MockB"),
-      erc721MockA: isLocal
-        ? "0xfc2061C2A7eC8820Ef27c70BE05b67bD867468c8"
-        : await getDeployedAddress(hre, "ERC721MockA"),
-      erc721MockB: isLocal
-        ? "0x059987287631386316293f23EDC6E79BC059aaAC"
-        : await getDeployedAddress(hre, "ERC721MockB"),
+      erc20MockA: await getDeployedAddress(hre, "ERC20MockA"),
+      erc20MockB: await getDeployedAddress(hre, "ERC20MockB"),
+      erc721MockA: await getDeployedAddress(hre, "ERC721MockA"),
+      erc721MockB: await getDeployedAddress(hre, "ERC721MockB"),
     };
 
     let tokenId = 0;
