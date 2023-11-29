@@ -24,7 +24,7 @@ export function PackCreatedCard() {
         controls={
             <div className='w-full flex justify-between py-1 px-2'>
                 <div>Created!</div>
-                <ExternalLink href={window.origin+'/'}>
+                <ExternalLink href={window.origin+'/'} className='text-white'>
                     Dashboard
                 </ExternalLink>
             </div>
