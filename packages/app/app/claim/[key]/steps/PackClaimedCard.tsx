@@ -3,9 +3,13 @@ import {IoIosCheckmark} from "react-icons/io";
 import {Card} from "@/app/components/Card";
 import {BiLogoTwitter} from "react-icons/bi";
 import {CheckMyWalletButton} from "@/app/components/web3/CheckMyWalletButton";
+import {useEffect} from "react";
+import {emitPackClaimed} from "@/src/event/events";
 
 export function PackClaimedCard() {
-
+    useEffect(() => {
+        emitPackClaimed();
+    }, []);
     return <Card
         className={'mx-auto w-full bg-green-800'}
         controls={

@@ -6,6 +6,8 @@ import {useUrlEncodeDecode} from "@/src/hooks/useUrlEncodeDecode";
 import {usePackState} from "@/app/mint/usePackState";
 import {useMintStore} from "@/src/stores/useMintStore";
 import {ExternalLink} from "@/app/components/links/ExternalLink";
+import {emitPackCreated} from "@/src/event/events";
+import {useEffect} from "react";
 
 export function PackCreatedCard() {
     const claimPrivateKey = useMintStore(state => state.claimKey?.private);
@@ -14,6 +16,9 @@ export function PackCreatedCard() {
         claimPrivateKey!,
         mintedTokenId!
     );
+    useEffect(() => {
+        emitPackCreated();
+    }, []);
     return <Card
         className={'mx-auto w-full bg-green-800'}
         controls={
