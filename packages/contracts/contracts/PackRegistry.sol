@@ -6,26 +6,23 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/utils/Create2.sol";
 
-import "./interfaces/IERC6551Registry.sol";
-import "./lib/ERC6551Bytecode.sol";
+import "erc6551/interfaces/IERC6551Registry.sol";
+import "erc6551/lib/ERC6551BytecodeLib.sol";
 
 contract PackRegistry is IERC6551Registry {
-    error AccountCreationFailed();
-
     function createAccount(
         address implementation,
+        bytes32 salt,
         uint256 chainId,
         address tokenContract,
-        uint256 tokenId,
-        uint256 salt,
-        bytes calldata initData
+        uint256 tokenId
     ) external returns (address) {
         bytes memory code = ERC6551BytecodeLib.getCreationCode(
             implementation,
+            salt,
             chainId,
             tokenContract,
-            tokenId,
-            salt
+            tokenId
         );
 
         address _account = Create2.computeAddress(
@@ -35,13 +32,13 @@ contract PackRegistry is IERC6551Registry {
 
         if (_account.code.length != 0) return _account;
 
-        emit AccountCreated(
+        emit ERC6551AccountCreated(
             _account,
             implementation,
+            salt,
             chainId,
             tokenContract,
-            tokenId,
-            salt
+            tokenId
         );
 
         assembly {
@@ -50,33 +47,23 @@ contract PackRegistry is IERC6551Registry {
 
         if (_account == address(0)) revert AccountCreationFailed();
 
-        if (initData.length != 0) {
-            (bool success, bytes memory result) = _account.call(initData);
-
-            if (!success) {
-                assembly {
-                    revert(add(result, 32), mload(result))
-                }
-            }
-        }
-
         return _account;
     }
 
     function account(
         address implementation,
+        bytes32 salt,
         uint256 chainId,
         address tokenContract,
-        uint256 tokenId,
-        uint256 salt
+        uint256 tokenId
     ) external view returns (address) {
         bytes32 bytecodeHash = keccak256(
             ERC6551BytecodeLib.getCreationCode(
                 implementation,
+                salt,
                 chainId,
                 tokenContract,
-                tokenId,
-                salt
+                tokenId
             )
         );
 

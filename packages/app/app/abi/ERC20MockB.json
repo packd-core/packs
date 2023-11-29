@@ -6,82 +6,6 @@
     "inputs": []
   },
   {
-    "type": "error",
-    "name": "ERC20InsufficientAllowance",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "spender"
-      },
-      {
-        "type": "uint256",
-        "name": "allowance"
-      },
-      {
-        "type": "uint256",
-        "name": "needed"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "ERC20InsufficientBalance",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "sender"
-      },
-      {
-        "type": "uint256",
-        "name": "balance"
-      },
-      {
-        "type": "uint256",
-        "name": "needed"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "ERC20InvalidApprover",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "approver"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "ERC20InvalidReceiver",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "receiver"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "ERC20InvalidSender",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "sender"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "ERC20InvalidSpender",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "spender"
-      }
-    ]
-  },
-  {
     "type": "event",
     "anonymous": false,
     "name": "Approval",
@@ -160,7 +84,7 @@
       },
       {
         "type": "uint256",
-        "name": "value"
+        "name": "amount"
       }
     ],
     "outputs": [
@@ -199,6 +123,50 @@
     "outputs": [
       {
         "type": "uint8",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "decreaseAllowance",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "spender"
+      },
+      {
+        "type": "uint256",
+        "name": "subtractedValue"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bool",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "increaseAllowance",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "spender"
+      },
+      {
+        "type": "uint256",
+        "name": "addedValue"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bool",
         "name": ""
       }
     ]
@@ -274,7 +242,7 @@
       },
       {
         "type": "uint256",
-        "name": "value"
+        "name": "amount"
       }
     ],
     "outputs": [
@@ -300,7 +268,7 @@
       },
       {
         "type": "uint256",
-        "name": "value"
+        "name": "amount"
       }
     ],
     "outputs": [

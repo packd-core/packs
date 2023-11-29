@@ -14,7 +14,7 @@ import {
 
 import debug from "debug";
 import type { HardhatRuntimeEnvironment } from "hardhat/types";
-import { Create2Factory } from "../typechain-types";
+import { Create2Factory } from "../types";
 import { saveAddress, getDeployedAddress } from "./saveAddress";
 
 interface Create2Options {
@@ -38,7 +38,7 @@ export const deployContract = async <T extends BaseContract>(
   signer: Signer,
   contractName: string,
   constructorArguments: any[],
-  overrides = {}
+  overrides = {},
 ): Promise<T> => {
   const contractInstance = await hre.ethers.getContractFactory(contractName, {
     signer,
@@ -52,7 +52,7 @@ export const deployContract = async <T extends BaseContract>(
     hre.network.name !== "localhost"
   ) {
     log(`Contract ${contractName} already deployed to ${deployedAddress}`);
-    const contract = contractInstance.attach(deployedAddress) as T;
+    const contract = contractInstance.attach(deployedAddress) as unknown as T;
     return contract;
   }
 
@@ -65,7 +65,7 @@ export const deployContract = async <T extends BaseContract>(
 
   const contract = (await contractInstance.deploy(
     ...constructorArguments,
-    overrides
+    overrides,
   )) as unknown as T;
   await contract.waitForDeployment();
   const abiEncodedConstructorArgs =
@@ -109,9 +109,10 @@ export const deployContractWithCreate2 = async <
     overrides: {},
     create2Options: { amount: 0, salt: undefined, callbacks: [] },
     waitForBlocks: undefined,
-  }
+  },
 ): Promise<T> => {
-  let { overrides, create2Options, waitForBlocks } = options;
+  let { overrides } = options;
+  const { create2Options, waitForBlocks } = options;
 
   const salt = create2Options?.salt ?? contractName;
 
@@ -120,14 +121,14 @@ export const deployContractWithCreate2 = async <
   const deployerAddress = await resolveAddress(create2Factory.target);
   const unsignedTx = await contractFactory.getDeployTransaction(
     ...constructorArgs,
-    overrides ?? {}
+    overrides ?? {},
   );
 
   const create2Salt = solidityPackedKeccak256(["string"], [salt]);
   const contractAddress = _computeCreate2Address(
     deployerAddress,
     create2Salt,
-    unsignedTx.data
+    unsignedTx.data,
   );
 
   if (hre.network.name === "mantleTestnet") {
@@ -142,7 +143,7 @@ export const deployContractWithCreate2 = async <
     create2Salt,
     unsignedTx.data,
     (create2Options?.callbacks ?? []) as unknown as any[],
-    overrides ?? {}
+    overrides ?? {},
   );
 
   const receipt = await deployTransaction.wait(waitForBlocks);
@@ -157,25 +158,25 @@ export const deployContractWithCreate2 = async <
   const deployedAddress = deployedEvent.args["deployed"];
   if (deployedAddress.toLowerCase() !== contractAddress.toLowerCase())
     throw new Error(
-      `Deployed address ${deployedAddress}, expected address ${contractAddress}`
+      `Deployed address ${deployedAddress}, expected address ${contractAddress}`,
     );
 
   const contract = new ethers.Contract(
     contractAddress,
-    contractFactory.interface
+    contractFactory.interface,
   ).connect(contractFactory.runner) as T;
 
   const abiEncodedConstructorArgs =
     contract.interface.encodeDeploy(constructorArgs);
   log(`ABI encoded args: ${abiEncodedConstructorArgs.slice(2)}`);
-
+  log(`Deployed ${contractName} to ${await contract.getAddress()}`);
   await saveAddress(hre, contract, contractName);
   return contract;
 };
 function _computeCreate2Address(
   deployerAddress: string,
   salt: string,
-  bytecode: BytesLike
+  bytecode: BytesLike,
 ): string {
   return getAddress(
     "0x" +
@@ -183,9 +184,9 @@ function _computeCreate2Address(
         ["bytes"],
         [
           `0xff${deployerAddress.slice(2)}${salt.slice(
-            2
+            2,
           )}${solidityPackedKeccak256(["bytes"], [bytecode]).slice(2)}`,
-        ]
-      ).slice(-40)
+        ],
+      ).slice(-40),
   );
 }

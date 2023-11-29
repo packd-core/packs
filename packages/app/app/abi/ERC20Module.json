@@ -1,40 +1,5 @@
 [
   {
-    "type": "error",
-    "name": "AddressEmptyCode",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "target"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "AddressInsufficientBalance",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "account"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "FailedInnerCall",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "SafeERC20FailedOperation",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "token"
-      }
-    ]
-  },
-  {
     "type": "function",
     "name": "CALL_OPERATION",
     "constant": true,
@@ -43,7 +8,7 @@
     "inputs": [],
     "outputs": [
       {
-        "type": "uint256",
+        "type": "uint8",
         "name": ""
       }
     ]

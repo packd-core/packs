@@ -6,9 +6,13 @@ module.exports = {
   bracketSpacing: true,
   arrowParens: "always",
   bracketSameLine: false,
-  printWidth: 80,
+  printWidth: 120,
   useTabs: false,
   quoteProps: "as-needed",
+  plugins: [
+    "@trivago/prettier-plugin-sort-imports",
+    "prettier-plugin-solidity",
+  ],
   overrides: [
     {
       files: "*.sol",
@@ -23,6 +27,17 @@ module.exports = {
         useTabs: false,
         explicitTypes: "always",
         compiler: "^0.8.20",
+        parser: "solidity-parser",
+      },
+    },
+    {
+      files: "*.ts",
+      options: {
+        importOrder: ["<THIRD_PARTY_MODULES>", "^[./]"],
+        importOrderParserPlugins: ["typescript"],
+        importOrderSeparation: true,
+        importOrderSortSpecifiers: true,
+        parser: "typescript",
       },
     },
   ],

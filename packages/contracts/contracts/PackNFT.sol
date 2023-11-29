@@ -6,7 +6,8 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
 /**
  * @title PackNFT
- * @dev This contract inherits from ERC721 and ERC721Enumerable. It represents a Pack NFT and includes functions for minting, revoking and opening packs.
+ * @dev This contract inherits from ERC721 and ERC721Enumerable.
+ * It represents a Pack NFT and includes functions for minting, revoking and opening packs.
  */
 contract PackNFT is ERC721, ERC721Enumerable {
     //
@@ -118,32 +119,13 @@ contract PackNFT is ERC721, ERC721Enumerable {
     }
 
     // The following functions are overrides required by Solidity.
-
-    /**
-     * @dev Internal function to update the state of a token
-     * @param to The address to update the token to
-     * @param tokenId The ID of the token
-     * @param auth The address authorized to update the token
-     * @return The address of the updated token
-     */
-    function _update(
+    function _beforeTokenTransfer(
+        address from,
         address to,
-        uint256 tokenId,
-        address auth
-    ) internal override(ERC721, ERC721Enumerable) returns (address) {
-        return super._update(to, tokenId, auth);
-    }
-
-    /**
-     * @dev Internal function to increase the balance of an account
-     * @param account The address of the account
-     * @param value The amount to increase the balance by
-     */
-    function _increaseBalance(
-        address account,
-        uint128 value
-    ) internal override(ERC721, ERC721Enumerable) {
-        super._increaseBalance(account, value);
+        uint256 firstTokenId,
+        uint256 batchSize
+    ) internal virtual override(ERC721, ERC721Enumerable) {
+        super._beforeTokenTransfer(from, to, firstTokenId, batchSize);
     }
 
     /**

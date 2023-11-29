@@ -1,4 +1,4 @@
-import { ZeroAddress } from "ethers";
+import { BytesLike, ZeroAddress } from "ethers";
 import type { HardhatRuntimeEnvironment } from "hardhat/types";
 
 const DEFAULT_CHAIN_ID = 31337;
@@ -11,11 +11,11 @@ export interface SystemConfig {
     registry: string;
     implementation: string;
     registryChainId: number;
-    salt: number;
+    salt: BytesLike;
   };
 }
 
-export function getSystemConfig(hre: HardhatRuntimeEnvironment) {
+export function getSystemConfig(hre: HardhatRuntimeEnvironment): SystemConfig {
   return {
     packConfig: {
       initBaseURI: "https://packd.io/",
@@ -24,7 +24,7 @@ export function getSystemConfig(hre: HardhatRuntimeEnvironment) {
       registry: ZeroAddress,
       implementation: ZeroAddress,
       registryChainId: getChainId(hre) || DEFAULT_CHAIN_ID,
-      salt: 0,
+      salt: "0",
     },
   };
 }
