@@ -8,7 +8,7 @@
     "inputs": [],
     "outputs": [
       {
-        "type": "uint256",
+        "type": "uint8",
         "name": ""
       }
     ]
@@ -36,7 +36,7 @@
     "inputs": [
       {
         "type": "uint256",
-        "name": "tokenId"
+        "name": ""
       },
       {
         "type": "address",
@@ -57,7 +57,7 @@
     "inputs": [
       {
         "type": "uint256",
-        "name": "tokenId"
+        "name": ""
       },
       {
         "type": "address",
@@ -82,7 +82,7 @@
     "inputs": [
       {
         "type": "uint256",
-        "name": "tokenId"
+        "name": ""
       },
       {
         "type": "address",

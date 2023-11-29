@@ -10,7 +10,7 @@ export interface ClaimData {
 }
 
 // Common function to encode data
-export async function encodeData(types: string[], values: any[]) {
+export async function encodeData(types: string[], values: ReadonlyArray<any>) {
   const coder = ethers.AbiCoder.defaultAbiCoder();
   return coder.encode(types, values);
 }

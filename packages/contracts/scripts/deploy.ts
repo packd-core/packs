@@ -1,20 +1,24 @@
+import { ethers, resolveAddress, type Signer } from "ethers";
 import type { HardhatRuntimeEnvironment } from "hardhat/types";
-import type { Signer } from "ethers";
 
 import {
-  PackAccount,
-  PackRegistry,
-  PackMain,
-  ERC20Module,
-  ERC20Mock,
-  ERC721Module,
-  ERC721Mock,
-  ERC20Mock__factory,
+  AccountGuardian,
+  AccountProxy,
+  AccountV3Upgradable,
   Create2Factory,
+  ERC20Mock,
+  ERC20Mock__factory,
+  ERC20Module,
+  ERC721Mock,
   ERC721Mock__factory,
-} from "../typechain-types";
+  ERC721Module,
+  Multicall3,
+  PackAccountV2,
+  PackMain,
+  PackRegistry
+} from "../types";
 
-import { getSystemConfig, SystemConfig } from "../utils/deployConfig";
+import { SystemConfig } from "../utils/deployConfig";
 import {
   deployContract,
   deployContractWithCreate2,
@@ -30,7 +34,7 @@ export interface MocksDeployed {
 }
 
 export interface SystemDeployed {
-  packAccount: PackAccount;
+  packAccount: PackAccountV2;
   packRegistry: PackRegistry;
   packMain: PackMain;
   create2Factory: Create2Factory;
@@ -45,7 +49,7 @@ export interface SystemDeployed {
 export async function deployMocks(
   hre: HardhatRuntimeEnvironment,
   signer: Signer,
-  create2Factory: Create2Factory
+  create2Factory: Create2Factory,
 ): Promise<MocksDeployed> {
   info("Deploying Mocks");
   const deploymentOverrides = {
@@ -75,7 +79,7 @@ export async function deployMocks(
       create2Factory,
       "ERC20MockA",
       [],
-      withSalt("ERC20MockA")
+      withSalt("ERC20MockA"),
     );
     erc20MockB = await deployContractWithCreate2<ERC20Mock, ERC20Mock__factory>(
       hre,
@@ -83,7 +87,7 @@ export async function deployMocks(
       create2Factory,
       "ERC20MockB",
       [],
-      withSalt("ERC20MockB")
+      withSalt("ERC20MockB"),
     );
     erc721MockA = await deployContractWithCreate2<
       ERC721Mock,
@@ -94,7 +98,7 @@ export async function deployMocks(
       create2Factory,
       "ERC721MockA",
       [],
-      withSalt("ERC721MockA")
+      withSalt("ERC721MockA"),
     );
     erc721MockB = await deployContractWithCreate2<
       ERC721Mock,
@@ -105,7 +109,7 @@ export async function deployMocks(
       create2Factory,
       "ERC721MockB",
       [],
-      withSalt("ERC721MockB")
+      withSalt("ERC721MockB"),
     );
   } else {
     // Deploy mocks without create2
@@ -114,28 +118,28 @@ export async function deployMocks(
       signer,
       "ERC20Mock",
       [],
-      deploymentOverrides
+      deploymentOverrides,
     );
     erc20MockB = await deployContract<ERC20Mock>(
       hre,
       signer,
       "ERC20Mock",
       [],
-      deploymentOverrides
+      deploymentOverrides,
     );
     erc721MockA = await deployContract<ERC721Mock>(
       hre,
       signer,
       "ERC721Mock",
       [],
-      deploymentOverrides
+      deploymentOverrides,
     );
     erc721MockB = await deployContract<ERC721Mock>(
       hre,
       signer,
       "ERC721Mock",
       [],
-      deploymentOverrides
+      deploymentOverrides,
     );
   }
   return {
@@ -148,11 +152,10 @@ export async function deployMocks(
 export async function deploySystem(
   hre: HardhatRuntimeEnvironment,
   signer: Signer,
-  systemConfig: SystemConfig
+  systemConfig: SystemConfig,
 ): Promise<SystemDeployed> {
   info("Deploying System");
-  const { packConfig } = getSystemConfig(hre);
-  let deploymentOverrides = {
+  const deploymentOverrides = {
     gasPrice: hre.ethers.parseUnits("1.0", "gwei"),
   };
 
@@ -161,37 +164,91 @@ export async function deploySystem(
     signer,
     "Create2Factory",
     [],
-    deploymentOverrides
+    deploymentOverrides,
   );
   const erc20Module = await deployContract<ERC20Module>(
     hre,
     signer,
     "ERC20Module",
     [],
-    deploymentOverrides
+    deploymentOverrides,
   );
   const erc721Module = await deployContract<ERC721Module>(
     hre,
     signer,
     "ERC721Module",
     [],
-    deploymentOverrides
+    deploymentOverrides,
   );
 
-  const packAccount = await deployContract<PackAccount>(
-    hre,
-    signer,
-    "PackAccount",
-    [],
-    deploymentOverrides
-  );
   const packRegistry = await deployContract<PackRegistry>(
     hre,
     signer,
     "PackRegistry",
     [],
-    deploymentOverrides
+    deploymentOverrides,
   );
+  // Move to external dependency
+  const forwarder = await deployContract<Multicall3>(
+    hre,
+    signer,
+    "Multicall3",
+    [],
+    deploymentOverrides,
+  );
+  const guardian = await deployContract<AccountGuardian>(
+    hre,
+    signer,
+    "AccountGuardian",
+    [await signer.getAddress()],
+    deploymentOverrides,
+  );
+  //     // mint tokenId 1 during setup for accurate cold call gas measurement
+  const implementation = await deployContract<PackAccountV2>(
+    hre,
+    signer,
+    "PackAccountV2",
+    // [_entryPoint, _multicallForwarder, _erc6551Registry, _guardian],
+    [
+      "0x0000000000000000000000000000000000000001",
+      // resolveAddress(entryPoint.target),
+      resolveAddress(forwarder.target),
+      resolveAddress(packRegistry.target),
+      resolveAddress(guardian.target),
+    ],
+    deploymentOverrides,
+  );
+  const upgradableImplementation = await deployContract<AccountV3Upgradable>(
+    hre,
+    signer,
+    "AccountV3Upgradable",
+    [
+      "0x0000000000000000000000000000000000000001",
+      // resolveAddress(entryPoint.target),
+      resolveAddress(forwarder.target),
+      resolveAddress(packRegistry.target),
+      resolveAddress(guardian.target),
+    ],
+    deploymentOverrides,
+  );
+  const proxy = await deployContract<AccountProxy>(
+    hre,
+    signer,
+    "AccountProxy",
+    [
+      resolveAddress(guardian.target),
+      resolveAddress(upgradableImplementation.target),
+    ],
+    deploymentOverrides,
+  );
+  const packAccount = implementation;
+  // const packAccount_ = await deployContract<PackAccount>(
+  //   hre,
+  //   signer,
+  //   "PackAccount",
+  //   [],
+  //   deploymentOverrides,
+  // );
   const packMain = await deployContract<PackMain>(
     hre,
     signer,
@@ -204,10 +261,10 @@ export async function deploySystem(
       await packRegistry.getAddress(),
       await packAccount.getAddress(),
       systemConfig.packConfig.registryChainId,
-      systemConfig.packConfig.salt,
+      ethers.encodeBytes32String(systemConfig.packConfig.salt.toString()),
       [await erc20Module.getAddress(), await erc721Module.getAddress()],
     ],
-    deploymentOverrides
+    deploymentOverrides,
   );
   const mocks = await deployMocks(hre, signer, create2Factory);
   return {

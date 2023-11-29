@@ -9,9 +9,8 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/interfaces/IERC1271.sol";
 import "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
 
-import "./lib/ERC6551Account.sol";
-import "./interfaces/IERC6551Account.sol";
-import "./interfaces/IERC6551Executable.sol";
+import "erc6551/interfaces/IERC6551Executable.sol";
+import "erc6551/interfaces/IERC6551Account.sol";
 
 contract PackAccount is IERC165, IERC1271, IERC6551Account, IERC6551Executable {
     uint256 public state;
@@ -22,7 +21,7 @@ contract PackAccount is IERC165, IERC1271, IERC6551Account, IERC6551Executable {
         address to,
         uint256 value,
         bytes calldata data,
-        uint256 operation
+        uint8 operation
     ) public payable virtual returns (bytes memory result) {
         require(
             _isValidSigner(msg.sender),

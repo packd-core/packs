@@ -33,7 +33,7 @@
         "name": "registryChainId_"
       },
       {
-        "type": "uint256",
+        "type": "bytes32",
         "name": "salt_"
       },
       {
@@ -44,133 +44,7 @@
   },
   {
     "type": "error",
-    "name": "AddressEmptyCode",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "target"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "ERC721EnumerableForbiddenBatchMint",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "ERC721IncorrectOwner",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "sender"
-      },
-      {
-        "type": "uint256",
-        "name": "tokenId"
-      },
-      {
-        "type": "address",
-        "name": "owner"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "ERC721InsufficientApproval",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "operator"
-      },
-      {
-        "type": "uint256",
-        "name": "tokenId"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "ERC721InvalidApprover",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "approver"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "ERC721InvalidOperator",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "operator"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "ERC721InvalidOwner",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "owner"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "ERC721InvalidReceiver",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "receiver"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "ERC721InvalidSender",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "sender"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "ERC721NonexistentToken",
-    "inputs": [
-      {
-        "type": "uint256",
-        "name": "tokenId"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "ERC721OutOfBoundsIndex",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "owner"
-      },
-      {
-        "type": "uint256",
-        "name": "index"
-      }
-    ]
-  },
-  {
-    "type": "error",
     "name": "EtherTransferFailed",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "FailedInnerCall",
     "inputs": []
   },
   {
@@ -229,26 +103,6 @@
       {
         "type": "uint256",
         "name": "tokenId"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "OwnableInvalidOwner",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "owner"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "OwnableUnauthorizedAccount",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "account"
       }
     ]
   },
@@ -413,7 +267,7 @@
     "inputs": [],
     "outputs": [
       {
-        "type": "uint256",
+        "type": "uint8",
         "name": ""
       }
     ]
@@ -447,6 +301,25 @@
     "outputs": [
       {
         "type": "address",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "accountNonce",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": ""
+      }
+    ],
+    "outputs": [
+      {
+        "type": "uint256",
         "name": ""
       }
     ]
@@ -894,7 +767,7 @@
     "inputs": [],
     "outputs": [
       {
-        "type": "uint256",
+        "type": "bytes32",
         "name": ""
       }
     ]

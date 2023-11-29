@@ -1,0 +1,821 @@
+[
+  {
+    "type": "constructor",
+    "stateMutability": "undefined",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "__entryPoint"
+      },
+      {
+        "type": "address",
+        "name": "_multicallForwarder"
+      },
+      {
+        "type": "address",
+        "name": "_erc6551Registry"
+      },
+      {
+        "type": "address",
+        "name": "_guardian"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "AccountLocked",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "ContractCreationFailed",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "ExceedsMaxLockTime",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidAccountProof",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidERC6551Registry",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidEntryPoint",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidInput",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidMulticallForwarder",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidOperation",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "NotAuthorized",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "OwnershipCycle",
+    "inputs": []
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "LockUpdated",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "lockedUntil",
+        "indexed": false
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "OverrideUpdated",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "owner",
+        "indexed": false
+      },
+      {
+        "type": "bytes4",
+        "name": "selector",
+        "indexed": false
+      },
+      {
+        "type": "address",
+        "name": "implementation",
+        "indexed": false
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "PermissionUpdated",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "owner",
+        "indexed": false
+      },
+      {
+        "type": "address",
+        "name": "caller",
+        "indexed": false
+      },
+      {
+        "type": "bool",
+        "name": "hasPermission",
+        "indexed": false
+      }
+    ]
+  },
+  {
+    "type": "fallback",
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "entryPoint",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "address",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "erc6551Registry",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "address",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "execute",
+    "constant": false,
+    "stateMutability": "payable",
+    "payable": true,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "to"
+      },
+      {
+        "type": "uint256",
+        "name": "value"
+      },
+      {
+        "type": "bytes",
+        "name": "data"
+      },
+      {
+        "type": "uint8",
+        "name": "operation"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bytes",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "executeBatch",
+    "constant": false,
+    "stateMutability": "payable",
+    "payable": true,
+    "inputs": [
+      {
+        "type": "tuple[]",
+        "name": "operations",
+        "components": [
+          {
+            "type": "address",
+            "name": "to"
+          },
+          {
+            "type": "uint256",
+            "name": "value"
+          },
+          {
+            "type": "bytes",
+            "name": "data"
+          },
+          {
+            "type": "uint8",
+            "name": "operation"
+          }
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bytes[]",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "executeNested",
+    "constant": false,
+    "stateMutability": "payable",
+    "payable": true,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "to"
+      },
+      {
+        "type": "uint256",
+        "name": "value"
+      },
+      {
+        "type": "bytes",
+        "name": "data"
+      },
+      {
+        "type": "uint8",
+        "name": "operation"
+      },
+      {
+        "type": "tuple[]",
+        "name": "proof",
+        "components": [
+          {
+            "type": "bytes32",
+            "name": "salt"
+          },
+          {
+            "type": "address",
+            "name": "tokenContract"
+          },
+          {
+            "type": "uint256",
+            "name": "tokenId"
+          }
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bytes",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "extcall",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "to"
+      },
+      {
+        "type": "uint256",
+        "name": "value"
+      },
+      {
+        "type": "bytes",
+        "name": "data"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bytes",
+        "name": "result"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "extcreate",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "value"
+      },
+      {
+        "type": "bytes",
+        "name": "bytecode"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "address",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "extcreate2",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "value"
+      },
+      {
+        "type": "bytes32",
+        "name": "salt"
+      },
+      {
+        "type": "bytes",
+        "name": "bytecode"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "address",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "extsload",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "bytes32",
+        "name": "slot"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bytes32",
+        "name": "value"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getNonce",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "isLocked",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "bool",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "isTrustedForwarder",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "forwarder"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bool",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "isValidSignature",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "bytes32",
+        "name": "hash"
+      },
+      {
+        "type": "bytes",
+        "name": "signature"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bytes4",
+        "name": "magicValue"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "isValidSigner",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "signer"
+      },
+      {
+        "type": "bytes",
+        "name": "data"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bytes4",
+        "name": "magicValue"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "lock",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_lockedUntil"
+      }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "lockedUntil",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "onERC1155BatchReceived",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": ""
+      },
+      {
+        "type": "address",
+        "name": ""
+      },
+      {
+        "type": "uint256[]",
+        "name": ""
+      },
+      {
+        "type": "uint256[]",
+        "name": ""
+      },
+      {
+        "type": "bytes",
+        "name": ""
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bytes4",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "onERC1155Received",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": ""
+      },
+      {
+        "type": "address",
+        "name": ""
+      },
+      {
+        "type": "uint256",
+        "name": ""
+      },
+      {
+        "type": "uint256",
+        "name": ""
+      },
+      {
+        "type": "bytes",
+        "name": ""
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bytes4",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "onERC721Received",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": ""
+      },
+      {
+        "type": "address",
+        "name": ""
+      },
+      {
+        "type": "uint256",
+        "name": "tokenId"
+      },
+      {
+        "type": "bytes",
+        "name": ""
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bytes4",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "overrides",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": ""
+      },
+      {
+        "type": "bytes4",
+        "name": ""
+      }
+    ],
+    "outputs": [
+      {
+        "type": "address",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "owner",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "address",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "permissions",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": ""
+      },
+      {
+        "type": "address",
+        "name": ""
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bool",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "setOverrides",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "bytes4[]",
+        "name": "selectors"
+      },
+      {
+        "type": "address[]",
+        "name": "implementations"
+      }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "setPermissions",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address[]",
+        "name": "callers"
+      },
+      {
+        "type": "bool[]",
+        "name": "_permissions"
+      }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "state",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "supportsInterface",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "bytes4",
+        "name": "interfaceId"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bool",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "token",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "chainId"
+      },
+      {
+        "type": "address",
+        "name": "tokenContract"
+      },
+      {
+        "type": "uint256",
+        "name": "tokenId"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "validateUserOp",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "tuple",
+        "name": "userOp",
+        "components": [
+          {
+            "type": "address",
+            "name": "sender"
+          },
+          {
+            "type": "uint256",
+            "name": "nonce"
+          },
+          {
+            "type": "bytes",
+            "name": "initCode"
+          },
+          {
+            "type": "bytes",
+            "name": "callData"
+          },
+          {
+            "type": "uint256",
+            "name": "callGasLimit"
+          },
+          {
+            "type": "uint256",
+            "name": "verificationGasLimit"
+          },
+          {
+            "type": "uint256",
+            "name": "preVerificationGas"
+          },
+          {
+            "type": "uint256",
+            "name": "maxFeePerGas"
+          },
+          {
+            "type": "uint256",
+            "name": "maxPriorityFeePerGas"
+          },
+          {
+            "type": "bytes",
+            "name": "paymasterAndData"
+          },
+          {
+            "type": "bytes",
+            "name": "signature"
+          }
+        ]
+      },
+      {
+        "type": "bytes32",
+        "name": "userOpHash"
+      },
+      {
+        "type": "uint256",
+        "name": "missingAccountFunds"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "validationData"
+      }
+    ]
+  },
+  {
+    "type": "receive",
+    "stateMutability": "payable"
+  }
+]

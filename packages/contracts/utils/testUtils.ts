@@ -1,8 +1,7 @@
 import type { Signer } from "ethers";
 import { ethers } from "hardhat";
-import type { PackMain } from "../typechain-types";
+import type { PackMain } from "../types";
 import type { KeySignManager } from "./keySignManager";
-import { encodeData } from "./erc20moduleData";
 
 export async function createPack(
   packMain: PackMain,
@@ -10,7 +9,7 @@ export async function createPack(
   keySignManager: KeySignManager,
   value: number | bigint,
   modules: string[] = [],
-  moduleData: string[] = []
+  moduleData: string[] = [],
 ) {
   const packInstance = packMain.connect(signer);
   const { claimPublicKey, claimPrivateKey } =
@@ -28,7 +27,7 @@ export async function createPack(
     moduleData,
     {
       value,
-    }
+    },
   );
 
   return { packInstance, claimPrivateKey };

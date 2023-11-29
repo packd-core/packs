@@ -23,7 +23,7 @@ describe("PackMain", function () {
     // Set PackMain address in KeySignManager
     const keySignManager = new KeySignManager(
       systemConfig.packConfig.registryChainId,
-      systemConfig.packConfig.salt,
+      ethers.encodeBytes32String(systemConfig.packConfig.salt.toString()),
       await packMain.getAddress()
     );
 
@@ -47,6 +47,10 @@ describe("PackMain", function () {
         alice.address
       );
 
+      // Check Account Nonce for Alice
+      const nonceBefore = await packMain.accountNonce(await alice.getAddress());
+      expect(nonceBefore).to.equal(0);
+
       // Mint a new pack using createPack function
       const { packInstance } = await createPack(
         packMain,
@@ -58,6 +62,10 @@ describe("PackMain", function () {
       // Check correct state
       expect(await packInstance.packState(0)).to.equal(1); // 1 is the enum value for Created
       expect(await packInstance.ownerOf(0)).to.equal(alice.address);
+      const accountNonceAfter = await packMain.accountNonce(
+        await alice.getAddress()
+      );
+      expect(accountNonceAfter).to.equal(1);
 
       // Check pack eth balance
       const accountAddress = await packInstance.account(0);
@@ -71,10 +79,6 @@ describe("PackMain", function () {
       const value1 = 1;
       const value2 = 2;
       const { packMain, alice, keySignManager } = await loadFixture(setup);
-
-      const aliceBalanceBefore = await ethers.provider.getBalance(
-        alice.address
-      );
 
       // Mint a new pack using createPack function
       const { packInstance: packInstance1 } = await createPack(
@@ -107,6 +111,10 @@ describe("PackMain", function () {
       const ethBalanceAccount2 =
         await ethers.provider.getBalance(accountAddress2);
       expect(ethBalanceAccount2).to.equal(ethers.parseEther(value2.toString()));
+      const accountNonceAfter = await packMain.accountNonce(
+        await alice.getAddress()
+      );
+      expect(accountNonceAfter).to.equal(2);
 
       // The first balance should be the same
       const ethBalanceAccount1Recheck =

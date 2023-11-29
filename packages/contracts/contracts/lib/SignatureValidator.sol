@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
-import "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 import "../ClaimData.sol";
 
@@ -13,11 +13,11 @@ library SignatureValidator {
     function validateSignatures(
         ClaimData memory data,
         uint256 registryChainId,
-        uint256 salt,
+        bytes32 salt,
         address addr,
         address claimPublicKey
     ) internal view returns (bool) {
-        bytes32 messageHashOwner = MessageHashUtils.toEthSignedMessageHash(
+        bytes32 messageHashOwner = ECDSA.toEthSignedMessageHash(
             keccak256(
                 abi.encodePacked(
                     data.tokenId,
@@ -39,7 +39,7 @@ library SignatureValidator {
             revert InvalidOwnerSignature();
         }
 
-        bytes32 messageHashClaimer = MessageHashUtils.toEthSignedMessageHash(
+        bytes32 messageHashClaimer = ECDSA.toEthSignedMessageHash(
             keccak256(
                 abi.encodePacked(
                     data.tokenId,

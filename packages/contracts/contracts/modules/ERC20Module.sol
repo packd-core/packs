@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "../interfaces/IERC6551Executable.sol";
+import "erc6551/interfaces/IERC6551Executable.sol";
 
 import "../interfaces/IPackModule.sol";
 
@@ -13,7 +13,7 @@ import "../interfaces/IPackModule.sol";
  */
 contract ERC20Module is IPackModule {
     //
-    uint256 public constant CALL_OPERATION = 0; // Only call operations are supported for ERC6551
+    uint8 public constant CALL_OPERATION = 0; // Only call operations are supported for ERC6551
     uint256 public constant CALL_VALUE = 0; // No value is sent with the call
 
     /**
