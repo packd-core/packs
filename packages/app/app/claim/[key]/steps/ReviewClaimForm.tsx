@@ -96,14 +96,14 @@ export default function ReviewClaimForm() {
         setControls(
             <div className="w-full flex justify-between py-1 items-center">
                 <StepperIndicator step={2}/>
-                <Button
-                    isLoading={isLoading}
-                    onClick={() => write && write()}
-                    variant="navigation"
-                    rightIcon={<FiArrowRight className="text-inherit inline"/>}
-                >
-                    Confirm Claim direct
-                </Button>
+                {/*<Button*/}
+                {/*    isLoading={isLoading}*/}
+                {/*    onClick={() => write && write()}*/}
+                {/*    variant="navigation"*/}
+                {/*    rightIcon={<FiArrowRight className="text-inherit inline"/>}*/}
+                {/*>*/}
+                {/*    Confirm Claim direct*/}
+                {/*</Button>*/}
                 <Button
                     isLoading={isLoading}
                     onClick={() => writeToRelayer()}
@@ -114,7 +114,7 @@ export default function ReviewClaimForm() {
                 </Button>
             </div>,
         );
-    }, [writeToRelayer, nextStep, setControls, previousStep, address, openConnectModal, isLoading, write]);
+    }, [writeToRelayer, nextStep, setControls, previousStep, address, openConnectModal, isLoading]);
 
     const ownerName = useEnsOrFormattedAddress(owner as Address);
     const claimerName = useEnsOrFormattedAddress(address);
