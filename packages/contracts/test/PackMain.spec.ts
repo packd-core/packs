@@ -227,9 +227,6 @@ describe("PackMain", function () {
       // Check balances
       const bobBalanceBefore = await ethers.provider.getBalance(bob.address);
 
-      // Create encoded moduleData
-      const encodedModuleData = KeySignManager.getModuleDataBytes([]);
-
       // Create SigOwner
       const { claimSignature: sigOwner } =
         await keySignManager.generateClaimSignature(
@@ -238,12 +235,13 @@ describe("PackMain", function () {
           [0, bob.address]
         );
       // Create SigClaimer
-      const { claimSignature: sigClaimer } =
-        await keySignManager.generateClaimSignature(
-          bob,
-          ["uint256", "uint256", "bytes"],
-          [0, 0, encodedModuleData]
-        );
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        0,
+        0,
+        []
+      );
 
       const claimData: ClaimData = {
         tokenId: 0,
@@ -296,13 +294,13 @@ describe("PackMain", function () {
           [0, bob.address]
         );
 
-      const encodedModuleData = KeySignManager.getModuleDataBytes([]);
-      const { claimSignature: sigClaimer } =
-        await keySignManager.generateClaimSignature(
-          bob,
-          ["uint256", "uint256", "bytes"],
-          [0, 0, encodedModuleData]
-        );
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        0,
+        0,
+        []
+      );
 
       const claimData: ClaimData = {
         tokenId: 0,
@@ -356,14 +354,13 @@ describe("PackMain", function () {
           [0, bob.address]
         );
 
-      const encodedModuleData = KeySignManager.getModuleDataBytes([]);
-
-      const { claimSignature: sigClaimer } =
-        await keySignManager.generateClaimSignature(
-          bob,
-          ["uint256", "uint256", "bytes"],
-          [0, maxRefundValue, encodedModuleData]
-        );
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        maxRefundValue,
+        maxRefundValue,
+        []
+      );
 
       const claimData: ClaimData = {
         tokenId: 0,
@@ -426,14 +423,13 @@ describe("PackMain", function () {
           [0, bob.address]
         );
 
-      const encodedModuleData = KeySignManager.getModuleDataBytes([]);
-
-      const { claimSignature: sigClaimer } =
-        await keySignManager.generateClaimSignature(
-          bob,
-          ["uint256", "uint256", "bytes"],
-          [0, maxRefundValue, encodedModuleData]
-        );
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        maxRefundValue + BigInt(1),
+        maxRefundValue,
+        []
+      );
 
       const claimData: ClaimData = {
         tokenId: 0,
@@ -477,14 +473,13 @@ describe("PackMain", function () {
           [0, bob.address]
         );
 
-      const encodedModuleData = KeySignManager.getModuleDataBytes([]);
-
-      const { claimSignature: sigClaimer } =
-        await keySignManager.generateClaimSignature(
-          bob,
-          ["uint256", "uint256", "bytes"],
-          [0, maxRefundValue, encodedModuleData]
-        );
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        maxRefundValue,
+        maxRefundValue,
+        []
+      );
 
       const claimData: ClaimData = {
         tokenId: 0,

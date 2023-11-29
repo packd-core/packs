@@ -210,15 +210,14 @@ describe("PackMain, ERC20Module", function () {
         await erc20MockA.getAddress(),
       ]);
 
-      const moduleDataBytes = KeySignManager.getModuleDataBytes([moduleData]);
-
       // Create SigClaimer
-      const { claimSignature: sigClaimer } =
-        await keySignManager.generateClaimSignature(
-          bob,
-          ["uint256", "uint256", "bytes"],
-          [0, 0, moduleDataBytes]
-        );
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        0,
+        0,
+        [moduleData]
+      );
 
       const claimData: ClaimData = {
         tokenId: 0,
@@ -257,7 +256,7 @@ describe("PackMain, ERC20Module", function () {
     });
   });
   describe("RelayClaim tests, with ERC20 Module", function () {
-    it.only("Should open a pack, using EIP712 signature", async function () {
+    it("Should open a pack, using EIP712 signature", async function () {
       const value = ethers.parseEther("1");
       const {
         packMain,
@@ -294,46 +293,13 @@ describe("PackMain, ERC20Module", function () {
         await erc20MockA.getAddress(),
       ]);
 
-      const domain = {
-        name: "PACKD",
-        version: "1",
-        chainId: 31337,
-        verifyingContract: await packMain.getAddress(),
-      };
-
-      // console.log("domain", domain);
-
-      const types = {
-        Claim: [
-          { name: "tokenId", type: "uint256" },
-          { name: "claimer", type: "address" },
-          { name: "refundValue", type: "uint256" },
-          { name: "maxRefundValue", type: "uint256" },
-          { name: "moduleData", type: "bytes" },
-        ],
-      };
-
-      const encodedModuleData = KeySignManager.getModuleDataBytes([moduleData]);
-
-      const message = {
-        tokenId: 0,
-        claimer: bob.address,
-        refundValue: 0,
-        maxRefundValue: 0,
-        moduleData: encodedModuleData,
-      };
-
-      console.log("message", message);
-
-      const sigClaimer = await bob.signTypedData(domain, types, message);
-      const verify = ethers.verifyTypedData(domain, types, message, sigClaimer);
-      console.log("verify", verify);
-      // const { claimSignature: sigClaimer } =
-      //   await keySignManager.generateClaimSignature(
-      //     bob,
-      //     ["uint256", "uint256", "bytes"],
-      //     [0, 0, encodedModuleData]
-      //   );
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        0,
+        0,
+        [moduleData]
+      );
 
       console.log("sigClaimer", sigClaimer);
 
@@ -393,14 +359,13 @@ describe("PackMain, ERC20Module", function () {
         await erc20MockA.getAddress(),
       ]);
 
-      const encodedModuleData = KeySignManager.getModuleDataBytes([moduleData]);
-      const { claimSignature: sigClaimer } =
-        await keySignManager.generateClaimSignature(
-          bob,
-          ["uint256", "uint256", "bytes"],
-          [0, maxRefundValue, encodedModuleData]
-        );
-
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        0,
+        maxRefundValue,
+        [moduleData]
+      );
       const claimData: ClaimData = {
         tokenId: 0,
         sigOwner: sigOwner,
@@ -584,7 +549,6 @@ describe("PackMain, ERC20Module", function () {
         await erc20MockB.getAddress(),
       ]);
 
-      const encodedModuleData = KeySignManager.getModuleDataBytes([moduleData]);
       // Create SigOwner
       const { claimSignature: sigOwner } =
         await keySignManager.generateClaimSignature(
@@ -593,12 +557,13 @@ describe("PackMain, ERC20Module", function () {
           [0, bob.address]
         );
       // Create SigClaimer
-      const { claimSignature: sigClaimer } =
-        await keySignManager.generateClaimSignature(
-          bob,
-          ["uint256", "uint256", "bytes"],
-          [0, 0, encodedModuleData]
-        );
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        0,
+        0,
+        [moduleData]
+      );
 
       const claimData: ClaimData = {
         tokenId: 0,

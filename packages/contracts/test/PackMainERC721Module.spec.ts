@@ -193,7 +193,7 @@ describe("PackMain, ERC721Module", function () {
       const moduleData = await generateClaimData([
         [await erc721MockA.getAddress(), tokenId],
       ]);
-      const moduleDataBytes = KeySignManager.getModuleDataBytes([moduleData]);
+
       // Create SigOwner
       const { claimSignature: sigOwner } =
         await keySignManager.generateClaimSignature(
@@ -201,13 +201,15 @@ describe("PackMain, ERC721Module", function () {
           ["uint256", "address"],
           [0, bob.address]
         );
+
       // Create SigClaimer
-      const { claimSignature: sigClaimer } =
-        await keySignManager.generateClaimSignature(
-          bob,
-          ["uint256", "uint256", "bytes"],
-          [0, 0, moduleDataBytes]
-        );
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        0,
+        0,
+        [moduleData]
+      );
 
       const claimData: ClaimData = {
         tokenId: 0,
@@ -272,7 +274,7 @@ describe("PackMain, ERC721Module", function () {
       const moduleData = await generateClaimData([
         [await erc721MockA.getAddress(), BigInt(0)],
       ]);
-      const moduleDataBytes = KeySignManager.getModuleDataBytes([moduleData]);
+
       // Create SigOwner
       const { claimSignature: sigOwner } =
         await keySignManager.generateClaimSignature(
@@ -280,12 +282,13 @@ describe("PackMain, ERC721Module", function () {
           ["uint256", "address"],
           [0, bob.address]
         );
-      const { claimSignature: sigClaimer } =
-        await keySignManager.generateClaimSignature(
-          bob,
-          ["uint256", "uint256", "bytes"],
-          [0, maxRefundValue, moduleDataBytes]
-        );
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        0,
+        maxRefundValue,
+        [moduleData]
+      );
 
       const claimData: ClaimData = {
         tokenId: 0,
@@ -325,7 +328,7 @@ describe("PackMain, ERC721Module", function () {
     });
   });
   describe("ERC721 Module, 2 tokens", function () {
-    it("Should mint a new pack, with erc721MockA and erc621MockB", async function () {
+    it("Should mint a new pack, with erc721MockA and erc721MockB", async function () {
       const value = ethers.parseEther("1");
       const {
         packMain,
@@ -466,7 +469,6 @@ describe("PackMain, ERC721Module", function () {
         [await erc721MockB.getAddress(), BigInt(0)],
       ]);
 
-      const moduleDataBytes = KeySignManager.getModuleDataBytes([moduleData]);
       // Create SigOwner
       const { claimSignature: sigOwner } =
         await keySignManager.generateClaimSignature(
@@ -476,12 +478,13 @@ describe("PackMain, ERC721Module", function () {
         );
 
       // Create SigClaimer
-      const { claimSignature: sigClaimer } =
-        await keySignManager.generateClaimSignature(
-          bob,
-          ["uint256", "uint256", "bytes"],
-          [0, 0, moduleDataBytes]
-        );
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        0,
+        0,
+        [moduleData]
+      );
 
       const claimData: ClaimData = {
         tokenId: 0,
@@ -548,7 +551,6 @@ describe("PackMain, ERC721Module", function () {
         [await erc721MockA.getAddress(), BigInt(1)],
       ]);
 
-      const moduleDataBytes = KeySignManager.getModuleDataBytes([moduleData]);
       // Create SigOwner
       const { claimSignature: sigOwner } =
         await keySignManager.generateClaimSignature(
@@ -558,12 +560,13 @@ describe("PackMain, ERC721Module", function () {
         );
 
       // Create SigClaimer
-      const { claimSignature: sigClaimer } =
-        await keySignManager.generateClaimSignature(
-          bob,
-          ["uint256", "uint256", "bytes"],
-          [0, 0, moduleDataBytes]
-        );
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        0,
+        0,
+        [moduleData]
+      );
 
       const claimData: ClaimData = {
         tokenId: 0,

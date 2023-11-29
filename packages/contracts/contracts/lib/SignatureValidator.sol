@@ -6,27 +6,9 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 import "../ClaimData.sol";
 
-import "hardhat/console.sol";
-
 library SignatureValidator {
     error InvalidOwnerSignature();
     error InvalidClaimerSignature();
-
-    // bytes32 public constant DOMAIN_TYPEHASH =
-    //     keccak256(
-    //         "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
-    //     );
-
-    // bytes32 public constant DOMAIN_TYPEHASH =
-    //     keccak256("EIP712Domain(string name)");
-
-    // bytes32 public constant HASH_STRUCT_TYPEHASH =
-    //     keccak256(
-    //         "Claim(uint256 tokenId,address claimer,uint256 refundValue,uint256 maxRefundValue,bytes moduleData)"
-    //     );
-
-    // bytes32 public constant HASH_STRUCT_TYPEHASH =
-    //     keccak256("Claim(uint256 refundValue)");
 
     function DOMAIN_SEPARATOR(
         uint256 registryChainId
@@ -48,8 +30,7 @@ library SignatureValidator {
     function STRUCT_TYPEHASH() public pure returns (bytes32) {
         return
             keccak256(
-                "Claim(uint256 tokenId,address claimer,uint256 refundValue,uint256 maxRefundValue,bytes moduleData)"
-                // "Claim(uint256 tokenId,address claimer,uint256 refundValue,uint256 maxRefundValue)"
+                "Claim(uint256 tokenId,address claimer,uint256 refundValue,uint256 maxRefundValue,bytes32 moduleData)"
             );
     }
 
@@ -91,26 +72,18 @@ library SignatureValidator {
                     data.claimer,
                     data.refundValue,
                     data.maxRefundValue,
-                    data.moduleData
+                    keccak256(abi.encode(data.moduleData))
                 )
             )
         );
 
-        console.log("tokenId");
-        console.logUint(data.tokenId);
-        console.log("claimer");
-        console.logAddress(data.claimer);
-        console.log("refundValue");
-        console.logUint(data.refundValue);
-        console.log("maxRefundValue");
-        console.logUint(data.maxRefundValue);
-        console.log("moduleData");
-        console.logBytes(abi.encode(data.moduleData));
-
-        address signer = ECDSA.recover(messageHashClaimer, data.sigClaimer);
-        console.log("signer");
-        console.logAddress(signer);
-        if (signer != data.claimer) {
+        if (
+            !SignatureChecker.isValidSignatureNow(
+                data.claimer,
+                messageHashClaimer,
+                data.sigClaimer
+            )
+        ) {
             revert InvalidClaimerSignature();
         }
 

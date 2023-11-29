@@ -86,12 +86,49 @@ export class KeySignManager {
     return { claimSignature };
   }
 
+  async generateSignTypedData(
+    signer: Signer,
+    tokenId: number | bigint,
+    refundValue: number | bigint,
+    maxRefundValue: number | bigint,
+    moduleData: Array<any>
+  ) {
+    const domain = {
+      name: "PACKD",
+      version: "1",
+      chainId: this.registryChainId,
+      verifyingContract: this.packdMainAddress,
+    };
+
+    const types = {
+      Claim: [
+        { name: "tokenId", type: "uint256" },
+        { name: "claimer", type: "address" },
+        { name: "refundValue", type: "uint256" },
+        { name: "maxRefundValue", type: "uint256" },
+        { name: "moduleData", type: "bytes32" },
+      ],
+    };
+
+    const encodedModuleData = KeySignManager.getModuleDataBytes(moduleData);
+
+    const message = {
+      tokenId: tokenId,
+      claimer: await signer.getAddress(),
+      refundValue: refundValue,
+      maxRefundValue: maxRefundValue,
+      moduleData: encodedModuleData,
+    };
+
+    return signer.signTypedData(domain, types, message);
+  }
+
   static getModuleDataBytes(moduleData: Array<any>) {
     const bytesArray = moduleData.map((data) => ethers.getBytes(data));
 
     const coder = ethers.AbiCoder.defaultAbiCoder();
     const encoded = coder.encode(["bytes[]"], [bytesArray]);
 
-    return encoded;
+    return ethers.keccak256(encoded);
   }
 }
