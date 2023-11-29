@@ -8,13 +8,13 @@ import type { PackMain, ERC20Module, ERC20Mock } from "../types";
 import { KeySignManager } from "../utils/keySignManager";
 import { getSystemConfig } from "../utils/deployConfig";
 import { createPack } from "../utils/testUtils";
-import { deploySystem } from "../scripts/deploy";
+import { deployFullSystem } from "../scripts/deploy";
 import {
-  ClaimData,
   generateMintData,
   generateRevokeData,
   generateClaimData,
 } from "../utils/erc20moduleData";
+import type { ClaimData } from "../utils/claimData";
 import { getCommonSigners } from "../utils/signers";
 
 const systemConfig = getSystemConfig(hre);
@@ -27,13 +27,13 @@ describe("PackMain, ERC20Module", function () {
 
     // ERC6551 Related contracts
     const { packMain, erc20MockA, erc20MockB, erc20Module } =
-      await deploySystem(hre, deployer, systemConfig);
+      await deployFullSystem(hre, deployer, systemConfig);
 
     // Set PackMain address in KeySignManager
     const keySignManager = new KeySignManager(
       systemConfig.packConfig.registryChainId,
       ethers.encodeBytes32String(systemConfig.packConfig.salt.toString()),
-      await packMain.getAddress(),
+      await packMain.getAddress()
     );
 
     return {
@@ -55,7 +55,7 @@ describe("PackMain, ERC20Module", function () {
     packMain: PackMain,
     erc20Module: ERC20Module,
     erc20Mocks: { mock: ERC20Mock; value: bigint }[],
-    keySignManager: KeySignManager,
+    keySignManager: KeySignManager
   ) => {
     const moduleDataArray: [string, bigint][] = [];
     for (const { mock, value } of erc20Mocks) {
@@ -74,7 +74,7 @@ describe("PackMain, ERC20Module", function () {
       keySignManager,
       erc20Mocks.reduce((acc, { value }) => acc + value, 0n),
       modules,
-      [moduleData],
+      [moduleData]
     );
     return { packInstance, erc20Mocks, alice, claimPrivateKey };
   };
@@ -86,7 +86,7 @@ describe("PackMain, ERC20Module", function () {
         await loadFixture(setup);
 
       const aliceBalanceBefore = await ethers.provider.getBalance(
-        alice.address,
+        alice.address
       );
 
       // Mint a new pack using createPack function
@@ -96,7 +96,7 @@ describe("PackMain, ERC20Module", function () {
         packMain,
         erc20Module,
         [{ mock: erc20MockA, value }],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -129,11 +129,11 @@ describe("PackMain, ERC20Module", function () {
         packMain,
         erc20Module,
         [{ mock: erc20MockA, value }],
-        keySignManager,
+        keySignManager
       );
 
       const aliceBalanceBefore = await ethers.provider.getBalance(
-        alice.address,
+        alice.address
       );
 
       // Check correct state
@@ -175,7 +175,7 @@ describe("PackMain, ERC20Module", function () {
         packMain,
         erc20Module,
         [{ mock: erc20MockA, value }],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -188,7 +188,7 @@ describe("PackMain, ERC20Module", function () {
         await ethers.provider.getBalance(accountAddress);
       expect(ethBalanceAccount).to.equal(value);
       const aliceBalanceBefore = await ethers.provider.getBalance(
-        alice.address,
+        alice.address
       );
       // Check that the erc20 tokens are in the pack
       const erc20BalanceAccount = await erc20MockA.balanceOf(accountAddress);
@@ -203,15 +203,21 @@ describe("PackMain, ERC20Module", function () {
         await keySignManager.generateClaimSignature(
           claimPrivateKey,
           ["uint256", "address"],
-          [0, bob.address],
+          [0, bob.address]
         );
+
+      const moduleData = await generateClaimData([
+        await erc20MockA.getAddress(),
+      ]);
+
       // Create SigClaimer
-      const { claimSignature: sigClaimer } =
-        await keySignManager.generateClaimSignature(
-          bob,
-          ["uint256", "uint256"],
-          [0, 0],
-        );
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        0,
+        0,
+        [moduleData]
+      );
 
       const claimData: ClaimData = {
         tokenId: 0,
@@ -220,15 +226,12 @@ describe("PackMain, ERC20Module", function () {
         sigClaimer: sigClaimer,
         refundValue: BigInt(0),
         maxRefundValue: BigInt(0),
+        moduleData: [moduleData],
       };
-
-      const moduleData = await generateClaimData([
-        await erc20MockA.getAddress(),
-      ]);
 
       // Change account to bob
       const packInstanceBob = packMain.connect(bob);
-      await packInstanceBob.open(claimData, [moduleData]);
+      await packInstanceBob.open(claimData);
 
       // Check correct state
       expect(await packInstanceBob.packState(0)).to.equal(2); // 2 is the enum value for Opened
@@ -253,6 +256,71 @@ describe("PackMain, ERC20Module", function () {
     });
   });
   describe("RelayClaim tests, with ERC20 Module", function () {
+    it("Should open a pack, using EIP712 signature", async function () {
+      const value = ethers.parseEther("1");
+      const {
+        packMain,
+        alice,
+        bob,
+        relayer,
+        keySignManager,
+        erc20Module,
+        erc20MockA,
+      } = await loadFixture(setup);
+
+      // Mint a new pack using createPack function
+      const { packInstance, claimPrivateKey } = await mintPackWithERC20(
+        value,
+        alice,
+        packMain,
+        erc20Module,
+        [{ mock: erc20MockA, value }],
+        keySignManager
+      );
+
+      // Check correct state
+      expect(await packInstance.packState(0)).to.equal(1); // 1 is the enum value for Created
+
+      // Create SigOwner
+      const { claimSignature: sigOwner } =
+        await keySignManager.generateClaimSignature(
+          claimPrivateKey,
+          ["uint256", "address"],
+          [0, bob.address]
+        );
+
+      const moduleData = await generateClaimData([
+        await erc20MockA.getAddress(),
+      ]);
+
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        0,
+        0,
+        [moduleData]
+      );
+
+      console.log("sigClaimer", sigClaimer);
+
+      const claimData: ClaimData = {
+        tokenId: 0,
+        sigOwner: sigOwner,
+        claimer: bob.address,
+        sigClaimer: sigClaimer,
+        refundValue: BigInt(0),
+        maxRefundValue: BigInt(0),
+        moduleData: [moduleData],
+      };
+
+      // Change account to relayer
+      const packInstanceRelayer = packMain.connect(relayer);
+      const tx = packInstanceRelayer.open(claimData);
+      await expect(tx).to.emit(packInstanceRelayer, "PackOpened");
+
+      // Check correct state
+      expect(await packInstanceRelayer.packState(0)).to.equal(2); // 2 is the enum value for Opened
+    });
     it("Should open a pack, some gas reimburstments", async function () {
       const value = ethers.parseEther("1");
       const maxRefundValue = ethers.parseEther("0.1");
@@ -273,7 +341,7 @@ describe("PackMain, ERC20Module", function () {
         packMain,
         erc20Module,
         [{ mock: erc20MockA, value }],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -284,15 +352,20 @@ describe("PackMain, ERC20Module", function () {
         await keySignManager.generateClaimSignature(
           claimPrivateKey,
           ["uint256", "address"],
-          [0, bob.address],
-        );
-      const { claimSignature: sigClaimer } =
-        await keySignManager.generateClaimSignature(
-          bob,
-          ["uint256", "uint256"],
-          [0, maxRefundValue],
+          [0, bob.address]
         );
 
+      const moduleData = await generateClaimData([
+        await erc20MockA.getAddress(),
+      ]);
+
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        0,
+        maxRefundValue,
+        [moduleData]
+      );
       const claimData: ClaimData = {
         tokenId: 0,
         sigOwner: sigOwner,
@@ -300,17 +373,14 @@ describe("PackMain, ERC20Module", function () {
         sigClaimer: sigClaimer,
         refundValue: BigInt(0),
         maxRefundValue: maxRefundValue,
+        moduleData: [moduleData],
       };
 
       const bobBalanceBefore = await ethers.provider.getBalance(bob.address);
 
-      const moduleData = await generateClaimData([
-        await erc20MockA.getAddress(),
-      ]);
-
       // Change account to relayer
       const packInstanceRelayer = packMain.connect(relayer);
-      await packInstanceRelayer.open(claimData, [moduleData]);
+      await packInstanceRelayer.open(claimData);
 
       // Check correct state
       expect(await packInstanceRelayer.packState(0)).to.equal(2); // 2 is the enum value for Opened
@@ -356,7 +426,7 @@ describe("PackMain, ERC20Module", function () {
           { mock: erc20MockA, value: valueA },
           { mock: erc20MockB, value: valueB },
         ],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -397,7 +467,7 @@ describe("PackMain, ERC20Module", function () {
           { mock: erc20MockA, value: valueA },
           { mock: erc20MockB, value: valueB },
         ],
-        keySignManager,
+        keySignManager
       );
 
       const accountAddress = await packInstance.account(0);
@@ -456,7 +526,7 @@ describe("PackMain, ERC20Module", function () {
           { mock: erc20MockA, value: valueA },
           { mock: erc20MockB, value: valueB },
         ],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -474,20 +544,26 @@ describe("PackMain, ERC20Module", function () {
       const erc20BalanceAccountB = await erc20MockB.balanceOf(accountAddress);
       expect(erc20BalanceAccountB).to.equal(valueB);
 
+      const moduleData = await generateClaimData([
+        await erc20MockA.getAddress(),
+        await erc20MockB.getAddress(),
+      ]);
+
       // Create SigOwner
       const { claimSignature: sigOwner } =
         await keySignManager.generateClaimSignature(
           claimPrivateKey,
           ["uint256", "address"],
-          [0, bob.address],
+          [0, bob.address]
         );
       // Create SigClaimer
-      const { claimSignature: sigClaimer } =
-        await keySignManager.generateClaimSignature(
-          bob,
-          ["uint256", "uint256"],
-          [0, 0],
-        );
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        0,
+        0,
+        [moduleData]
+      );
 
       const claimData: ClaimData = {
         tokenId: 0,
@@ -496,16 +572,12 @@ describe("PackMain, ERC20Module", function () {
         sigClaimer: sigClaimer,
         refundValue: BigInt(0),
         maxRefundValue: BigInt(0),
+        moduleData: [moduleData],
       };
-
-      const moduleData = await generateClaimData([
-        await erc20MockA.getAddress(),
-        await erc20MockB.getAddress(),
-      ]);
 
       // Change account to bob
       const packInstanceBob = packMain.connect(bob);
-      await packInstanceBob.open(claimData, [moduleData]);
+      await packInstanceBob.open(claimData);
 
       // Check correct state
       expect(await packInstanceBob.packState(0)).to.equal(2); // 2 is the enum value for Opened

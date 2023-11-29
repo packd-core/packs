@@ -520,12 +520,12 @@
           {
             "type": "uint256",
             "name": "maxRefundValue"
+          },
+          {
+            "type": "bytes[]",
+            "name": "moduleData"
           }
         ]
-      },
-      {
-        "type": "bytes[]",
-        "name": "moduleData"
       }
     ],
     "outputs": []

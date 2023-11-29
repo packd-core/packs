@@ -1,5 +1,7 @@
 import { subtask, task, types } from "hardhat/config";
-import { deploySystem } from "../scripts/deploy";
+import { config as baseConfig } from "../scripts/base-config";
+import { deployFullSystem } from "../scripts/deploy";
+import { chainIds } from "../utils/constants";
 import { getSystemConfig } from "../utils/deployConfig";
 import { logger } from "../utils/deployUtils";
 import { getDeployedAddress } from "../utils/saveAddress";
@@ -8,14 +10,26 @@ const info = logger("info", "task");
 subtask(
   "deploy",
   "Deploy the contracts to the selected chain (defaults to localhost)",
-).setAction(async (args, hre) => {
+).
+setAction(async (args, hre) => {
   info("Subtask deploy");
   const systemConfig = getSystemConfig(hre);
-  return await deploySystem(
-    hre,
-    await hre.ethers.provider.getSigner(),
-    systemConfig,
-  );
+  const configs = {
+    // HERE ADD EACH DIFFERENT CHAIN ID
+    [chainIds.base]: baseConfig,
+    [chainIds.hardhat]: {externalConfig:undefined},
+    [-1]: undefined,
+};
+let config = configs[hre.network.config.chainId??-1];
+if (!config) {
+    throw new Error(`Config for chain ID ${hre.network.config.chainId} not found`);
+}
+
+const signer = await hre.ethers.provider.getSigner();
+const fullSystemDeployed = await deployFullSystem(hre, signer, systemConfig, config.externalConfig)
+  return {
+    ...fullSystemDeployed
+  }
 });
 
 task("deploy").setAction(async (_, __, runSuper) => {
@@ -37,22 +51,12 @@ task("fund:account", "Send ETH, ERC20Mocks, and NFTsMocks to an account")
   .setAction(async (args, hre) => {
     info("fund:account");
     const account = args.account;
-    const isLocal =
-      hre.network.name === "hardhat" || hre.network.name === "localhost";
 
     const addresses = {
-      erc20MockA: isLocal
-        ? "0x7D0B2154C5c709b3Cc8489286e023Cf75a38E0B5"
-        : await getDeployedAddress(hre, "ERC20MockA"),
-      erc20MockB: isLocal
-        ? "0x416D29fbCf9fc5CA66d792B1f6368221E985ec47"
-        : await getDeployedAddress(hre, "ERC20MockB"),
-      erc721MockA: isLocal
-        ? "0x0106f5483Ace34618dCC1c76EFF7e284e5dE4C6B"
-        : await getDeployedAddress(hre, "ERC721MockA"),
-      erc721MockB: isLocal
-        ? "0x958B411CB2cf43678ca9d366a8a6469CEa85B8fE"
-        : await getDeployedAddress(hre, "ERC721MockB"),
+      erc20MockA: await getDeployedAddress(hre, "ERC20MockA"),
+      erc20MockB: await getDeployedAddress(hre, "ERC20MockB"),
+      erc721MockA: await getDeployedAddress(hre, "ERC721MockA"),
+      erc721MockB: await getDeployedAddress(hre, "ERC721MockB"),
     };
 
     let tokenId = 0;

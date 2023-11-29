@@ -1,13 +1,13 @@
+import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
 import hre, { ethers } from "hardhat";
-import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 
-import { KeySignManager } from "../utils/keySignManager";
+import { deployFullSystem } from "../scripts/deploy";
+import { ClaimData } from "../utils/claimData";
 import { getSystemConfig } from "../utils/deployConfig";
-import { createPack } from "../utils/testUtils";
-import { deploySystem } from "../scripts/deploy";
-import { ClaimData } from "../utils/erc20moduleData";
+import { KeySignManager } from "../utils/keySignManager";
 import { getCommonSigners } from "../utils/signers";
+import { createPack } from "../utils/testUtils";
 
 const systemConfig = getSystemConfig(hre);
 
@@ -18,7 +18,7 @@ describe("PackMain", function () {
     const { alice, bob, deployer, relayer } = await getCommonSigners(hre);
 
     // ERC6551 Related contracts
-    const { packMain } = await deploySystem(hre, deployer, systemConfig);
+    const { packMain } = await deployFullSystem(hre, deployer, systemConfig);
 
     // Set PackMain address in KeySignManager
     const keySignManager = new KeySignManager(
@@ -235,12 +235,13 @@ describe("PackMain", function () {
           [0, bob.address]
         );
       // Create SigClaimer
-      const { claimSignature: sigClaimer } =
-        await keySignManager.generateClaimSignature(
-          bob,
-          ["uint256", "uint256"],
-          [0, 0]
-        );
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        0,
+        0,
+        []
+      );
 
       const claimData: ClaimData = {
         tokenId: 0,
@@ -249,11 +250,12 @@ describe("PackMain", function () {
         sigClaimer: sigClaimer,
         refundValue: BigInt(0),
         maxRefundValue: BigInt(0),
+        moduleData: [],
       };
 
       // Change account to bob
       const packInstanceBob = packMain.connect(bob);
-      await packInstanceBob.open(claimData, []);
+      await packInstanceBob.open(claimData);
 
       // Check correct state
       expect(await packInstanceBob.packState(0)).to.equal(2); // 2 is the enum value for Opened
@@ -291,12 +293,14 @@ describe("PackMain", function () {
           ["uint256", "address"],
           [0, bob.address]
         );
-      const { claimSignature: sigClaimer } =
-        await keySignManager.generateClaimSignature(
-          bob,
-          ["uint256", "uint256"],
-          [0, 0]
-        );
+
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        0,
+        0,
+        []
+      );
 
       const claimData: ClaimData = {
         tokenId: 0,
@@ -305,13 +309,14 @@ describe("PackMain", function () {
         sigClaimer: sigClaimer,
         refundValue: BigInt(0),
         maxRefundValue: BigInt(0),
+        moduleData: [],
       };
 
       const bobBalanceBefore = await ethers.provider.getBalance(bob.address);
 
       // Change account to relayer
       const packInstanceRelayer = packMain.connect(relayer);
-      await packInstanceRelayer.open(claimData, []);
+      await packInstanceRelayer.open(claimData);
 
       // Check correct state
       expect(await packInstanceRelayer.packState(0)).to.equal(2); // 2 is the enum value for Opened
@@ -349,12 +354,13 @@ describe("PackMain", function () {
           [0, bob.address]
         );
 
-      const { claimSignature: sigClaimer } =
-        await keySignManager.generateClaimSignature(
-          bob,
-          ["uint256", "uint256"],
-          [0, maxRefundValue]
-        );
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        maxRefundValue,
+        maxRefundValue,
+        []
+      );
 
       const claimData: ClaimData = {
         tokenId: 0,
@@ -363,6 +369,7 @@ describe("PackMain", function () {
         sigClaimer: sigClaimer,
         refundValue: maxRefundValue,
         maxRefundValue: maxRefundValue,
+        moduleData: [],
       };
 
       // Get balances before
@@ -373,7 +380,7 @@ describe("PackMain", function () {
 
       // Change account to relayer
       const packInstanceRelayer = packMain.connect(relayer);
-      await packInstanceRelayer.open(claimData, []);
+      await packInstanceRelayer.open(claimData);
 
       // Check correct state
       expect(await packInstanceRelayer.packState(0)).to.equal(2); // 2 is the enum value for Opened
@@ -416,12 +423,13 @@ describe("PackMain", function () {
           [0, bob.address]
         );
 
-      const { claimSignature: sigClaimer } =
-        await keySignManager.generateClaimSignature(
-          bob,
-          ["uint256", "uint256"],
-          [0, maxRefundValue]
-        );
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        maxRefundValue + BigInt(1),
+        maxRefundValue,
+        []
+      );
 
       const claimData: ClaimData = {
         tokenId: 0,
@@ -430,12 +438,13 @@ describe("PackMain", function () {
         sigClaimer: sigClaimer,
         refundValue: maxRefundValue + BigInt(1),
         maxRefundValue: maxRefundValue,
+        moduleData: [],
       };
 
       // Change account to relayer
       const packInstanceRelayer = packMain.connect(relayer);
       await expect(
-        packInstanceRelayer.open(claimData, [])
+        packInstanceRelayer.open(claimData)
       ).to.be.revertedWithCustomError(packMain, "InvalidRefundValue");
     });
     it("Should not open a pack, relayer tries to steal pack content", async function () {
@@ -464,12 +473,13 @@ describe("PackMain", function () {
           [0, bob.address]
         );
 
-      const { claimSignature: sigClaimer } =
-        await keySignManager.generateClaimSignature(
-          bob,
-          ["uint256", "uint256"],
-          [0, maxRefundValue]
-        );
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        bob,
+        0,
+        maxRefundValue,
+        maxRefundValue,
+        []
+      );
 
       const claimData: ClaimData = {
         tokenId: 0,
@@ -478,12 +488,13 @@ describe("PackMain", function () {
         sigClaimer: sigClaimer,
         refundValue: maxRefundValue,
         maxRefundValue: maxRefundValue,
+        moduleData: [],
       };
 
       // Change account to relayer
       const packInstanceRelayer = packMain.connect(relayer);
       await expect(
-        packInstanceRelayer.open(claimData, [])
+        packInstanceRelayer.open(claimData)
       ).to.be.revertedWithCustomError(packMain, "InvalidOwnerSignature");
     });
   });

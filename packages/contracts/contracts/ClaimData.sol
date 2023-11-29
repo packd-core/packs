@@ -12,4 +12,5 @@ struct ClaimData {
     bytes sigClaimer; // Signature from the claimer
     uint256 refundValue; // Value to refund to the relayer
     uint256 maxRefundValue; // Maximum refundable value (to prevent over-refund)
+    bytes[] moduleData; // Data for the modules
 }

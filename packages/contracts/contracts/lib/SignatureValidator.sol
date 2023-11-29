@@ -10,6 +10,30 @@ library SignatureValidator {
     error InvalidOwnerSignature();
     error InvalidClaimerSignature();
 
+    function DOMAIN_SEPARATOR(
+        uint256 registryChainId
+    ) public view returns (bytes32) {
+        return
+            keccak256(
+                abi.encode(
+                    keccak256(
+                        "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
+                    ),
+                    keccak256(bytes("PACKD")),
+                    keccak256(bytes("1")),
+                    registryChainId,
+                    address(this)
+                )
+            );
+    }
+
+    function STRUCT_TYPEHASH() public pure returns (bytes32) {
+        return
+            keccak256(
+                "Claim(uint256 tokenId,address claimer,uint256 refundValue,uint256 maxRefundValue,bytes32 moduleData)"
+            );
+    }
+
     function validateSignatures(
         ClaimData memory data,
         uint256 registryChainId,
@@ -39,14 +63,16 @@ library SignatureValidator {
             revert InvalidOwnerSignature();
         }
 
-        bytes32 messageHashClaimer = ECDSA.toEthSignedMessageHash(
+        bytes32 messageHashClaimer = ECDSA.toTypedDataHash(
+            DOMAIN_SEPARATOR(registryChainId),
             keccak256(
-                abi.encodePacked(
+                abi.encode(
+                    STRUCT_TYPEHASH(),
                     data.tokenId,
+                    data.claimer,
+                    data.refundValue,
                     data.maxRefundValue,
-                    registryChainId,
-                    salt,
-                    addr
+                    keccak256(abi.encode(data.moduleData))
                 )
             )
         );

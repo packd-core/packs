@@ -6,6 +6,7 @@ import "hardhat-tracer";
 dotenvConfig({ path: __dirname + "/.env" });
 
 import "./tasks";
+import { chainIds } from "./utils/constants";
 
 // Ensure that we have all the environment variables we need.
 const mnemonic: string | undefined = process.env.MNEMONIC;
@@ -30,10 +31,16 @@ const config: HardhatUserConfig = {
   typechain: {
     outDir: "types/generated",
     target: "ethers-v6",
-},  
+  },
   networks: {
+    localhost: {
+      chainId: chainIds.hardhat,
+      accounts: {
+        mnemonic,
+      },
+    },    
     hardhat: {
-      chainId: 31337,
+      chainId: chainIds.hardhat,
       accounts: {
         mnemonic,
       },
@@ -42,21 +49,21 @@ const config: HardhatUserConfig = {
     scrollSepolia: {
       url: "https://sepolia-rpc.scroll.io/" || "",
       accounts: accounts,
-      chainId: 534351,
+      chainId: chainIds.scrollSepolia,
     },
 
     //  https://faucet.polygon.technology/
     polygonZkEVMTestnet: {
       url: "https://rpc.public.zkevm-test.net" || "",
       accounts: accounts,
-      chainId: 1442,
+      chainId: chainIds.polygonZkEVMTestnet,
     },
 
     // Faucets, RPC, etc: https://windranger-io.notion.site/Developer-Starter-Guide-9e9de7a4e60a49dc97dd786c48ffd455
     mantleTestnet: {
       url: "https://rpc.testnet.mantle.xyz" || "",
       accounts: accounts,
-      chainId: 5001,
+      chainId: chainIds.mantleTestnet,
     },
   },
   etherscan: {
@@ -68,7 +75,7 @@ const config: HardhatUserConfig = {
     customChains: [
       {
         network: "scrollSepolia",
-        chainId: 534351,
+        chainId: chainIds.scrollSepolia,
         urls: {
           apiURL: "https://api-sepolia.scrollscan.com/api",
           browserURL: "https://sepolia.scrollscan.dev/",
@@ -76,7 +83,7 @@ const config: HardhatUserConfig = {
       },
       {
         network: "mantleTest",
-        chainId: 5001,
+        chainId: chainIds.mantleTestnet,
         urls: {
           apiURL: "https://explorer.testnet.mantle.xyz/api",
           browserURL: "https://explorer.testnet.mantle.xyz",
@@ -84,7 +91,7 @@ const config: HardhatUserConfig = {
       },
       {
         network: "polygonZkEVMTestnet",
-        chainId: 1442,
+        chainId: chainIds.polygonZkEVMTestnet,
         urls: {
           apiURL: "https://api-testnet-zkevm.polygonscan.com/api",
           browserURL: "https://testnet-zkevm.polygonscan.com/",
