@@ -8,6 +8,7 @@ import type {
   FunctionFragment,
   Result,
   Interface,
+  EventFragment,
   AddressLike,
   ContractRunner,
   ContractMethod,
@@ -17,25 +18,165 @@ import type {
   TypedContractEvent,
   TypedDeferredTopicFilter,
   TypedEventLog,
+  TypedLogDescription,
   TypedListener,
   TypedContractMethod,
 } from "../common";
 
+export type UserOperationStruct = {
+  sender: AddressLike;
+  nonce: BigNumberish;
+  initCode: BytesLike;
+  callData: BytesLike;
+  callGasLimit: BigNumberish;
+  verificationGasLimit: BigNumberish;
+  preVerificationGas: BigNumberish;
+  maxFeePerGas: BigNumberish;
+  maxPriorityFeePerGas: BigNumberish;
+  paymasterAndData: BytesLike;
+  signature: BytesLike;
+};
+
+export type UserOperationStructOutput = [
+  sender: string,
+  nonce: bigint,
+  initCode: string,
+  callData: string,
+  callGasLimit: bigint,
+  verificationGasLimit: bigint,
+  preVerificationGas: bigint,
+  maxFeePerGas: bigint,
+  maxPriorityFeePerGas: bigint,
+  paymasterAndData: string,
+  signature: string
+] & {
+  sender: string;
+  nonce: bigint;
+  initCode: string;
+  callData: string;
+  callGasLimit: bigint;
+  verificationGasLimit: bigint;
+  preVerificationGas: bigint;
+  maxFeePerGas: bigint;
+  maxPriorityFeePerGas: bigint;
+  paymasterAndData: string;
+  signature: string;
+};
+
+export declare namespace BatchExecutor {
+  export type OperationStruct = {
+    to: AddressLike;
+    value: BigNumberish;
+    data: BytesLike;
+    operation: BigNumberish;
+  };
+
+  export type OperationStructOutput = [
+    to: string,
+    value: bigint,
+    data: string,
+    operation: bigint
+  ] & { to: string; value: bigint; data: string; operation: bigint };
+}
+
+export declare namespace NestedAccountExecutor {
+  export type ERC6551AccountInfoStruct = {
+    salt: BytesLike;
+    tokenContract: AddressLike;
+    tokenId: BigNumberish;
+  };
+
+  export type ERC6551AccountInfoStructOutput = [
+    salt: string,
+    tokenContract: string,
+    tokenId: bigint
+  ] & { salt: string; tokenContract: string; tokenId: bigint };
+}
+
 export interface PackAccountInterface extends Interface {
   getFunction(
     nameOrSignature:
+      | "entryPoint"
+      | "erc6551Registry"
       | "execute"
+      | "executeBatch"
+      | "executeNested"
+      | "extcall"
+      | "extcreate"
+      | "extcreate2"
+      | "extsload"
+      | "getNonce"
+      | "isLocked"
+      | "isTrustedForwarder"
       | "isValidSignature"
       | "isValidSigner"
+      | "lock"
+      | "lockedUntil"
+      | "onERC1155BatchReceived"
+      | "onERC1155Received"
+      | "onERC721Received"
+      | "overrides"
       | "owner"
+      | "permissions"
+      | "setOverrides"
+      | "setPermissions"
       | "state"
       | "supportsInterface"
       | "token"
+      | "validateUserOp"
   ): FunctionFragment;
 
+  getEvent(
+    nameOrSignatureOrTopic:
+      | "LockUpdated"
+      | "OverrideUpdated"
+      | "PermissionUpdated"
+  ): EventFragment;
+
+  encodeFunctionData(
+    functionFragment: "entryPoint",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "erc6551Registry",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "execute",
     values: [AddressLike, BigNumberish, BytesLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "executeBatch",
+    values: [BatchExecutor.OperationStruct[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "executeNested",
+    values: [
+      AddressLike,
+      BigNumberish,
+      BytesLike,
+      BigNumberish,
+      NestedAccountExecutor.ERC6551AccountInfoStruct[]
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "extcall",
+    values: [AddressLike, BigNumberish, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "extcreate",
+    values: [BigNumberish, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "extcreate2",
+    values: [BigNumberish, BytesLike, BytesLike]
+  ): string;
+  encodeFunctionData(functionFragment: "extsload", values: [BytesLike]): string;
+  encodeFunctionData(functionFragment: "getNonce", values?: undefined): string;
+  encodeFunctionData(functionFragment: "isLocked", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "isTrustedForwarder",
+    values: [AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "isValidSignature",
@@ -45,15 +186,81 @@ export interface PackAccountInterface extends Interface {
     functionFragment: "isValidSigner",
     values: [AddressLike, BytesLike]
   ): string;
+  encodeFunctionData(functionFragment: "lock", values: [BigNumberish]): string;
+  encodeFunctionData(
+    functionFragment: "lockedUntil",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "onERC1155BatchReceived",
+    values: [
+      AddressLike,
+      AddressLike,
+      BigNumberish[],
+      BigNumberish[],
+      BytesLike
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "onERC1155Received",
+    values: [AddressLike, AddressLike, BigNumberish, BigNumberish, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "onERC721Received",
+    values: [AddressLike, AddressLike, BigNumberish, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "overrides",
+    values: [AddressLike, BytesLike]
+  ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "permissions",
+    values: [AddressLike, AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setOverrides",
+    values: [BytesLike[], AddressLike[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setPermissions",
+    values: [AddressLike[], boolean[]]
+  ): string;
   encodeFunctionData(functionFragment: "state", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "token", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "validateUserOp",
+    values: [UserOperationStruct, BytesLike, BigNumberish]
+  ): string;
 
+  decodeFunctionResult(functionFragment: "entryPoint", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "erc6551Registry",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "execute", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "executeBatch",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "executeNested",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "extcall", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "extcreate", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "extcreate2", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "extsload", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getNonce", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "isLocked", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "isTrustedForwarder",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "isValidSignature",
     data: BytesLike
@@ -62,13 +269,103 @@ export interface PackAccountInterface extends Interface {
     functionFragment: "isValidSigner",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "lock", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "lockedUntil",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "onERC1155BatchReceived",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "onERC1155Received",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "onERC721Received",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "overrides", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "permissions",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setOverrides",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setPermissions",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "state", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "token", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "validateUserOp",
+    data: BytesLike
+  ): Result;
+}
+
+export namespace LockUpdatedEvent {
+  export type InputTuple = [lockedUntil: BigNumberish];
+  export type OutputTuple = [lockedUntil: bigint];
+  export interface OutputObject {
+    lockedUntil: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace OverrideUpdatedEvent {
+  export type InputTuple = [
+    owner: AddressLike,
+    selector: BytesLike,
+    implementation: AddressLike
+  ];
+  export type OutputTuple = [
+    owner: string,
+    selector: string,
+    implementation: string
+  ];
+  export interface OutputObject {
+    owner: string;
+    selector: string;
+    implementation: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace PermissionUpdatedEvent {
+  export type InputTuple = [
+    owner: AddressLike,
+    caller: AddressLike,
+    hasPermission: boolean
+  ];
+  export type OutputTuple = [
+    owner: string,
+    caller: string,
+    hasPermission: boolean
+  ];
+  export interface OutputObject {
+    owner: string;
+    caller: string;
+    hasPermission: boolean;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
 }
 
 export interface PackAccount extends BaseContract {
@@ -114,6 +411,10 @@ export interface PackAccount extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  entryPoint: TypedContractMethod<[], [string], "view">;
+
+  erc6551Registry: TypedContractMethod<[], [string], "view">;
+
   execute: TypedContractMethod<
     [
       to: AddressLike,
@@ -125,6 +426,54 @@ export interface PackAccount extends BaseContract {
     "payable"
   >;
 
+  executeBatch: TypedContractMethod<
+    [operations: BatchExecutor.OperationStruct[]],
+    [string[]],
+    "payable"
+  >;
+
+  executeNested: TypedContractMethod<
+    [
+      to: AddressLike,
+      value: BigNumberish,
+      data: BytesLike,
+      operation: BigNumberish,
+      proof: NestedAccountExecutor.ERC6551AccountInfoStruct[]
+    ],
+    [string],
+    "payable"
+  >;
+
+  extcall: TypedContractMethod<
+    [to: AddressLike, value: BigNumberish, data: BytesLike],
+    [string],
+    "nonpayable"
+  >;
+
+  extcreate: TypedContractMethod<
+    [value: BigNumberish, bytecode: BytesLike],
+    [string],
+    "nonpayable"
+  >;
+
+  extcreate2: TypedContractMethod<
+    [value: BigNumberish, salt: BytesLike, bytecode: BytesLike],
+    [string],
+    "nonpayable"
+  >;
+
+  extsload: TypedContractMethod<[slot: BytesLike], [string], "view">;
+
+  getNonce: TypedContractMethod<[], [bigint], "view">;
+
+  isLocked: TypedContractMethod<[], [boolean], "view">;
+
+  isTrustedForwarder: TypedContractMethod<
+    [forwarder: AddressLike],
+    [boolean],
+    "view"
+  >;
+
   isValidSignature: TypedContractMethod<
     [hash: BytesLike, signature: BytesLike],
     [string],
@@ -132,12 +481,75 @@ export interface PackAccount extends BaseContract {
   >;
 
   isValidSigner: TypedContractMethod<
-    [signer: AddressLike, arg1: BytesLike],
+    [signer: AddressLike, data: BytesLike],
+    [string],
+    "view"
+  >;
+
+  lock: TypedContractMethod<[_lockedUntil: BigNumberish], [void], "nonpayable">;
+
+  lockedUntil: TypedContractMethod<[], [bigint], "view">;
+
+  onERC1155BatchReceived: TypedContractMethod<
+    [
+      arg0: AddressLike,
+      arg1: AddressLike,
+      arg2: BigNumberish[],
+      arg3: BigNumberish[],
+      arg4: BytesLike
+    ],
+    [string],
+    "nonpayable"
+  >;
+
+  onERC1155Received: TypedContractMethod<
+    [
+      arg0: AddressLike,
+      arg1: AddressLike,
+      arg2: BigNumberish,
+      arg3: BigNumberish,
+      arg4: BytesLike
+    ],
+    [string],
+    "nonpayable"
+  >;
+
+  onERC721Received: TypedContractMethod<
+    [
+      arg0: AddressLike,
+      arg1: AddressLike,
+      tokenId: BigNumberish,
+      arg3: BytesLike
+    ],
+    [string],
+    "nonpayable"
+  >;
+
+  overrides: TypedContractMethod<
+    [arg0: AddressLike, arg1: BytesLike],
     [string],
     "view"
   >;
 
   owner: TypedContractMethod<[], [string], "view">;
+
+  permissions: TypedContractMethod<
+    [arg0: AddressLike, arg1: AddressLike],
+    [boolean],
+    "view"
+  >;
+
+  setOverrides: TypedContractMethod<
+    [selectors: BytesLike[], implementations: AddressLike[]],
+    [void],
+    "nonpayable"
+  >;
+
+  setPermissions: TypedContractMethod<
+    [callers: AddressLike[], _permissions: boolean[]],
+    [void],
+    "nonpayable"
+  >;
 
   state: TypedContractMethod<[], [bigint], "view">;
 
@@ -147,12 +559,38 @@ export interface PackAccount extends BaseContract {
     "view"
   >;
 
-  token: TypedContractMethod<[], [[bigint, string, bigint]], "view">;
+  token: TypedContractMethod<
+    [],
+    [
+      [bigint, string, bigint] & {
+        chainId: bigint;
+        tokenContract: string;
+        tokenId: bigint;
+      }
+    ],
+    "view"
+  >;
+
+  validateUserOp: TypedContractMethod<
+    [
+      userOp: UserOperationStruct,
+      userOpHash: BytesLike,
+      missingAccountFunds: BigNumberish
+    ],
+    [bigint],
+    "nonpayable"
+  >;
 
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
   ): T;
 
+  getFunction(
+    nameOrSignature: "entryPoint"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "erc6551Registry"
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "execute"
   ): TypedContractMethod<
@@ -166,6 +604,59 @@ export interface PackAccount extends BaseContract {
     "payable"
   >;
   getFunction(
+    nameOrSignature: "executeBatch"
+  ): TypedContractMethod<
+    [operations: BatchExecutor.OperationStruct[]],
+    [string[]],
+    "payable"
+  >;
+  getFunction(
+    nameOrSignature: "executeNested"
+  ): TypedContractMethod<
+    [
+      to: AddressLike,
+      value: BigNumberish,
+      data: BytesLike,
+      operation: BigNumberish,
+      proof: NestedAccountExecutor.ERC6551AccountInfoStruct[]
+    ],
+    [string],
+    "payable"
+  >;
+  getFunction(
+    nameOrSignature: "extcall"
+  ): TypedContractMethod<
+    [to: AddressLike, value: BigNumberish, data: BytesLike],
+    [string],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "extcreate"
+  ): TypedContractMethod<
+    [value: BigNumberish, bytecode: BytesLike],
+    [string],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "extcreate2"
+  ): TypedContractMethod<
+    [value: BigNumberish, salt: BytesLike, bytecode: BytesLike],
+    [string],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "extsload"
+  ): TypedContractMethod<[slot: BytesLike], [string], "view">;
+  getFunction(
+    nameOrSignature: "getNonce"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "isLocked"
+  ): TypedContractMethod<[], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "isTrustedForwarder"
+  ): TypedContractMethod<[forwarder: AddressLike], [boolean], "view">;
+  getFunction(
     nameOrSignature: "isValidSignature"
   ): TypedContractMethod<
     [hash: BytesLike, signature: BytesLike],
@@ -175,13 +666,85 @@ export interface PackAccount extends BaseContract {
   getFunction(
     nameOrSignature: "isValidSigner"
   ): TypedContractMethod<
-    [signer: AddressLike, arg1: BytesLike],
+    [signer: AddressLike, data: BytesLike],
+    [string],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "lock"
+  ): TypedContractMethod<[_lockedUntil: BigNumberish], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "lockedUntil"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "onERC1155BatchReceived"
+  ): TypedContractMethod<
+    [
+      arg0: AddressLike,
+      arg1: AddressLike,
+      arg2: BigNumberish[],
+      arg3: BigNumberish[],
+      arg4: BytesLike
+    ],
+    [string],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "onERC1155Received"
+  ): TypedContractMethod<
+    [
+      arg0: AddressLike,
+      arg1: AddressLike,
+      arg2: BigNumberish,
+      arg3: BigNumberish,
+      arg4: BytesLike
+    ],
+    [string],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "onERC721Received"
+  ): TypedContractMethod<
+    [
+      arg0: AddressLike,
+      arg1: AddressLike,
+      tokenId: BigNumberish,
+      arg3: BytesLike
+    ],
+    [string],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "overrides"
+  ): TypedContractMethod<
+    [arg0: AddressLike, arg1: BytesLike],
     [string],
     "view"
   >;
   getFunction(
     nameOrSignature: "owner"
   ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "permissions"
+  ): TypedContractMethod<
+    [arg0: AddressLike, arg1: AddressLike],
+    [boolean],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "setOverrides"
+  ): TypedContractMethod<
+    [selectors: BytesLike[], implementations: AddressLike[]],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "setPermissions"
+  ): TypedContractMethod<
+    [callers: AddressLike[], _permissions: boolean[]],
+    [void],
+    "nonpayable"
+  >;
   getFunction(
     nameOrSignature: "state"
   ): TypedContractMethod<[], [bigint], "view">;
@@ -190,7 +753,83 @@ export interface PackAccount extends BaseContract {
   ): TypedContractMethod<[interfaceId: BytesLike], [boolean], "view">;
   getFunction(
     nameOrSignature: "token"
-  ): TypedContractMethod<[], [[bigint, string, bigint]], "view">;
+  ): TypedContractMethod<
+    [],
+    [
+      [bigint, string, bigint] & {
+        chainId: bigint;
+        tokenContract: string;
+        tokenId: bigint;
+      }
+    ],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "validateUserOp"
+  ): TypedContractMethod<
+    [
+      userOp: UserOperationStruct,
+      userOpHash: BytesLike,
+      missingAccountFunds: BigNumberish
+    ],
+    [bigint],
+    "nonpayable"
+  >;
 
-  filters: {};
+  getEvent(
+    key: "LockUpdated"
+  ): TypedContractEvent<
+    LockUpdatedEvent.InputTuple,
+    LockUpdatedEvent.OutputTuple,
+    LockUpdatedEvent.OutputObject
+  >;
+  getEvent(
+    key: "OverrideUpdated"
+  ): TypedContractEvent<
+    OverrideUpdatedEvent.InputTuple,
+    OverrideUpdatedEvent.OutputTuple,
+    OverrideUpdatedEvent.OutputObject
+  >;
+  getEvent(
+    key: "PermissionUpdated"
+  ): TypedContractEvent<
+    PermissionUpdatedEvent.InputTuple,
+    PermissionUpdatedEvent.OutputTuple,
+    PermissionUpdatedEvent.OutputObject
+  >;
+
+  filters: {
+    "LockUpdated(uint256)": TypedContractEvent<
+      LockUpdatedEvent.InputTuple,
+      LockUpdatedEvent.OutputTuple,
+      LockUpdatedEvent.OutputObject
+    >;
+    LockUpdated: TypedContractEvent<
+      LockUpdatedEvent.InputTuple,
+      LockUpdatedEvent.OutputTuple,
+      LockUpdatedEvent.OutputObject
+    >;
+
+    "OverrideUpdated(address,bytes4,address)": TypedContractEvent<
+      OverrideUpdatedEvent.InputTuple,
+      OverrideUpdatedEvent.OutputTuple,
+      OverrideUpdatedEvent.OutputObject
+    >;
+    OverrideUpdated: TypedContractEvent<
+      OverrideUpdatedEvent.InputTuple,
+      OverrideUpdatedEvent.OutputTuple,
+      OverrideUpdatedEvent.OutputObject
+    >;
+
+    "PermissionUpdated(address,address,bool)": TypedContractEvent<
+      PermissionUpdatedEvent.InputTuple,
+      PermissionUpdatedEvent.OutputTuple,
+      PermissionUpdatedEvent.OutputObject
+    >;
+    PermissionUpdated: TypedContractEvent<
+      PermissionUpdatedEvent.InputTuple,
+      PermissionUpdatedEvent.OutputTuple,
+      PermissionUpdatedEvent.OutputObject
+    >;
+  };
 }

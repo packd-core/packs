@@ -8,7 +8,6 @@ import type {
   FunctionFragment,
   Result,
   Interface,
-  EventFragment,
   AddressLike,
   ContractRunner,
   ContractMethod,
@@ -18,7 +17,6 @@ import type {
   TypedContractEvent,
   TypedDeferredTopicFilter,
   TypedEventLog,
-  TypedLogDescription,
   TypedListener,
   TypedContractMethod,
 } from "../../common";
@@ -27,10 +25,6 @@ export interface IPackModuleInterface extends Interface {
   getFunction(
     nameOrSignature: "onCreate" | "onOpen" | "onRevoke"
   ): FunctionFragment;
-
-  getEvent(
-    nameOrSignatureOrTopic: "Created" | "Opened" | "Revoked"
-  ): EventFragment;
 
   encodeFunctionData(
     functionFragment: "onCreate",
@@ -48,45 +42,6 @@ export interface IPackModuleInterface extends Interface {
   decodeFunctionResult(functionFragment: "onCreate", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "onOpen", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "onRevoke", data: BytesLike): Result;
-}
-
-export namespace CreatedEvent {
-  export type InputTuple = [tokenId: BigNumberish, account: AddressLike];
-  export type OutputTuple = [tokenId: bigint, account: string];
-  export interface OutputObject {
-    tokenId: bigint;
-    account: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
-export namespace OpenedEvent {
-  export type InputTuple = [tokenId: BigNumberish, account: AddressLike];
-  export type OutputTuple = [tokenId: bigint, account: string];
-  export interface OutputObject {
-    tokenId: bigint;
-    account: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
-export namespace RevokedEvent {
-  export type InputTuple = [tokenId: BigNumberish, account: AddressLike];
-  export type OutputTuple = [tokenId: bigint, account: string];
-  export interface OutputObject {
-    tokenId: bigint;
-    account: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
 }
 
 export interface IPackModule extends BaseContract {
@@ -186,60 +141,5 @@ export interface IPackModule extends BaseContract {
     "nonpayable"
   >;
 
-  getEvent(
-    key: "Created"
-  ): TypedContractEvent<
-    CreatedEvent.InputTuple,
-    CreatedEvent.OutputTuple,
-    CreatedEvent.OutputObject
-  >;
-  getEvent(
-    key: "Opened"
-  ): TypedContractEvent<
-    OpenedEvent.InputTuple,
-    OpenedEvent.OutputTuple,
-    OpenedEvent.OutputObject
-  >;
-  getEvent(
-    key: "Revoked"
-  ): TypedContractEvent<
-    RevokedEvent.InputTuple,
-    RevokedEvent.OutputTuple,
-    RevokedEvent.OutputObject
-  >;
-
-  filters: {
-    "Created(uint256,address)": TypedContractEvent<
-      CreatedEvent.InputTuple,
-      CreatedEvent.OutputTuple,
-      CreatedEvent.OutputObject
-    >;
-    Created: TypedContractEvent<
-      CreatedEvent.InputTuple,
-      CreatedEvent.OutputTuple,
-      CreatedEvent.OutputObject
-    >;
-
-    "Opened(uint256,address)": TypedContractEvent<
-      OpenedEvent.InputTuple,
-      OpenedEvent.OutputTuple,
-      OpenedEvent.OutputObject
-    >;
-    Opened: TypedContractEvent<
-      OpenedEvent.InputTuple,
-      OpenedEvent.OutputTuple,
-      OpenedEvent.OutputObject
-    >;
-
-    "Revoked(uint256,address)": TypedContractEvent<
-      RevokedEvent.InputTuple,
-      RevokedEvent.OutputTuple,
-      RevokedEvent.OutputObject
-    >;
-    Revoked: TypedContractEvent<
-      RevokedEvent.InputTuple,
-      RevokedEvent.OutputTuple,
-      RevokedEvent.OutputObject
-    >;
-  };
+  filters: {};
 }

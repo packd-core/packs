@@ -26,22 +26,15 @@ import type {
 export interface PackRegistryInterface extends Interface {
   getFunction(nameOrSignature: "account" | "createAccount"): FunctionFragment;
 
-  getEvent(nameOrSignatureOrTopic: "AccountCreated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ERC6551AccountCreated"): EventFragment;
 
   encodeFunctionData(
     functionFragment: "account",
-    values: [AddressLike, BigNumberish, AddressLike, BigNumberish, BigNumberish]
+    values: [AddressLike, BytesLike, BigNumberish, AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "createAccount",
-    values: [
-      AddressLike,
-      BigNumberish,
-      AddressLike,
-      BigNumberish,
-      BigNumberish,
-      BytesLike
-    ]
+    values: [AddressLike, BytesLike, BigNumberish, AddressLike, BigNumberish]
   ): string;
 
   decodeFunctionResult(functionFragment: "account", data: BytesLike): Result;
@@ -51,30 +44,30 @@ export interface PackRegistryInterface extends Interface {
   ): Result;
 }
 
-export namespace AccountCreatedEvent {
+export namespace ERC6551AccountCreatedEvent {
   export type InputTuple = [
     account: AddressLike,
     implementation: AddressLike,
+    salt: BytesLike,
     chainId: BigNumberish,
     tokenContract: AddressLike,
-    tokenId: BigNumberish,
-    salt: BigNumberish
+    tokenId: BigNumberish
   ];
   export type OutputTuple = [
     account: string,
     implementation: string,
+    salt: string,
     chainId: bigint,
     tokenContract: string,
-    tokenId: bigint,
-    salt: bigint
+    tokenId: bigint
   ];
   export interface OutputObject {
     account: string;
     implementation: string;
+    salt: string;
     chainId: bigint;
     tokenContract: string;
     tokenId: bigint;
-    salt: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -128,10 +121,10 @@ export interface PackRegistry extends BaseContract {
   account: TypedContractMethod<
     [
       implementation: AddressLike,
+      salt: BytesLike,
       chainId: BigNumberish,
       tokenContract: AddressLike,
-      tokenId: BigNumberish,
-      salt: BigNumberish
+      tokenId: BigNumberish
     ],
     [string],
     "view"
@@ -140,11 +133,10 @@ export interface PackRegistry extends BaseContract {
   createAccount: TypedContractMethod<
     [
       implementation: AddressLike,
+      salt: BytesLike,
       chainId: BigNumberish,
       tokenContract: AddressLike,
-      tokenId: BigNumberish,
-      salt: BigNumberish,
-      initData: BytesLike
+      tokenId: BigNumberish
     ],
     [string],
     "nonpayable"
@@ -159,10 +151,10 @@ export interface PackRegistry extends BaseContract {
   ): TypedContractMethod<
     [
       implementation: AddressLike,
+      salt: BytesLike,
       chainId: BigNumberish,
       tokenContract: AddressLike,
-      tokenId: BigNumberish,
-      salt: BigNumberish
+      tokenId: BigNumberish
     ],
     [string],
     "view"
@@ -172,34 +164,33 @@ export interface PackRegistry extends BaseContract {
   ): TypedContractMethod<
     [
       implementation: AddressLike,
+      salt: BytesLike,
       chainId: BigNumberish,
       tokenContract: AddressLike,
-      tokenId: BigNumberish,
-      salt: BigNumberish,
-      initData: BytesLike
+      tokenId: BigNumberish
     ],
     [string],
     "nonpayable"
   >;
 
   getEvent(
-    key: "AccountCreated"
+    key: "ERC6551AccountCreated"
   ): TypedContractEvent<
-    AccountCreatedEvent.InputTuple,
-    AccountCreatedEvent.OutputTuple,
-    AccountCreatedEvent.OutputObject
+    ERC6551AccountCreatedEvent.InputTuple,
+    ERC6551AccountCreatedEvent.OutputTuple,
+    ERC6551AccountCreatedEvent.OutputObject
   >;
 
   filters: {
-    "AccountCreated(address,address,uint256,address,uint256,uint256)": TypedContractEvent<
-      AccountCreatedEvent.InputTuple,
-      AccountCreatedEvent.OutputTuple,
-      AccountCreatedEvent.OutputObject
+    "ERC6551AccountCreated(address,address,bytes32,uint256,address,uint256)": TypedContractEvent<
+      ERC6551AccountCreatedEvent.InputTuple,
+      ERC6551AccountCreatedEvent.OutputTuple,
+      ERC6551AccountCreatedEvent.OutputObject
     >;
-    AccountCreated: TypedContractEvent<
-      AccountCreatedEvent.InputTuple,
-      AccountCreatedEvent.OutputTuple,
-      AccountCreatedEvent.OutputObject
+    ERC6551AccountCreated: TypedContractEvent<
+      ERC6551AccountCreatedEvent.InputTuple,
+      ERC6551AccountCreatedEvent.OutputTuple,
+      ERC6551AccountCreatedEvent.OutputObject
     >;
   };
 }
