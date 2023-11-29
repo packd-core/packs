@@ -294,8 +294,6 @@ describe("PackMain, ERC20Module", function () {
         await erc20MockA.getAddress(),
       ]);
 
-      // const encodedModuleData = KeySignManager.getModuleDataBytes([moduleData]);
-
       const domain = {
         name: "PACKD",
         version: "1",
@@ -307,27 +305,27 @@ describe("PackMain, ERC20Module", function () {
 
       const types = {
         Claim: [
-          // { name: "tokenId", type: "uint256" },
-          // { name: "claimer", type: "address" },
+          { name: "tokenId", type: "uint256" },
+          { name: "claimer", type: "address" },
           { name: "refundValue", type: "uint256" },
-          // { name: "maxRefundValue", type: "uint256" },
-          // { name: "moduleData", type: "bytes" },
+          { name: "maxRefundValue", type: "uint256" },
+          { name: "moduleData", type: "bytes" },
         ],
       };
 
-      // console.log("types", types);
+      const encodedModuleData = KeySignManager.getModuleDataBytes([moduleData]);
 
       const message = {
-        // tokenId: 0,
-        // claimer: bob.address,
+        tokenId: 0,
+        claimer: bob.address,
         refundValue: 0,
-        // maxRefundValue: BigInt(0),
-        // moduleData: encodedModuleData,
+        maxRefundValue: 0,
+        moduleData: encodedModuleData,
       };
 
-      // console.log("values", values);
+      console.log("message", message);
 
-      const sigClaimer = await alice.signTypedData(domain, types, message);
+      const sigClaimer = await bob.signTypedData(domain, types, message);
       const verify = ethers.verifyTypedData(domain, types, message, sigClaimer);
       console.log("verify", verify);
       // const { claimSignature: sigClaimer } =

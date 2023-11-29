@@ -45,14 +45,11 @@ library SignatureValidator {
             );
     }
 
-    function HASH_STRUCT_TYPEHASH() public pure returns (bytes32) {
+    function STRUCT_TYPEHASH() public pure returns (bytes32) {
         return
             keccak256(
-                abi.encode(
-                    keccak256("Claim(uint256 refundValue)"),
-                    // keccak256("Claim(uint256 tokenId,address claimer,uint256 refundValue,uint256 maxRefundValue,bytes moduleData)"
-                    0
-                )
+                "Claim(uint256 tokenId,address claimer,uint256 refundValue,uint256 maxRefundValue,bytes moduleData)"
+                // "Claim(uint256 tokenId,address claimer,uint256 refundValue,uint256 maxRefundValue)"
             );
     }
 
@@ -87,8 +84,28 @@ library SignatureValidator {
 
         bytes32 messageHashClaimer = ECDSA.toTypedDataHash(
             DOMAIN_SEPARATOR(registryChainId),
-            HASH_STRUCT_TYPEHASH()
+            keccak256(
+                abi.encode(
+                    STRUCT_TYPEHASH(),
+                    data.tokenId,
+                    data.claimer,
+                    data.refundValue,
+                    data.maxRefundValue,
+                    data.moduleData
+                )
+            )
         );
+
+        console.log("tokenId");
+        console.logUint(data.tokenId);
+        console.log("claimer");
+        console.logAddress(data.claimer);
+        console.log("refundValue");
+        console.logUint(data.refundValue);
+        console.log("maxRefundValue");
+        console.logUint(data.maxRefundValue);
+        console.log("moduleData");
+        console.logBytes(abi.encode(data.moduleData));
 
         address signer = ECDSA.recover(messageHashClaimer, data.sigClaimer);
         console.log("signer");
