@@ -10,7 +10,6 @@ import "erc6551/interfaces/IERC6551Registry.sol";
 import "erc6551/lib/ERC6551BytecodeLib.sol";
 
 contract PackRegistry is IERC6551Registry {
-
     function createAccount(
         address implementation,
         bytes32 salt,

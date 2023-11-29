@@ -15,7 +15,7 @@ export interface SystemConfig {
   };
 }
 
-export function getSystemConfig(hre: HardhatRuntimeEnvironment):SystemConfig {
+export function getSystemConfig(hre: HardhatRuntimeEnvironment): SystemConfig {
   return {
     packConfig: {
       initBaseURI: "https://packd.io/",
@@ -24,7 +24,7 @@ export function getSystemConfig(hre: HardhatRuntimeEnvironment):SystemConfig {
       registry: ZeroAddress,
       implementation: ZeroAddress,
       registryChainId: getChainId(hre) || DEFAULT_CHAIN_ID,
-      salt: '0',
+      salt: "0",
     },
   };
 }

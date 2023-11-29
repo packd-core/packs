@@ -38,7 +38,7 @@ const config: HardhatUserConfig = {
       accounts: {
         mnemonic,
       },
-    },    
+    },
     hardhat: {
       chainId: chainIds.hardhat,
       accounts: {
@@ -65,12 +65,18 @@ const config: HardhatUserConfig = {
       accounts: accounts,
       chainId: chainIds.mantleTestnet,
     },
+    "base-mainnet": {
+      chainId: chainIds.base,
+      accounts: accounts,
+      url: process.env.NODE_URL || "",
+    },
   },
   etherscan: {
     apiKey: {
       scrollSepolia: process.env.ETHERSCAN_SCROLL || "", // https://docs.scroll.io/en/developers/verifying-smart-contracts/
       mantleTest: "abc",
       polygonZkEVMTestnet: process.env.ETHERSCAN_POLYGON_ZKEVM || "",
+      "base-mainnet": process.env.ETHERSCAN_BASE_MAINNET || "",
     },
     customChains: [
       {
@@ -97,7 +103,18 @@ const config: HardhatUserConfig = {
           browserURL: "https://testnet-zkevm.polygonscan.com/",
         },
       },
+      {
+        network: "base-mainnet",
+        chainId: chainIds.base,
+        urls: {
+          apiURL: "https://api.basescan.org/api",
+          browserURL: "https://basescan.org/",
+        },
+      },
     ],
+  },
+  sourcify: {
+    enabled: false,
   },
 };
 

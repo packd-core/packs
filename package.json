@@ -8,9 +8,6 @@
     "engines": {
         "node": ">=18.0.0"
     },
-    "workspaces": [
-        "packages/*"
-    ],
     "scripts": {
         "start:contracts": "yarn workspace packs-contracts run start",
         "start:app": "yarn workspace packs-app run dev"

@@ -9,7 +9,7 @@ export class KeySignManager {
   constructor(
     registryChainId: number,
     salt: BytesLike,
-    packdMainAddress: string
+    packdMainAddress: string,
   ) {
     this.registryChainId = registryChainId;
     this.salt = salt;
@@ -42,7 +42,7 @@ export class KeySignManager {
   async generateClaimKey(
     signerOrSignature: Signer | string,
     types: string[],
-    values: any[]
+    values: any[],
   ) {
     const { allTypes, allValues } = await this.getMessage(types, values);
     let signature;
@@ -51,7 +51,7 @@ export class KeySignManager {
       signature = signerOrSignature;
     } else if ("signMessage" in signerOrSignature) {
       signature = await signerOrSignature.signMessage(
-        ethers.getBytes(ethers.solidityPackedKeccak256(allTypes, allValues))
+        ethers.getBytes(ethers.solidityPackedKeccak256(allTypes, allValues)),
       );
     } else {
       throw new Error("Invalid signerOrSignature type");
@@ -66,7 +66,7 @@ export class KeySignManager {
   async generateClaimSignature(
     claimPrivateKey: string | Signer,
     types: string[],
-    values: any[]
+    values: any[],
   ) {
     const { allTypes, allValues } = await this.getMessage(types, values);
     const messageToSign = ethers.solidityPackedKeccak256(allTypes, allValues);
@@ -75,11 +75,11 @@ export class KeySignManager {
 
     if (typeof claimPrivateKey === "string")
       claimSignature = await new ethers.Wallet(claimPrivateKey).signMessage(
-        ethers.getBytes(messageToSign)
+        ethers.getBytes(messageToSign),
       );
     else if ("signMessage" in claimPrivateKey)
       claimSignature = await claimPrivateKey.signMessage(
-        ethers.getBytes(messageToSign)
+        ethers.getBytes(messageToSign),
       );
     else throw new Error("Invalid claimPrivateKey type");
 
@@ -91,7 +91,7 @@ export class KeySignManager {
     tokenId: number | bigint,
     refundValue: number | bigint,
     maxRefundValue: number | bigint,
-    moduleData: Array<any>
+    moduleData: Array<any>,
   ) {
     const domain = {
       name: "PACKD",
