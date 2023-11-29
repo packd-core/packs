@@ -16,7 +16,7 @@ subtask("send:eth")
       const balance = await hre.ethers.provider.getBalance(deployer);
 
       const wallet = taskArguments.account;
-      
+
       log("Deployer balance: ", hre.ethers.parseEther(balance.toString()));
       log("Sending to: ", wallet);
 

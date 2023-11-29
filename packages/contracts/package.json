@@ -25,7 +25,7 @@
         "verify": "hardhat verify",
         "task": "yarn hardhat",
         "typechain": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat typechain",
-        "preinstall": "yarn clean && mkdir types/generated &&  touch types/generated/index.ts",
+        "preinstall": "mkdir types/generated &&  touch types/generated/index.ts",
         "postinstall": "yarn typechain"
     },
     "devDependencies": {

@@ -10,26 +10,32 @@ const info = logger("info", "task");
 subtask(
   "deploy",
   "Deploy the contracts to the selected chain (defaults to localhost)",
-).
-setAction(async (args, hre) => {
+).setAction(async (args, hre) => {
   info("Subtask deploy");
   const systemConfig = getSystemConfig(hre);
   const configs = {
     // HERE ADD EACH DIFFERENT CHAIN ID
     [chainIds.base]: baseConfig,
-    [chainIds.hardhat]: {externalConfig:undefined},
+    [chainIds.hardhat]: { externalConfig: undefined },
     [-1]: undefined,
-};
-let config = configs[hre.network.config.chainId??-1];
-if (!config) {
-    throw new Error(`Config for chain ID ${hre.network.config.chainId} not found`);
-}
-
-const signer = await hre.ethers.provider.getSigner();
-const fullSystemDeployed = await deployFullSystem(hre, signer, systemConfig, config.externalConfig)
-  return {
-    ...fullSystemDeployed
+  };
+  let config = configs[hre.network.config.chainId ?? -1];
+  if (!config) {
+    throw new Error(
+      `Config for chain ID ${hre.network.config.chainId} not found`,
+    );
   }
+
+  const signer = await hre.ethers.provider.getSigner();
+  const fullSystemDeployed = await deployFullSystem(
+    hre,
+    signer,
+    systemConfig,
+    config.externalConfig,
+  );
+  return {
+    ...fullSystemDeployed,
+  };
 });
 
 task("deploy").setAction(async (_, __, runSuper) => {

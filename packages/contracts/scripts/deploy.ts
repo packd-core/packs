@@ -14,7 +14,7 @@ import {
   Multicall3,
   PackAccount,
   PackMain,
-  PackRegistry
+  PackRegistry,
 } from "../types";
 
 import { SystemConfig } from "../utils/deployConfig";
@@ -30,16 +30,15 @@ export interface MocksDeployed {
   erc20MockB: ERC20Mock;
   erc721MockA: ERC721Mock;
   erc721MockB: ERC721Mock;
-  registry?:IERC6551Registry;
-  multicall3?:Multicall3
+  registry?: IERC6551Registry;
+  multicall3?: Multicall3;
 }
 export interface ExternalConfig {
   registry: string;
-  multicall3:string
-  entryPoint:string;
+  multicall3: string;
+  entryPoint: string;
   accountProxy?: string;
-  accountV3Upgradable?:string;
-
+  accountV3Upgradable?: string;
 }
 
 export interface SystemDeployed {
@@ -66,9 +65,9 @@ export async function deployMocks(
   let erc20MockB: ERC20Mock;
   let erc721MockA: ERC721Mock;
   let erc721MockB: ERC721Mock;
-  let registry= undefined;
-  let multicall3= undefined;
-  // Test mocks 
+  let registry = undefined;
+  let multicall3 = undefined;
+  // Test mocks
 
   if (hre.network.name === "hardhat" || hre.network.name === "localhost") {
     // Deploy mocks with create2
@@ -120,15 +119,15 @@ export async function deployMocks(
       [],
       withSalt("ERC721MockB"),
     );
-    //  Mock external dependencies 
-     registry = await deployContract<PackRegistry>(
+    //  Mock external dependencies
+    registry = await deployContract<PackRegistry>(
       hre,
       signer,
       "PackRegistry",
       [],
       deploymentOverrides,
     );
-     multicall3 = await deployContract<Multicall3>(
+    multicall3 = await deployContract<Multicall3>(
       hre,
       signer,
       "Multicall3",
@@ -167,7 +166,6 @@ export async function deployMocks(
     );
   }
 
-
   return {
     erc20MockA,
     erc20MockB,
@@ -180,7 +178,7 @@ export async function deployMocks(
 export async function deployFactory(
   hre: HardhatRuntimeEnvironment,
   signer: Signer,
-): Promise<{create2Factory:Create2Factory}> {
+): Promise<{ create2Factory: Create2Factory }> {
   info("Deploying deployFactory");
   const deploymentOverrides = {
     // gasPrice: hre.ethers.parseUnits("1.0", "gwei"),
@@ -223,7 +221,6 @@ export async function deploySystem(
     [],
     deploymentOverrides,
   );
-
 
   // Move to external dependency
 
@@ -296,29 +293,32 @@ export async function deploySystem(
   };
 }
 
-
 export async function deployFullSystem(
   hre: HardhatRuntimeEnvironment,
   signer: Signer,
   systemConfig: SystemConfig,
   externalConfig?: ExternalConfig,
 ): Promise<FullSystemDeployed> {
-  const {create2Factory} = await deployFactory(   hre,signer)
-  const mocks = await deployMocks(   hre,signer, create2Factory)
-  let extConfig = externalConfig
-  if(externalConfig===undefined && mocks.registry&& mocks.multicall3 ){
-    // Generate external config from mocks 
-    extConfig = { 
-      registry:await mocks.registry.getAddress(),
-      multicall3:await mocks.multicall3.getAddress(),
-      entryPoint:"0x0000000000000000000000000000000000000001",
-
+  const { create2Factory } = await deployFactory(hre, signer);
+  const mocks = await deployMocks(hre, signer, create2Factory);
+  let extConfig = externalConfig;
+  if (externalConfig === undefined && mocks.registry && mocks.multicall3) {
+    // Generate external config from mocks
+    extConfig = {
+      registry: await mocks.registry.getAddress(),
+      multicall3: await mocks.multicall3.getAddress(),
+      entryPoint: "0x0000000000000000000000000000000000000001",
+    };
   }
-}
-  const system = await deploySystem(hre, signer, systemConfig, extConfig as ExternalConfig)
+  const system = await deploySystem(
+    hre,
+    signer,
+    systemConfig,
+    extConfig as ExternalConfig,
+  );
   return {
     create2Factory,
     ...mocks,
-    ...system
-  }
+    ...system,
+  };
 }

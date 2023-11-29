@@ -166,7 +166,8 @@ export const deployContractWithCreate2 = async <
     contractFactory.interface,
   ).connect(contractFactory.runner) as T;
 
-  const abiEncodedConstructorArgs = contract.interface.encodeDeploy(constructorArgs);
+  const abiEncodedConstructorArgs =
+    contract.interface.encodeDeploy(constructorArgs);
   log(`ABI encoded args: ${abiEncodedConstructorArgs.slice(2)}`);
   log(`Deployed ${contractName} to ${await contract.getAddress()}`);
   await saveAddress(hre, contract, contractName);
