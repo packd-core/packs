@@ -13,6 +13,7 @@
     ],
     "scripts": {
         "start:contracts": "yarn workspace packs-contracts run start",
-        "start:app": "yarn workspace packs-app run dev"
+        "start:app": "yarn workspace packs-app run dev",
+        "build:app": "yarn workspace packs-app run build"
     }
 }
