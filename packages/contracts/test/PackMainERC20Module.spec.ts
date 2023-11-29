@@ -257,6 +257,106 @@ describe("PackMain, ERC20Module", function () {
     });
   });
   describe("RelayClaim tests, with ERC20 Module", function () {
+    it.only("Should open a pack, using EIP712 signature", async function () {
+      const value = ethers.parseEther("1");
+      const {
+        packMain,
+        alice,
+        bob,
+        relayer,
+        keySignManager,
+        erc20Module,
+        erc20MockA,
+      } = await loadFixture(setup);
+
+      // Mint a new pack using createPack function
+      const { packInstance, claimPrivateKey } = await mintPackWithERC20(
+        value,
+        alice,
+        packMain,
+        erc20Module,
+        [{ mock: erc20MockA, value }],
+        keySignManager
+      );
+
+      // Check correct state
+      expect(await packInstance.packState(0)).to.equal(1); // 1 is the enum value for Created
+
+      // Create SigOwner
+      const { claimSignature: sigOwner } =
+        await keySignManager.generateClaimSignature(
+          claimPrivateKey,
+          ["uint256", "address"],
+          [0, bob.address]
+        );
+
+      const moduleData = await generateClaimData([
+        await erc20MockA.getAddress(),
+      ]);
+
+      // const encodedModuleData = KeySignManager.getModuleDataBytes([moduleData]);
+
+      const domain = {
+        name: "PACKD",
+        version: "1",
+        chainId: 31337,
+        verifyingContract: await packMain.getAddress(),
+      };
+
+      // console.log("domain", domain);
+
+      const types = {
+        Claim: [
+          // { name: "tokenId", type: "uint256" },
+          // { name: "claimer", type: "address" },
+          { name: "refundValue", type: "uint256" },
+          // { name: "maxRefundValue", type: "uint256" },
+          // { name: "moduleData", type: "bytes" },
+        ],
+      };
+
+      // console.log("types", types);
+
+      const message = {
+        // tokenId: 0,
+        // claimer: bob.address,
+        refundValue: 0,
+        // maxRefundValue: BigInt(0),
+        // moduleData: encodedModuleData,
+      };
+
+      // console.log("values", values);
+
+      const sigClaimer = await alice.signTypedData(domain, types, message);
+      const verify = ethers.verifyTypedData(domain, types, message, sigClaimer);
+      console.log("verify", verify);
+      // const { claimSignature: sigClaimer } =
+      //   await keySignManager.generateClaimSignature(
+      //     bob,
+      //     ["uint256", "uint256", "bytes"],
+      //     [0, 0, encodedModuleData]
+      //   );
+
+      console.log("sigClaimer", sigClaimer);
+
+      const claimData: ClaimData = {
+        tokenId: 0,
+        sigOwner: sigOwner,
+        claimer: bob.address,
+        sigClaimer: sigClaimer,
+        refundValue: BigInt(0),
+        maxRefundValue: BigInt(0),
+        moduleData: [moduleData],
+      };
+
+      // Change account to relayer
+      const packInstanceRelayer = packMain.connect(relayer);
+      const tx = packInstanceRelayer.open(claimData);
+      await expect(tx).to.emit(packInstanceRelayer, "PackOpened");
+
+      // Check correct state
+      expect(await packInstanceRelayer.packState(0)).to.equal(2); // 2 is the enum value for Opened
+    });
     it("Should open a pack, some gas reimburstments", async function () {
       const value = ethers.parseEther("1");
       const maxRefundValue = ethers.parseEther("0.1");

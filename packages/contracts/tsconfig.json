@@ -18,7 +18,13 @@
     "removeComments": true,
     "sourceMap": true
   },
-  "exclude": ["../../node_modules","node_modules", "lib"],
+  "exclude": ["../../node_modules", "node_modules", "lib"],
   "files": ["./hardhat.config.ts"],
-  "include": ["scripts/**/*", "tasks/**/*", "test/**/*", "utils/**/*", "types/generated/"]
+  "include": [
+    "scripts/**/*",
+    "tasks/**/*",
+    "test/**/*",
+    "utils/**/*",
+    "types/generated/"
+  ]
 }
