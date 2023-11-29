@@ -23,9 +23,17 @@ export const useNftsOfAddress = () => {
         }
         setIsLoading(true);
         fetch(`/api/getNftsOfAddress?address=${address}&chain=${chain?.id}`)
-            .then(r => r.json())
+            .then(r => {
+                if (!r.ok) {
+                    throw new Error("Request failed");
+                }
+                return r.json();
+            })
             .then(setNftList)
-            .catch(() => setIsError(true))
+            .catch(() => {
+                setNftList([])
+                setIsError(true)
+            })
             .finally(() => setIsLoading(false));
     }, [address, chain?.id]);
 

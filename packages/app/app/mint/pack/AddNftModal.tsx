@@ -31,7 +31,7 @@ export default function AddNftModal({isOpen, setIsOpen, onAdd}: {
     const [filter, setFilter] = useState('');
 
     const nftList = useMemo(() => {
-        return unfilteredNftList?.filter((nft) => Object.values(nft).some((val) => typeof val === 'string' && val.toLowerCase().includes(filter?.toLowerCase() ?? '')))
+        return (unfilteredNftList ?? []).filter((nft) => Object.values(nft).some((val) => typeof val === 'string' && val.toLowerCase().includes(filter?.toLowerCase() ?? '')))
     }, [filter, unfilteredNftList]);
 
     const [isManual, setIsManual] = useState(false);
@@ -111,18 +111,19 @@ export default function AddNftModal({isOpen, setIsOpen, onAdd}: {
                     </div>}
 
                     {
-                       !isLoading && !!nftList?.length && <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-2 h-96 overflow-y-auto">
+                       !isLoading && !!nftList?.length && <div className=" h-96 overflow-y-auto">
+                            <div className='grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-2'>
+                                {
 
-                            {
-
-                                nftList?.map((nft, ind) => {
-                                    return <NftSearchItem key={ind} item={nft} onClick={() => {
-                                        onAdd(nft.token_address, BigInt(nft.token_id));
-                                        closeModal();
-                                    }
-                                    }/>
-                                })
-                            }
+                                    nftList?.map((nft, ind) => {
+                                        return <NftSearchItem key={ind} item={nft} onClick={() => {
+                                            onAdd(nft.token_address, BigInt(nft.token_id));
+                                            closeModal();
+                                        }
+                                        }/>
+                                    })
+                                }
+                            </div>
 
                         </div>
                     }
