@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { useSignMessage } from "wagmi";
 import useKeySignManager from "@/src/hooks/useKeySignManager";
 
-export function useClaimKeys(balanceOf: number) {
+export function useClaimKeys(nonce: number) {
   const [claimPublicKey, setClaimPublicKey] = useState("");
   const [claimPrivateKey, setClaimPrivateKey] = useState("");
   const [isMessagePrepared, setMessagePrepared] = useState(false);
@@ -21,10 +21,10 @@ export function useClaimKeys(balanceOf: number) {
 
   const prepareMessage = useCallback(async () => {
     // console.log('prepareMessage')
-    const msg = await keySignManager.prepareMessage(["uint256"], [balanceOf]);
+    const msg = await keySignManager.prepareMessage(["uint256"], [nonce]);
     setMessage(msg);
     setMessagePrepared(true);
-  }, [balanceOf, keySignManager]);
+  }, [nonce, keySignManager]);
 
   useEffect(() => {
     if (isMessagePrepared){
@@ -51,7 +51,7 @@ export function useClaimKeys(balanceOf: number) {
           await keySignManager.generateClaimKey(
             signData,
             ["uint256"],
-            [balanceOf]
+            [nonce]
           );
         // console.log("Generated private key: ", privkey); // Debugging line
         setClaimPublicKey(pubkey);
@@ -60,7 +60,7 @@ export function useClaimKeys(balanceOf: number) {
     } catch (error) {
       console.error("Error generating claim key:", error);
     }
-  }, [signData, balanceOf]);
+  }, [signData, nonce]);
 
   // Call handleGenerateClaimKey whenever signData changes
   useEffect(() => {
