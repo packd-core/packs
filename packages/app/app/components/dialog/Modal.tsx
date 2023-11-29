@@ -1,7 +1,8 @@
 import {Dialog, Transition} from '@headlessui/react'
 import {Fragment, ReactNode} from 'react'
+import clsxm from "@/src/lib/clsxm";
 
-export default function Modal({render, isOpen, setIsOpen}: { render: (closeModal: () => void) => ReactNode, isOpen: boolean, setIsOpen: (isOpen: boolean) => void }) {
+export default function Modal({render, isOpen, setIsOpen, panelClassNames}: { render: (closeModal: () => void) => ReactNode, isOpen: boolean, setIsOpen: (isOpen: boolean) => void, panelClassNames?: string }) {
     function closeModal() {
         setIsOpen(false)
     }
@@ -41,7 +42,7 @@ export default function Modal({render, isOpen, setIsOpen}: { render: (closeModal
                             leaveTo="opacity-0 scale-95"
                         >
                             <Dialog.Panel
-                                className="w-full max-w-md transform overflow-hidden p-0 bg-transparent align-middle transition-all">
+                                className={clsxm("w-full max-w-md transform overflow-hidden p-0 bg-transparent align-middle transition-all", panelClassNames)}>
                                 {render(closeModal)}
                             </Dialog.Panel>
                         </Transition.Child>

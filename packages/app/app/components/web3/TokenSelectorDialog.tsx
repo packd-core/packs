@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useState} from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {BsChevronDown, BsSearch, BsX} from "react-icons/bs";
 import {Address, useAccount, useBalance, useToken} from "wagmi";
 import Modal from "@/app/components/dialog/Modal";
@@ -11,7 +11,7 @@ export default function TokenInput({token, value, onTokenSelected, onValueChange
     token?: Address,
     value?: bigint,
     onTokenSelected?: (address: Address) => void,
-    onValueChanged?: (value: bigint) => void,
+    onValueChanged?: (value: bigint, valid: boolean) => void,
     autoOpenModal?: boolean
 }) {
     const {address} = useAccount()
@@ -27,19 +27,21 @@ export default function TokenInput({token, value, onTokenSelected, onValueChange
         token: token as Address,
         enabled: !!token
     })
+
+    const isValid = useCallback((value: bigint) => !!(value && value > 0 && (value <= (balance?.value ?? BigInt(0)))),[balance?.value])
     const isValidAmount = useMemo(() => {
         if (!onValueChanged) {
             return true;
         }
-        return value && value > 0 && (value <= (balance?.value ?? BigInt(0)));
-    }, [value, balance?.value, onValueChanged]);
+        return isValid(value ?? 0n);
+    }, [isValid, onValueChanged, value]);
 
     return <div>
         <TokenSelectorDialog isOpen={isOpen} setIsOpen={setIsOpen} onAdd={(t) => {
             setIsOpen(false);
             onTokenSelected?.(t.address);
             if (t.address != token) {
-                onValueChanged?.(0n)
+                onValueChanged?.(0n, false);
             }
         }}/>
         <div className='relative w-full'>
@@ -59,9 +61,9 @@ export default function TokenInput({token, value, onTokenSelected, onValueChange
                     const value = e.target.value;
                     if (!isNaN(Number(value))) {
                         const val = parseUnits(value == '' ? '0' : value as `${number}`, tokenData?.decimals ?? 18);
-                        onValueChanged?.(val);
+                        onValueChanged?.(val, isValid(val));
                     } else {
-                        onValueChanged?.(BigInt(-1));
+                        onValueChanged?.(BigInt(-1), false);
                     }
                 }}/>
         </div>

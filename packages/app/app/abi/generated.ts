@@ -15,37 +15,1446 @@ import {
 } from 'wagmi/actions'
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Address
+// AccountGuardian
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const addressABI = [
+export const accountGuardianABI = [
   {
-    type: 'error',
-    inputs: [{ name: 'target', internalType: 'address', type: 'address' }],
-    name: 'AddressEmptyCode',
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
   },
   {
-    type: 'error',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'AddressInsufficientBalance',
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'previousOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'newOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'OwnershipTransferStarted',
   },
-  { type: 'error', inputs: [], name: 'FailedInnerCall' },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'previousOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'newOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'OwnershipTransferred',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'executor',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      { name: 'trusted', internalType: 'bool', type: 'bool', indexed: false },
+    ],
+    name: 'TrustedExecutorUpdated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'implementation',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      { name: 'trusted', internalType: 'bool', type: 'bool', indexed: false },
+    ],
+    name: 'TrustedImplementationUpdated',
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [],
+    name: 'acceptOwnership',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: '', internalType: 'address', type: 'address' }],
+    name: 'isTrustedExecutor',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: '', internalType: 'address', type: 'address' }],
+    name: 'isTrustedImplementation',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'pendingOwner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [],
+    name: 'renounceOwnership',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'executor', internalType: 'address', type: 'address' },
+      { name: 'trusted', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'setTrustedExecutor',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'implementation', internalType: 'address', type: 'address' },
+      { name: 'trusted', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'setTrustedImplementation',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
+    name: 'transferOwnership',
+    outputs: [],
+  },
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Create2
+// AccountGuardianMock
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const create2ABI = [
-  { type: 'error', inputs: [], name: 'Create2EmptyBytecode' },
-  { type: 'error', inputs: [], name: 'Create2FailedDeployment' },
+export const accountGuardianMockABI = [
   {
-    type: 'error',
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [{ name: '_owner', internalType: 'address', type: 'address' }],
+  },
+  {
+    type: 'event',
+    anonymous: false,
     inputs: [
-      { name: 'balance', internalType: 'uint256', type: 'uint256' },
-      { name: 'needed', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'previousOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'newOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'Create2InsufficientBalance',
+    name: 'OwnershipTransferStarted',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'previousOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'newOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'OwnershipTransferred',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'executor',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      { name: 'trusted', internalType: 'bool', type: 'bool', indexed: false },
+    ],
+    name: 'TrustedExecutorUpdated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'implementation',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      { name: 'trusted', internalType: 'bool', type: 'bool', indexed: false },
+    ],
+    name: 'TrustedImplementationUpdated',
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [],
+    name: 'acceptOwnership',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: '', internalType: 'address', type: 'address' }],
+    name: 'isTrustedExecutor',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: '', internalType: 'address', type: 'address' }],
+    name: 'isTrustedImplementation',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'pendingOwner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [],
+    name: 'renounceOwnership',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'executor', internalType: 'address', type: 'address' },
+      { name: 'trusted', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'setTrustedExecutor',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'implementation', internalType: 'address', type: 'address' },
+      { name: 'trusted', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'setTrustedImplementation',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
+    name: 'transferOwnership',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// AccountProxy
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const accountProxyABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [
+      { name: '_guardian', internalType: 'address', type: 'address' },
+      {
+        name: '_initialImplementation',
+        internalType: 'address',
+        type: 'address',
+      },
+    ],
+  },
+  { type: 'error', inputs: [], name: 'AlreadyInitialized' },
+  { type: 'error', inputs: [], name: 'InvalidImplementation' },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'previousAdmin',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'newAdmin',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'AdminChanged',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'beacon',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'BeaconUpgraded',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'implementation',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'Upgraded',
+  },
+  { stateMutability: 'payable', type: 'fallback' },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'implementation', internalType: 'address', type: 'address' },
+    ],
+    name: 'initialize',
+    outputs: [],
+  },
+  { stateMutability: 'payable', type: 'receive' },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// AccountV3
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const accountV3ABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [
+      { name: 'entryPoint_', internalType: 'address', type: 'address' },
+      { name: 'multicallForwarder', internalType: 'address', type: 'address' },
+      { name: 'erc6551Registry', internalType: 'address', type: 'address' },
+      { name: '_guardian', internalType: 'address', type: 'address' },
+    ],
+  },
+  { type: 'error', inputs: [], name: 'AccountLocked' },
+  { type: 'error', inputs: [], name: 'ContractCreationFailed' },
+  { type: 'error', inputs: [], name: 'ExceedsMaxLockTime' },
+  { type: 'error', inputs: [], name: 'InvalidAccountProof' },
+  { type: 'error', inputs: [], name: 'InvalidERC6551Registry' },
+  { type: 'error', inputs: [], name: 'InvalidEntryPoint' },
+  { type: 'error', inputs: [], name: 'InvalidInput' },
+  { type: 'error', inputs: [], name: 'InvalidMulticallForwarder' },
+  { type: 'error', inputs: [], name: 'InvalidOperation' },
+  { type: 'error', inputs: [], name: 'NotAuthorized' },
+  { type: 'error', inputs: [], name: 'OwnershipCycle' },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'lockedUntil',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'LockUpdated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'selector',
+        internalType: 'bytes4',
+        type: 'bytes4',
+        indexed: false,
+      },
+      {
+        name: 'implementation',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'OverrideUpdated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'caller',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'hasPermission',
+        internalType: 'bool',
+        type: 'bool',
+        indexed: false,
+      },
+    ],
+    name: 'PermissionUpdated',
+  },
+  { stateMutability: 'payable', type: 'fallback' },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'entryPoint',
+    outputs: [
+      { name: '', internalType: 'contract IEntryPoint', type: 'address' },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'erc6551Registry',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+      { name: 'operation', internalType: 'uint8', type: 'uint8' },
+    ],
+    name: 'execute',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'operations',
+        internalType: 'struct BatchExecutor.Operation[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'to', internalType: 'address', type: 'address' },
+          { name: 'value', internalType: 'uint256', type: 'uint256' },
+          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: 'operation', internalType: 'uint8', type: 'uint8' },
+        ],
+      },
+    ],
+    name: 'executeBatch',
+    outputs: [{ name: '', internalType: 'bytes[]', type: 'bytes[]' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+      { name: 'operation', internalType: 'uint8', type: 'uint8' },
+      {
+        name: 'proof',
+        internalType: 'struct NestedAccountExecutor.ERC6551AccountInfo[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'tokenContract', internalType: 'address', type: 'address' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    name: 'executeNested',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcall',
+    outputs: [{ name: 'result', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'bytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcreate',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'bytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcreate2',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'slot', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'extsload',
+    outputs: [{ name: 'value', internalType: 'bytes32', type: 'bytes32' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getNonce',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'isLocked',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'forwarder', internalType: 'address', type: 'address' }],
+    name: 'isTrustedForwarder',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'hash', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'signature', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'isValidSignature',
+    outputs: [{ name: 'magicValue', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'signer', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'isValidSigner',
+    outputs: [{ name: 'magicValue', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '_lockedUntil', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'lock',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'lockedUntil',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: '', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: '', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'onERC1155BatchReceived',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'onERC1155Received',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'address', type: 'address' },
+      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'onERC721Received',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'bytes4', type: 'bytes4' },
+    ],
+    name: 'overrides',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'address', type: 'address' },
+    ],
+    name: 'permissions',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+      { name: 'implementations', internalType: 'address[]', type: 'address[]' },
+    ],
+    name: 'setOverrides',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'callers', internalType: 'address[]', type: 'address[]' },
+      { name: '_permissions', internalType: 'bool[]', type: 'bool[]' },
+    ],
+    name: 'setPermissions',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'state',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
+    name: 'supportsInterface',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'token',
+    outputs: [
+      { name: 'chainId', internalType: 'uint256', type: 'uint256' },
+      { name: 'tokenContract', internalType: 'address', type: 'address' },
+      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+    ],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'userOp',
+        internalType: 'struct UserOperation',
+        type: 'tuple',
+        components: [
+          { name: 'sender', internalType: 'address', type: 'address' },
+          { name: 'nonce', internalType: 'uint256', type: 'uint256' },
+          { name: 'initCode', internalType: 'bytes', type: 'bytes' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+          { name: 'callGasLimit', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'verificationGasLimit',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'preVerificationGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxFeePerGas', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'maxPriorityFeePerGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'paymasterAndData', internalType: 'bytes', type: 'bytes' },
+          { name: 'signature', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+      { name: 'userOpHash', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'missingAccountFunds', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'validateUserOp',
+    outputs: [
+      { name: 'validationData', internalType: 'uint256', type: 'uint256' },
+    ],
+  },
+  { stateMutability: 'payable', type: 'receive' },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// AccountV3Upgradable
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const accountV3UpgradableABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [
+      { name: 'entryPoint_', internalType: 'address', type: 'address' },
+      { name: 'multicallForwarder', internalType: 'address', type: 'address' },
+      { name: 'erc6551Registry', internalType: 'address', type: 'address' },
+      { name: 'guardian', internalType: 'address', type: 'address' },
+    ],
+  },
+  { type: 'error', inputs: [], name: 'AccountLocked' },
+  { type: 'error', inputs: [], name: 'ContractCreationFailed' },
+  { type: 'error', inputs: [], name: 'ExceedsMaxLockTime' },
+  { type: 'error', inputs: [], name: 'InvalidAccountProof' },
+  { type: 'error', inputs: [], name: 'InvalidERC6551Registry' },
+  { type: 'error', inputs: [], name: 'InvalidEntryPoint' },
+  { type: 'error', inputs: [], name: 'InvalidImplementation' },
+  { type: 'error', inputs: [], name: 'InvalidInput' },
+  { type: 'error', inputs: [], name: 'InvalidMulticallForwarder' },
+  { type: 'error', inputs: [], name: 'InvalidOperation' },
+  { type: 'error', inputs: [], name: 'NotAuthorized' },
+  { type: 'error', inputs: [], name: 'OwnershipCycle' },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'previousAdmin',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'newAdmin',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'AdminChanged',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'beacon',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'BeaconUpgraded',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'lockedUntil',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'LockUpdated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'selector',
+        internalType: 'bytes4',
+        type: 'bytes4',
+        indexed: false,
+      },
+      {
+        name: 'implementation',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'OverrideUpdated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'caller',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'hasPermission',
+        internalType: 'bool',
+        type: 'bool',
+        indexed: false,
+      },
+    ],
+    name: 'PermissionUpdated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'implementation',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'Upgraded',
+  },
+  { stateMutability: 'payable', type: 'fallback' },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'entryPoint',
+    outputs: [
+      { name: '', internalType: 'contract IEntryPoint', type: 'address' },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'erc6551Registry',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+      { name: 'operation', internalType: 'uint8', type: 'uint8' },
+    ],
+    name: 'execute',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'operations',
+        internalType: 'struct BatchExecutor.Operation[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'to', internalType: 'address', type: 'address' },
+          { name: 'value', internalType: 'uint256', type: 'uint256' },
+          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: 'operation', internalType: 'uint8', type: 'uint8' },
+        ],
+      },
+    ],
+    name: 'executeBatch',
+    outputs: [{ name: '', internalType: 'bytes[]', type: 'bytes[]' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+      { name: 'operation', internalType: 'uint8', type: 'uint8' },
+      {
+        name: 'proof',
+        internalType: 'struct NestedAccountExecutor.ERC6551AccountInfo[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'tokenContract', internalType: 'address', type: 'address' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    name: 'executeNested',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcall',
+    outputs: [{ name: 'result', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'bytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcreate',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'bytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcreate2',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'slot', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'extsload',
+    outputs: [{ name: 'value', internalType: 'bytes32', type: 'bytes32' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getNonce',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'isLocked',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'forwarder', internalType: 'address', type: 'address' }],
+    name: 'isTrustedForwarder',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'hash', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'signature', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'isValidSignature',
+    outputs: [{ name: 'magicValue', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'signer', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'isValidSigner',
+    outputs: [{ name: 'magicValue', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '_lockedUntil', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'lock',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'lockedUntil',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: '', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: '', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'onERC1155BatchReceived',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'onERC1155Received',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'address', type: 'address' },
+      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'onERC721Received',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'bytes4', type: 'bytes4' },
+    ],
+    name: 'overrides',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'address', type: 'address' },
+    ],
+    name: 'permissions',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'proxiableUUID',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+      { name: 'implementations', internalType: 'address[]', type: 'address[]' },
+    ],
+    name: 'setOverrides',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'callers', internalType: 'address[]', type: 'address[]' },
+      { name: '_permissions', internalType: 'bool[]', type: 'bool[]' },
+    ],
+    name: 'setPermissions',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'state',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
+    name: 'supportsInterface',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'token',
+    outputs: [
+      { name: 'chainId', internalType: 'uint256', type: 'uint256' },
+      { name: 'tokenContract', internalType: 'address', type: 'address' },
+      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+    ],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'newImplementation', internalType: 'address', type: 'address' },
+    ],
+    name: 'upgradeTo',
+    outputs: [],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'newImplementation', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'upgradeToAndCall',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'userOp',
+        internalType: 'struct UserOperation',
+        type: 'tuple',
+        components: [
+          { name: 'sender', internalType: 'address', type: 'address' },
+          { name: 'nonce', internalType: 'uint256', type: 'uint256' },
+          { name: 'initCode', internalType: 'bytes', type: 'bytes' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+          { name: 'callGasLimit', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'verificationGasLimit',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'preVerificationGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxFeePerGas', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'maxPriorityFeePerGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'paymasterAndData', internalType: 'bytes', type: 'bytes' },
+          { name: 'signature', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+      { name: 'userOpHash', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'missingAccountFunds', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'validateUserOp',
+    outputs: [
+      { name: 'validationData', internalType: 'uint256', type: 'uint256' },
+    ],
+  },
+  { stateMutability: 'payable', type: 'receive' },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// BaseAccount
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const baseAccountABI = [
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'entryPoint',
+    outputs: [
+      { name: '', internalType: 'contract IEntryPoint', type: 'address' },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getNonce',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'userOp',
+        internalType: 'struct UserOperation',
+        type: 'tuple',
+        components: [
+          { name: 'sender', internalType: 'address', type: 'address' },
+          { name: 'nonce', internalType: 'uint256', type: 'uint256' },
+          { name: 'initCode', internalType: 'bytes', type: 'bytes' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+          { name: 'callGasLimit', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'verificationGasLimit',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'preVerificationGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxFeePerGas', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'maxPriorityFeePerGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'paymasterAndData', internalType: 'bytes', type: 'bytes' },
+          { name: 'signature', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+      { name: 'userOpHash', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'missingAccountFunds', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'validateUserOp',
+    outputs: [
+      { name: 'validationData', internalType: 'uint256', type: 'uint256' },
+    ],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// BaseExecutor
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const baseExecutorABI = [
+  { type: 'error', inputs: [], name: 'ContractCreationFailed' },
+  { type: 'error', inputs: [], name: 'NotAuthorized' },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcall',
+    outputs: [{ name: 'result', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'bytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcreate',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'bytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcreate2',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'slot', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'extsload',
+    outputs: [{ name: 'value', internalType: 'bytes32', type: 'bytes32' }],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// BatchExecutor
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const batchExecutorABI = [
+  { type: 'error', inputs: [], name: 'ContractCreationFailed' },
+  { type: 'error', inputs: [], name: 'InvalidOperation' },
+  { type: 'error', inputs: [], name: 'NotAuthorized' },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'operations',
+        internalType: 'struct BatchExecutor.Operation[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'to', internalType: 'address', type: 'address' },
+          { name: 'value', internalType: 'uint256', type: 'uint256' },
+          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: 'operation', internalType: 'uint8', type: 'uint8' },
+        ],
+      },
+    ],
+    name: 'executeBatch',
+    outputs: [{ name: '', internalType: 'bytes[]', type: 'bytes[]' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcall',
+    outputs: [{ name: 'result', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'bytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcreate',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'bytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcreate2',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'slot', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'extsload',
+    outputs: [{ name: 'value', internalType: 'bytes32', type: 'bytes32' }],
   },
 ] as const
 
@@ -54,16 +1463,6 @@ export const create2ABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const create2FactoryABI = [
-  { type: 'error', inputs: [], name: 'Create2EmptyBytecode' },
-  { type: 'error', inputs: [], name: 'Create2FailedDeployment' },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'balance', internalType: 'uint256', type: 'uint256' },
-      { name: 'needed', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'Create2InsufficientBalance',
-  },
   {
     type: 'event',
     anonymous: false,
@@ -104,20 +1503,90 @@ export const create2FactoryABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// ECDSA
+// Dummy
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const ecdsaABI = [
-  { type: 'error', inputs: [], name: 'ECDSAInvalidSignature' },
+export const dummyABI = [
+  { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ERC1155Holder
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const erc1155HolderABI = [
   {
-    type: 'error',
-    inputs: [{ name: 'length', internalType: 'uint256', type: 'uint256' }],
-    name: 'ECDSAInvalidSignatureLength',
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: '', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: '', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'onERC1155BatchReceived',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
   },
   {
-    type: 'error',
-    inputs: [{ name: 's', internalType: 'bytes32', type: 'bytes32' }],
-    name: 'ECDSAInvalidSignatureS',
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'onERC1155Received',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
+    name: 'supportsInterface',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ERC1155Receiver
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const erc1155ReceiverABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'operator', internalType: 'address', type: 'address' },
+      { name: 'from', internalType: 'address', type: 'address' },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'values', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'onERC1155BatchReceived',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'operator', internalType: 'address', type: 'address' },
+      { name: 'from', internalType: 'address', type: 'address' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'onERC1155Received',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
+    name: 'supportsInterface',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
   },
 ] as const
 
@@ -136,47 +1605,69 @@ export const erc165ABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ERC1967Upgrade
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const erc1967UpgradeABI = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'previousAdmin',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'newAdmin',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'AdminChanged',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'beacon',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'BeaconUpgraded',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'implementation',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'Upgraded',
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ERC20
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const erc20ABI = [
   {
-    type: 'error',
+    stateMutability: 'nonpayable',
+    type: 'constructor',
     inputs: [
-      { name: 'spender', internalType: 'address', type: 'address' },
-      { name: 'allowance', internalType: 'uint256', type: 'uint256' },
-      { name: 'needed', internalType: 'uint256', type: 'uint256' },
+      { name: 'name_', internalType: 'string', type: 'string' },
+      { name: 'symbol_', internalType: 'string', type: 'string' },
     ],
-    name: 'ERC20InsufficientAllowance',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'sender', internalType: 'address', type: 'address' },
-      { name: 'balance', internalType: 'uint256', type: 'uint256' },
-      { name: 'needed', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'ERC20InsufficientBalance',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'approver', internalType: 'address', type: 'address' }],
-    name: 'ERC20InvalidApprover',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'receiver', internalType: 'address', type: 'address' }],
-    name: 'ERC20InvalidReceiver',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
-    name: 'ERC20InvalidSender',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'spender', internalType: 'address', type: 'address' }],
-    name: 'ERC20InvalidSpender',
   },
   {
     type: 'event',
@@ -233,7 +1724,7 @@ export const erc20ABI = [
     type: 'function',
     inputs: [
       { name: 'spender', internalType: 'address', type: 'address' },
-      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'approve',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
@@ -251,6 +1742,26 @@ export const erc20ABI = [
     inputs: [],
     name: 'decimals',
     outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'spender', internalType: 'address', type: 'address' },
+      { name: 'subtractedValue', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'decreaseAllowance',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'spender', internalType: 'address', type: 'address' },
+      { name: 'addedValue', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'increaseAllowance',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
   },
   {
     stateMutability: 'view',
@@ -278,7 +1789,7 @@ export const erc20ABI = [
     type: 'function',
     inputs: [
       { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'transfer',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
@@ -289,7 +1800,7 @@ export const erc20ABI = [
     inputs: [
       { name: 'from', internalType: 'address', type: 'address' },
       { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'transferFrom',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
@@ -302,44 +1813,6 @@ export const erc20ABI = [
 
 export const erc20MockABI = [
   { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'spender', internalType: 'address', type: 'address' },
-      { name: 'allowance', internalType: 'uint256', type: 'uint256' },
-      { name: 'needed', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'ERC20InsufficientAllowance',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'sender', internalType: 'address', type: 'address' },
-      { name: 'balance', internalType: 'uint256', type: 'uint256' },
-      { name: 'needed', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'ERC20InsufficientBalance',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'approver', internalType: 'address', type: 'address' }],
-    name: 'ERC20InvalidApprover',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'receiver', internalType: 'address', type: 'address' }],
-    name: 'ERC20InvalidReceiver',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
-    name: 'ERC20InvalidSender',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'spender', internalType: 'address', type: 'address' }],
-    name: 'ERC20InvalidSpender',
-  },
   {
     type: 'event',
     anonymous: false,
@@ -395,7 +1868,7 @@ export const erc20MockABI = [
     type: 'function',
     inputs: [
       { name: 'spender', internalType: 'address', type: 'address' },
-      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'approve',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
@@ -413,6 +1886,26 @@ export const erc20MockABI = [
     inputs: [],
     name: 'decimals',
     outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'spender', internalType: 'address', type: 'address' },
+      { name: 'subtractedValue', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'decreaseAllowance',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'spender', internalType: 'address', type: 'address' },
+      { name: 'addedValue', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'increaseAllowance',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
   },
   {
     stateMutability: 'nonpayable',
@@ -450,7 +1943,7 @@ export const erc20MockABI = [
     type: 'function',
     inputs: [
       { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'transfer',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
@@ -461,7 +1954,7 @@ export const erc20MockABI = [
     inputs: [
       { name: 'from', internalType: 'address', type: 'address' },
       { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'transferFrom',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
@@ -474,27 +1967,11 @@ export const erc20MockABI = [
 
 export const erc20ModuleABI = [
   {
-    type: 'error',
-    inputs: [{ name: 'target', internalType: 'address', type: 'address' }],
-    name: 'AddressEmptyCode',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'AddressInsufficientBalance',
-  },
-  { type: 'error', inputs: [], name: 'FailedInnerCall' },
-  {
-    type: 'error',
-    inputs: [{ name: 'token', internalType: 'address', type: 'address' }],
-    name: 'SafeERC20FailedOperation',
-  },
-  {
     stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'CALL_OPERATION',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
   },
   {
     stateMutability: 'view',
@@ -540,56 +2017,218 @@ export const erc20ModuleABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ERC2771Context
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const erc2771ContextABI = [
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'forwarder', internalType: 'address', type: 'address' }],
+    name: 'isTrustedForwarder',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ERC4337Account
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const erc4337AccountABI = [
+  { type: 'error', inputs: [], name: 'InvalidEntryPoint' },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'entryPoint',
+    outputs: [
+      { name: '', internalType: 'contract IEntryPoint', type: 'address' },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getNonce',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'userOp',
+        internalType: 'struct UserOperation',
+        type: 'tuple',
+        components: [
+          { name: 'sender', internalType: 'address', type: 'address' },
+          { name: 'nonce', internalType: 'uint256', type: 'uint256' },
+          { name: 'initCode', internalType: 'bytes', type: 'bytes' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+          { name: 'callGasLimit', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'verificationGasLimit',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'preVerificationGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxFeePerGas', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'maxPriorityFeePerGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'paymasterAndData', internalType: 'bytes', type: 'bytes' },
+          { name: 'signature', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+      { name: 'userOpHash', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'missingAccountFunds', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'validateUserOp',
+    outputs: [
+      { name: 'validationData', internalType: 'uint256', type: 'uint256' },
+    ],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ERC6551Account
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const erc6551AccountABI = [
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'hash', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'signature', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'isValidSignature',
+    outputs: [{ name: 'magicValue', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'signer', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'isValidSigner',
+    outputs: [{ name: 'magicValue', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'state',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
+    name: 'supportsInterface',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'token',
+    outputs: [
+      { name: 'chainId', internalType: 'uint256', type: 'uint256' },
+      { name: 'tokenContract', internalType: 'address', type: 'address' },
+      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+    ],
+  },
+  { stateMutability: 'payable', type: 'receive' },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ERC6551Executor
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const erc6551ExecutorABI = [
+  { type: 'error', inputs: [], name: 'ContractCreationFailed' },
+  { type: 'error', inputs: [], name: 'InvalidOperation' },
+  { type: 'error', inputs: [], name: 'NotAuthorized' },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+      { name: 'operation', internalType: 'uint8', type: 'uint8' },
+    ],
+    name: 'execute',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcall',
+    outputs: [{ name: 'result', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'bytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcreate',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'bytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcreate2',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'slot', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'extsload',
+    outputs: [{ name: 'value', internalType: 'bytes32', type: 'bytes32' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
+    name: 'supportsInterface',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ERC721
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const erc721ABI = [
   {
-    type: 'error',
+    stateMutability: 'nonpayable',
+    type: 'constructor',
     inputs: [
-      { name: 'sender', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'owner', internalType: 'address', type: 'address' },
+      { name: 'name_', internalType: 'string', type: 'string' },
+      { name: 'symbol_', internalType: 'string', type: 'string' },
     ],
-    name: 'ERC721IncorrectOwner',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'ERC721InsufficientApproval',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'approver', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidApprover',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'operator', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidOperator',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidOwner',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'receiver', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidReceiver',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidSender',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'ERC721NonexistentToken',
   },
   {
     type: 'event',
@@ -771,62 +2410,6 @@ export const erc721ABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const erc721EnumerableABI = [
-  { type: 'error', inputs: [], name: 'ERC721EnumerableForbiddenBatchMint' },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'sender', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'owner', internalType: 'address', type: 'address' },
-    ],
-    name: 'ERC721IncorrectOwner',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'ERC721InsufficientApproval',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'approver', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidApprover',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'operator', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidOperator',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidOwner',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'receiver', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidReceiver',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidSender',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'ERC721NonexistentToken',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'index', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'ERC721OutOfBoundsIndex',
-  },
   {
     type: 'event',
     anonymous: false,
@@ -1027,58 +2610,30 @@ export const erc721EnumerableABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ERC721Holder
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const erc721HolderABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'onERC721Received',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ERC721Mock
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const erc721MockABI = [
   { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'sender', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'owner', internalType: 'address', type: 'address' },
-    ],
-    name: 'ERC721IncorrectOwner',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'ERC721InsufficientApproval',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'approver', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidApprover',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'operator', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidOperator',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidOwner',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'receiver', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidReceiver',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidSender',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'ERC721NonexistentToken',
-  },
   {
     type: 'event',
     anonymous: false,
@@ -1274,7 +2829,7 @@ export const erc721ModuleABI = [
     type: 'function',
     inputs: [],
     name: 'CALL_OPERATION',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
   },
   {
     stateMutability: 'view',
@@ -1287,7 +2842,7 @@ export const erc721ModuleABI = [
     stateMutability: 'payable',
     type: 'function',
     inputs: [
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
       { name: 'account', internalType: 'address', type: 'address' },
       { name: 'additionalData', internalType: 'bytes', type: 'bytes' },
     ],
@@ -1298,7 +2853,7 @@ export const erc721ModuleABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
       { name: 'account', internalType: 'address', type: 'address' },
       { name: 'claimer', internalType: 'address', type: 'address' },
       { name: 'additionalData', internalType: 'bytes', type: 'bytes' },
@@ -1310,7 +2865,7 @@ export const erc721ModuleABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
       { name: 'account', internalType: 'address', type: 'address' },
       { name: 'additionalData', internalType: 'bytes', type: 'bytes' },
     ],
@@ -1320,55 +2875,281 @@ export const erc721ModuleABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IERC1155Errors
+// IAccount
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const ierc1155ErrorsABI = [
+export const iAccountABI = [
   {
-    type: 'error',
+    stateMutability: 'nonpayable',
+    type: 'function',
     inputs: [
-      { name: 'sender', internalType: 'address', type: 'address' },
-      { name: 'balance', internalType: 'uint256', type: 'uint256' },
-      { name: 'needed', internalType: 'uint256', type: 'uint256' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'userOp',
+        internalType: 'struct UserOperation',
+        type: 'tuple',
+        components: [
+          { name: 'sender', internalType: 'address', type: 'address' },
+          { name: 'nonce', internalType: 'uint256', type: 'uint256' },
+          { name: 'initCode', internalType: 'bytes', type: 'bytes' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+          { name: 'callGasLimit', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'verificationGasLimit',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'preVerificationGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxFeePerGas', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'maxPriorityFeePerGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'paymasterAndData', internalType: 'bytes', type: 'bytes' },
+          { name: 'signature', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+      { name: 'userOpHash', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'missingAccountFunds', internalType: 'uint256', type: 'uint256' },
     ],
-    name: 'ERC1155InsufficientBalance',
+    name: 'validateUserOp',
+    outputs: [
+      { name: 'validationData', internalType: 'uint256', type: 'uint256' },
+    ],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// IAccountGuardian
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const iAccountGuardianABI = [
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'defaultImplementation',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
   },
   {
-    type: 'error',
-    inputs: [{ name: 'approver', internalType: 'address', type: 'address' }],
-    name: 'ERC1155InvalidApprover',
-  },
-  {
-    type: 'error',
+    stateMutability: 'view',
+    type: 'function',
     inputs: [
-      { name: 'idsLength', internalType: 'uint256', type: 'uint256' },
-      { name: 'valuesLength', internalType: 'uint256', type: 'uint256' },
+      { name: 'implementation', internalType: 'address', type: 'address' },
     ],
-    name: 'ERC1155InvalidArrayLength',
+    name: 'isTrustedExecutor',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
   },
   {
-    type: 'error',
-    inputs: [{ name: 'operator', internalType: 'address', type: 'address' }],
-    name: 'ERC1155InvalidOperator',
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'implementation', internalType: 'address', type: 'address' },
+    ],
+    name: 'isTrustedImplementation',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
   },
   {
-    type: 'error',
-    inputs: [{ name: 'receiver', internalType: 'address', type: 'address' }],
-    name: 'ERC1155InvalidReceiver',
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'executor', internalType: 'address', type: 'address' },
+      { name: 'trusted', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'setTrustedExecutor',
+    outputs: [],
   },
   {
-    type: 'error',
-    inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
-    name: 'ERC1155InvalidSender',
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'implementation', internalType: 'address', type: 'address' },
+      { name: 'trusted', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'setTrustedImplementation',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// IAggregator
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const iAggregatorABI = [
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      {
+        name: 'userOps',
+        internalType: 'struct UserOperation[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'sender', internalType: 'address', type: 'address' },
+          { name: 'nonce', internalType: 'uint256', type: 'uint256' },
+          { name: 'initCode', internalType: 'bytes', type: 'bytes' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+          { name: 'callGasLimit', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'verificationGasLimit',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'preVerificationGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxFeePerGas', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'maxPriorityFeePerGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'paymasterAndData', internalType: 'bytes', type: 'bytes' },
+          { name: 'signature', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    name: 'aggregateSignatures',
+    outputs: [
+      { name: 'aggregatedSignature', internalType: 'bytes', type: 'bytes' },
+    ],
   },
   {
-    type: 'error',
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      {
+        name: 'userOps',
+        internalType: 'struct UserOperation[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'sender', internalType: 'address', type: 'address' },
+          { name: 'nonce', internalType: 'uint256', type: 'uint256' },
+          { name: 'initCode', internalType: 'bytes', type: 'bytes' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+          { name: 'callGasLimit', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'verificationGasLimit',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'preVerificationGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxFeePerGas', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'maxPriorityFeePerGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'paymasterAndData', internalType: 'bytes', type: 'bytes' },
+          { name: 'signature', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+      { name: 'signature', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'validateSignatures',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      {
+        name: 'userOp',
+        internalType: 'struct UserOperation',
+        type: 'tuple',
+        components: [
+          { name: 'sender', internalType: 'address', type: 'address' },
+          { name: 'nonce', internalType: 'uint256', type: 'uint256' },
+          { name: 'initCode', internalType: 'bytes', type: 'bytes' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+          { name: 'callGasLimit', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'verificationGasLimit',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'preVerificationGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxFeePerGas', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'maxPriorityFeePerGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'paymasterAndData', internalType: 'bytes', type: 'bytes' },
+          { name: 'signature', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    name: 'validateUserOpSignature',
+    outputs: [{ name: 'sigForUserOp', internalType: 'bytes', type: 'bytes' }],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// IBeacon
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const iBeaconABI = [
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'implementation',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// IERC1155Receiver
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const ierc1155ReceiverABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
     inputs: [
       { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'owner', internalType: 'address', type: 'address' },
+      { name: 'from', internalType: 'address', type: 'address' },
+      { name: 'ids', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'values', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
     ],
-    name: 'ERC1155MissingApprovalForAll',
+    name: 'onERC1155BatchReceived',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'operator', internalType: 'address', type: 'address' },
+      { name: 'from', internalType: 'address', type: 'address' },
+      { name: 'id', internalType: 'uint256', type: 'uint256' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'onERC1155Received',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
+    name: 'supportsInterface',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
   },
 ] as const
 
@@ -1400,6 +3181,72 @@ export const ierc165ABI = [
     inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
     name: 'supportsInterface',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// IERC1822Proxiable
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const ierc1822ProxiableABI = [
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'proxiableUUID',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// IERC1967
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const ierc1967ABI = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'previousAdmin',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'newAdmin',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'AdminChanged',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'beacon',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'BeaconUpgraded',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'implementation',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'Upgraded',
   },
 ] as const
 
@@ -1463,7 +3310,7 @@ export const ierc20ABI = [
     type: 'function',
     inputs: [
       { name: 'spender', internalType: 'address', type: 'address' },
-      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'approve',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
@@ -1487,7 +3334,7 @@ export const ierc20ABI = [
     type: 'function',
     inputs: [
       { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'transfer',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
@@ -1498,55 +3345,10 @@ export const ierc20ABI = [
     inputs: [
       { name: 'from', internalType: 'address', type: 'address' },
       { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'transferFrom',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-  },
-] as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IERC20Errors
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const ierc20ErrorsABI = [
-  {
-    type: 'error',
-    inputs: [
-      { name: 'spender', internalType: 'address', type: 'address' },
-      { name: 'allowance', internalType: 'uint256', type: 'uint256' },
-      { name: 'needed', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'ERC20InsufficientAllowance',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'sender', internalType: 'address', type: 'address' },
-      { name: 'balance', internalType: 'uint256', type: 'uint256' },
-      { name: 'needed', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'ERC20InsufficientBalance',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'approver', internalType: 'address', type: 'address' }],
-    name: 'ERC20InvalidApprover',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'receiver', internalType: 'address', type: 'address' }],
-    name: 'ERC20InvalidReceiver',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
-    name: 'ERC20InvalidSender',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'spender', internalType: 'address', type: 'address' }],
-    name: 'ERC20InvalidSpender',
   },
 ] as const
 
@@ -1610,7 +3412,7 @@ export const ierc20MetadataABI = [
     type: 'function',
     inputs: [
       { name: 'spender', internalType: 'address', type: 'address' },
-      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'approve',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
@@ -1655,7 +3457,7 @@ export const ierc20MetadataABI = [
     type: 'function',
     inputs: [
       { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'transfer',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
@@ -1666,7 +3468,7 @@ export const ierc20MetadataABI = [
     inputs: [
       { name: 'from', internalType: 'address', type: 'address' },
       { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'transferFrom',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
@@ -1757,7 +3559,7 @@ export const ierc6551ExecutableABI = [
       { name: 'to', internalType: 'address', type: 'address' },
       { name: 'value', internalType: 'uint256', type: 'uint256' },
       { name: 'data', internalType: 'bytes', type: 'bytes' },
-      { name: 'operation', internalType: 'uint256', type: 'uint256' },
+      { name: 'operation', internalType: 'uint8', type: 'uint8' },
     ],
     name: 'execute',
     outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
@@ -1769,6 +3571,7 @@ export const ierc6551ExecutableABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const ierc6551RegistryABI = [
+  { type: 'error', inputs: [], name: 'AccountCreationFailed' },
   {
     type: 'event',
     anonymous: false,
@@ -1784,6 +3587,12 @@ export const ierc6551RegistryABI = [
         internalType: 'address',
         type: 'address',
         indexed: true,
+      },
+      {
+        name: 'salt',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: false,
       },
       {
         name: 'chainId',
@@ -1803,41 +3612,34 @@ export const ierc6551RegistryABI = [
         type: 'uint256',
         indexed: true,
       },
-      {
-        name: 'salt',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
     ],
-    name: 'AccountCreated',
+    name: 'ERC6551AccountCreated',
   },
   {
     stateMutability: 'view',
     type: 'function',
     inputs: [
       { name: 'implementation', internalType: 'address', type: 'address' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
       { name: 'chainId', internalType: 'uint256', type: 'uint256' },
       { name: 'tokenContract', internalType: 'address', type: 'address' },
       { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'salt', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'account',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    outputs: [{ name: 'account', internalType: 'address', type: 'address' }],
   },
   {
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: 'implementation', internalType: 'address', type: 'address' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
       { name: 'chainId', internalType: 'uint256', type: 'uint256' },
       { name: 'tokenContract', internalType: 'address', type: 'address' },
       { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'seed', internalType: 'uint256', type: 'uint256' },
-      { name: 'initData', internalType: 'bytes', type: 'bytes' },
     ],
     name: 'createAccount',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    outputs: [{ name: 'account', internalType: 'address', type: 'address' }],
   },
 ] as const
 
@@ -2184,60 +3986,6 @@ export const ierc721EnumerableABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IERC721Errors
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const ierc721ErrorsABI = [
-  {
-    type: 'error',
-    inputs: [
-      { name: 'sender', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'owner', internalType: 'address', type: 'address' },
-    ],
-    name: 'ERC721IncorrectOwner',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'ERC721InsufficientApproval',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'approver', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidApprover',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'operator', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidOperator',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidOwner',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'receiver', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidReceiver',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidSender',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'ERC721NonexistentToken',
-  },
-] as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // IERC721Metadata
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -2437,6 +4185,733 @@ export const ierc721ReceiverABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// IEntryPoint
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const iEntryPointABI = [
+  {
+    type: 'error',
+    inputs: [
+      { name: 'preOpGas', internalType: 'uint256', type: 'uint256' },
+      { name: 'paid', internalType: 'uint256', type: 'uint256' },
+      { name: 'validAfter', internalType: 'uint48', type: 'uint48' },
+      { name: 'validUntil', internalType: 'uint48', type: 'uint48' },
+      { name: 'targetSuccess', internalType: 'bool', type: 'bool' },
+      { name: 'targetResult', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'ExecutionResult',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'opIndex', internalType: 'uint256', type: 'uint256' },
+      { name: 'reason', internalType: 'string', type: 'string' },
+    ],
+    name: 'FailedOp',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
+    name: 'SenderAddressResult',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'aggregator', internalType: 'address', type: 'address' }],
+    name: 'SignatureValidationFailed',
+  },
+  {
+    type: 'error',
+    inputs: [
+      {
+        name: 'returnInfo',
+        internalType: 'struct IEntryPoint.ReturnInfo',
+        type: 'tuple',
+        components: [
+          { name: 'preOpGas', internalType: 'uint256', type: 'uint256' },
+          { name: 'prefund', internalType: 'uint256', type: 'uint256' },
+          { name: 'sigFailed', internalType: 'bool', type: 'bool' },
+          { name: 'validAfter', internalType: 'uint48', type: 'uint48' },
+          { name: 'validUntil', internalType: 'uint48', type: 'uint48' },
+          { name: 'paymasterContext', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+      {
+        name: 'senderInfo',
+        internalType: 'struct IStakeManager.StakeInfo',
+        type: 'tuple',
+        components: [
+          { name: 'stake', internalType: 'uint256', type: 'uint256' },
+          { name: 'unstakeDelaySec', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+      {
+        name: 'factoryInfo',
+        internalType: 'struct IStakeManager.StakeInfo',
+        type: 'tuple',
+        components: [
+          { name: 'stake', internalType: 'uint256', type: 'uint256' },
+          { name: 'unstakeDelaySec', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+      {
+        name: 'paymasterInfo',
+        internalType: 'struct IStakeManager.StakeInfo',
+        type: 'tuple',
+        components: [
+          { name: 'stake', internalType: 'uint256', type: 'uint256' },
+          { name: 'unstakeDelaySec', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    name: 'ValidationResult',
+  },
+  {
+    type: 'error',
+    inputs: [
+      {
+        name: 'returnInfo',
+        internalType: 'struct IEntryPoint.ReturnInfo',
+        type: 'tuple',
+        components: [
+          { name: 'preOpGas', internalType: 'uint256', type: 'uint256' },
+          { name: 'prefund', internalType: 'uint256', type: 'uint256' },
+          { name: 'sigFailed', internalType: 'bool', type: 'bool' },
+          { name: 'validAfter', internalType: 'uint48', type: 'uint48' },
+          { name: 'validUntil', internalType: 'uint48', type: 'uint48' },
+          { name: 'paymasterContext', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+      {
+        name: 'senderInfo',
+        internalType: 'struct IStakeManager.StakeInfo',
+        type: 'tuple',
+        components: [
+          { name: 'stake', internalType: 'uint256', type: 'uint256' },
+          { name: 'unstakeDelaySec', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+      {
+        name: 'factoryInfo',
+        internalType: 'struct IStakeManager.StakeInfo',
+        type: 'tuple',
+        components: [
+          { name: 'stake', internalType: 'uint256', type: 'uint256' },
+          { name: 'unstakeDelaySec', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+      {
+        name: 'paymasterInfo',
+        internalType: 'struct IStakeManager.StakeInfo',
+        type: 'tuple',
+        components: [
+          { name: 'stake', internalType: 'uint256', type: 'uint256' },
+          { name: 'unstakeDelaySec', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+      {
+        name: 'aggregatorInfo',
+        internalType: 'struct IEntryPoint.AggregatorStakeInfo',
+        type: 'tuple',
+        components: [
+          { name: 'aggregator', internalType: 'address', type: 'address' },
+          {
+            name: 'stakeInfo',
+            internalType: 'struct IStakeManager.StakeInfo',
+            type: 'tuple',
+            components: [
+              { name: 'stake', internalType: 'uint256', type: 'uint256' },
+              {
+                name: 'unstakeDelaySec',
+                internalType: 'uint256',
+                type: 'uint256',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    name: 'ValidationResultWithAggregation',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'userOpHash',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: true,
+      },
+      {
+        name: 'sender',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'factory',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'paymaster',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'AccountDeployed',
+  },
+  { type: 'event', anonymous: false, inputs: [], name: 'BeforeExecution' },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'account',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'totalDeposit',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Deposited',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'aggregator',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'SignatureAggregatorChanged',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'account',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'totalStaked',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'unstakeDelaySec',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'StakeLocked',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'account',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'withdrawTime',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'StakeUnlocked',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'account',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'withdrawAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'StakeWithdrawn',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'userOpHash',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: true,
+      },
+      {
+        name: 'sender',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'paymaster',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'nonce',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      { name: 'success', internalType: 'bool', type: 'bool', indexed: false },
+      {
+        name: 'actualGasCost',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'actualGasUsed',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'UserOperationEvent',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'userOpHash',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: true,
+      },
+      {
+        name: 'sender',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'nonce',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'revertReason',
+        internalType: 'bytes',
+        type: 'bytes',
+        indexed: false,
+      },
+    ],
+    name: 'UserOperationRevertReason',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'account',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'withdrawAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Withdrawn',
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: '_unstakeDelaySec', internalType: 'uint32', type: 'uint32' },
+    ],
+    name: 'addStake',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'balanceOf',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'depositTo',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'getDepositInfo',
+    outputs: [
+      {
+        name: 'info',
+        internalType: 'struct IStakeManager.DepositInfo',
+        type: 'tuple',
+        components: [
+          { name: 'deposit', internalType: 'uint112', type: 'uint112' },
+          { name: 'staked', internalType: 'bool', type: 'bool' },
+          { name: 'stake', internalType: 'uint112', type: 'uint112' },
+          { name: 'unstakeDelaySec', internalType: 'uint32', type: 'uint32' },
+          { name: 'withdrawTime', internalType: 'uint48', type: 'uint48' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'key', internalType: 'uint192', type: 'uint192' },
+    ],
+    name: 'getNonce',
+    outputs: [{ name: 'nonce', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'initCode', internalType: 'bytes', type: 'bytes' }],
+    name: 'getSenderAddress',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      {
+        name: 'userOp',
+        internalType: 'struct UserOperation',
+        type: 'tuple',
+        components: [
+          { name: 'sender', internalType: 'address', type: 'address' },
+          { name: 'nonce', internalType: 'uint256', type: 'uint256' },
+          { name: 'initCode', internalType: 'bytes', type: 'bytes' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+          { name: 'callGasLimit', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'verificationGasLimit',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'preVerificationGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxFeePerGas', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'maxPriorityFeePerGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'paymasterAndData', internalType: 'bytes', type: 'bytes' },
+          { name: 'signature', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    name: 'getUserOpHash',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'opsPerAggregator',
+        internalType: 'struct IEntryPoint.UserOpsPerAggregator[]',
+        type: 'tuple[]',
+        components: [
+          {
+            name: 'userOps',
+            internalType: 'struct UserOperation[]',
+            type: 'tuple[]',
+            components: [
+              { name: 'sender', internalType: 'address', type: 'address' },
+              { name: 'nonce', internalType: 'uint256', type: 'uint256' },
+              { name: 'initCode', internalType: 'bytes', type: 'bytes' },
+              { name: 'callData', internalType: 'bytes', type: 'bytes' },
+              {
+                name: 'callGasLimit',
+                internalType: 'uint256',
+                type: 'uint256',
+              },
+              {
+                name: 'verificationGasLimit',
+                internalType: 'uint256',
+                type: 'uint256',
+              },
+              {
+                name: 'preVerificationGas',
+                internalType: 'uint256',
+                type: 'uint256',
+              },
+              {
+                name: 'maxFeePerGas',
+                internalType: 'uint256',
+                type: 'uint256',
+              },
+              {
+                name: 'maxPriorityFeePerGas',
+                internalType: 'uint256',
+                type: 'uint256',
+              },
+              {
+                name: 'paymasterAndData',
+                internalType: 'bytes',
+                type: 'bytes',
+              },
+              { name: 'signature', internalType: 'bytes', type: 'bytes' },
+            ],
+          },
+          {
+            name: 'aggregator',
+            internalType: 'contract IAggregator',
+            type: 'address',
+          },
+          { name: 'signature', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+      { name: 'beneficiary', internalType: 'address payable', type: 'address' },
+    ],
+    name: 'handleAggregatedOps',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'ops',
+        internalType: 'struct UserOperation[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'sender', internalType: 'address', type: 'address' },
+          { name: 'nonce', internalType: 'uint256', type: 'uint256' },
+          { name: 'initCode', internalType: 'bytes', type: 'bytes' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+          { name: 'callGasLimit', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'verificationGasLimit',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'preVerificationGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxFeePerGas', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'maxPriorityFeePerGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'paymasterAndData', internalType: 'bytes', type: 'bytes' },
+          { name: 'signature', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+      { name: 'beneficiary', internalType: 'address payable', type: 'address' },
+    ],
+    name: 'handleOps',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'key', internalType: 'uint192', type: 'uint192' }],
+    name: 'incrementNonce',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'op',
+        internalType: 'struct UserOperation',
+        type: 'tuple',
+        components: [
+          { name: 'sender', internalType: 'address', type: 'address' },
+          { name: 'nonce', internalType: 'uint256', type: 'uint256' },
+          { name: 'initCode', internalType: 'bytes', type: 'bytes' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+          { name: 'callGasLimit', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'verificationGasLimit',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'preVerificationGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxFeePerGas', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'maxPriorityFeePerGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'paymasterAndData', internalType: 'bytes', type: 'bytes' },
+          { name: 'signature', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+      { name: 'target', internalType: 'address', type: 'address' },
+      { name: 'targetCallData', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'simulateHandleOp',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'userOp',
+        internalType: 'struct UserOperation',
+        type: 'tuple',
+        components: [
+          { name: 'sender', internalType: 'address', type: 'address' },
+          { name: 'nonce', internalType: 'uint256', type: 'uint256' },
+          { name: 'initCode', internalType: 'bytes', type: 'bytes' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+          { name: 'callGasLimit', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'verificationGasLimit',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'preVerificationGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxFeePerGas', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'maxPriorityFeePerGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'paymasterAndData', internalType: 'bytes', type: 'bytes' },
+          { name: 'signature', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    name: 'simulateValidation',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [],
+    name: 'unlockStake',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'withdrawAddress',
+        internalType: 'address payable',
+        type: 'address',
+      },
+    ],
+    name: 'withdrawStake',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'withdrawAddress',
+        internalType: 'address payable',
+        type: 'address',
+      },
+      { name: 'withdrawAmount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'withdrawTo',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// INonceManager
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const iNonceManagerABI = [
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'key', internalType: 'uint192', type: 'uint192' },
+    ],
+    name: 'getNonce',
+    outputs: [{ name: 'nonce', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'key', internalType: 'uint192', type: 'uint192' }],
+    name: 'incrementNonce',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // IPackModule
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -2478,11 +4953,690 @@ export const iPackModuleABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Math
+// ISandboxExecutor
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const mathABI = [
-  { type: 'error', inputs: [], name: 'MathOverflowedMulDiv' },
+export const iSandboxExecutorABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcall',
+    outputs: [{ name: 'result', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcreate',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'bytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcreate2',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'slot', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'extsload',
+    outputs: [{ name: 'value', internalType: 'bytes32', type: 'bytes32' }],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// IStakeManager
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const iStakeManagerABI = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'account',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'totalDeposit',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Deposited',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'account',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'totalStaked',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'unstakeDelaySec',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'StakeLocked',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'account',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'withdrawTime',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'StakeUnlocked',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'account',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'withdrawAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'StakeWithdrawn',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'account',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'withdrawAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Withdrawn',
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: '_unstakeDelaySec', internalType: 'uint32', type: 'uint32' },
+    ],
+    name: 'addStake',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'balanceOf',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'depositTo',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'getDepositInfo',
+    outputs: [
+      {
+        name: 'info',
+        internalType: 'struct IStakeManager.DepositInfo',
+        type: 'tuple',
+        components: [
+          { name: 'deposit', internalType: 'uint112', type: 'uint112' },
+          { name: 'staked', internalType: 'bool', type: 'bool' },
+          { name: 'stake', internalType: 'uint112', type: 'uint112' },
+          { name: 'unstakeDelaySec', internalType: 'uint32', type: 'uint32' },
+          { name: 'withdrawTime', internalType: 'uint48', type: 'uint48' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [],
+    name: 'unlockStake',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'withdrawAddress',
+        internalType: 'address payable',
+        type: 'address',
+      },
+    ],
+    name: 'withdrawStake',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'withdrawAddress',
+        internalType: 'address payable',
+        type: 'address',
+      },
+      { name: 'withdrawAmount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'withdrawTo',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// LibSandbox
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const libSandboxABI = [
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'footer',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'header',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Lockable
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const lockableABI = [
+  { type: 'error', inputs: [], name: 'ExceedsMaxLockTime' },
+  { type: 'error', inputs: [], name: 'NotAuthorized' },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'lockedUntil',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'LockUpdated',
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'isLocked',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '_lockedUntil', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'lock',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'lockedUntil',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Multicall3
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const multicall3ABI = [
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'calls',
+        internalType: 'struct Multicall3.Call[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'target', internalType: 'address', type: 'address' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    name: 'aggregate',
+    outputs: [
+      { name: 'blockNumber', internalType: 'uint256', type: 'uint256' },
+      { name: 'returnData', internalType: 'bytes[]', type: 'bytes[]' },
+    ],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'calls',
+        internalType: 'struct Multicall3.Call3[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'target', internalType: 'address', type: 'address' },
+          { name: 'allowFailure', internalType: 'bool', type: 'bool' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    name: 'aggregate3',
+    outputs: [
+      {
+        name: 'returnData',
+        internalType: 'struct Multicall3.Result[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'success', internalType: 'bool', type: 'bool' },
+          { name: 'returnData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'calls',
+        internalType: 'struct Multicall3.Call3Value[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'target', internalType: 'address', type: 'address' },
+          { name: 'allowFailure', internalType: 'bool', type: 'bool' },
+          { name: 'value', internalType: 'uint256', type: 'uint256' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    name: 'aggregate3Value',
+    outputs: [
+      {
+        name: 'returnData',
+        internalType: 'struct Multicall3.Result[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'success', internalType: 'bool', type: 'bool' },
+          { name: 'returnData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'calls',
+        internalType: 'struct Multicall3.Call[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'target', internalType: 'address', type: 'address' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    name: 'blockAndAggregate',
+    outputs: [
+      { name: 'blockNumber', internalType: 'uint256', type: 'uint256' },
+      { name: 'blockHash', internalType: 'bytes32', type: 'bytes32' },
+      {
+        name: 'returnData',
+        internalType: 'struct Multicall3.Result[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'success', internalType: 'bool', type: 'bool' },
+          { name: 'returnData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getBasefee',
+    outputs: [{ name: 'basefee', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'blockNumber', internalType: 'uint256', type: 'uint256' }],
+    name: 'getBlockHash',
+    outputs: [{ name: 'blockHash', internalType: 'bytes32', type: 'bytes32' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getBlockNumber',
+    outputs: [
+      { name: 'blockNumber', internalType: 'uint256', type: 'uint256' },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getChainId',
+    outputs: [{ name: 'chainid', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getCurrentBlockCoinbase',
+    outputs: [{ name: 'coinbase', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getCurrentBlockDifficulty',
+    outputs: [{ name: 'difficulty', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getCurrentBlockGasLimit',
+    outputs: [{ name: 'gaslimit', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getCurrentBlockTimestamp',
+    outputs: [{ name: 'timestamp', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'addr', internalType: 'address', type: 'address' }],
+    name: 'getEthBalance',
+    outputs: [{ name: 'balance', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getLastBlockHash',
+    outputs: [{ name: 'blockHash', internalType: 'bytes32', type: 'bytes32' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'requireSuccess', internalType: 'bool', type: 'bool' },
+      {
+        name: 'calls',
+        internalType: 'struct Multicall3.Call[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'target', internalType: 'address', type: 'address' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    name: 'tryAggregate',
+    outputs: [
+      {
+        name: 'returnData',
+        internalType: 'struct Multicall3.Result[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'success', internalType: 'bool', type: 'bool' },
+          { name: 'returnData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'requireSuccess', internalType: 'bool', type: 'bool' },
+      {
+        name: 'calls',
+        internalType: 'struct Multicall3.Call[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'target', internalType: 'address', type: 'address' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+    name: 'tryBlockAndAggregate',
+    outputs: [
+      { name: 'blockNumber', internalType: 'uint256', type: 'uint256' },
+      { name: 'blockHash', internalType: 'bytes32', type: 'bytes32' },
+      {
+        name: 'returnData',
+        internalType: 'struct Multicall3.Result[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'success', internalType: 'bool', type: 'bool' },
+          { name: 'returnData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+    ],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// NestedAccountExecutor
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const nestedAccountExecutorABI = [
+  { type: 'error', inputs: [], name: 'AccountLocked' },
+  { type: 'error', inputs: [], name: 'ContractCreationFailed' },
+  { type: 'error', inputs: [], name: 'InvalidAccountProof' },
+  { type: 'error', inputs: [], name: 'InvalidERC6551Registry' },
+  { type: 'error', inputs: [], name: 'InvalidOperation' },
+  { type: 'error', inputs: [], name: 'NotAuthorized' },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'erc6551Registry',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+      { name: 'operation', internalType: 'uint8', type: 'uint8' },
+      {
+        name: 'proof',
+        internalType: 'struct NestedAccountExecutor.ERC6551AccountInfo[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'tokenContract', internalType: 'address', type: 'address' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    name: 'executeNested',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcall',
+    outputs: [{ name: 'result', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'bytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcreate',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'bytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcreate2',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'slot', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'extsload',
+    outputs: [{ name: 'value', internalType: 'bytes32', type: 'bytes32' }],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Overridable
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const overridableABI = [
+  { type: 'error', inputs: [], name: 'InvalidInput' },
+  { type: 'error', inputs: [], name: 'NotAuthorized' },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'selector',
+        internalType: 'bytes4',
+        type: 'bytes4',
+        indexed: false,
+      },
+      {
+        name: 'implementation',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'OverrideUpdated',
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'bytes4', type: 'bytes4' },
+    ],
+    name: 'overrides',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+      { name: 'implementations', internalType: 'address[]', type: 'address[]' },
+    ],
+    name: 'setOverrides',
+    outputs: [],
+  },
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2490,16 +5644,6 @@ export const mathABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const ownableABI = [
-  {
-    type: 'error',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    name: 'OwnableInvalidOwner',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'OwnableUnauthorizedAccount',
-  },
   {
     type: 'event',
     anonymous: false,
@@ -2543,10 +5687,191 @@ export const ownableABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Ownable2Step
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const ownable2StepABI = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'previousOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'newOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'OwnershipTransferStarted',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'previousOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'newOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'OwnershipTransferred',
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [],
+    name: 'acceptOwnership',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'pendingOwner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [],
+    name: 'renounceOwnership',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
+    name: 'transferOwnership',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // PackAccount
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const packAccountABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [
+      { name: '__entryPoint', internalType: 'address', type: 'address' },
+      { name: '_multicallForwarder', internalType: 'address', type: 'address' },
+      { name: '_erc6551Registry', internalType: 'address', type: 'address' },
+      { name: '_guardian', internalType: 'address', type: 'address' },
+    ],
+  },
+  { type: 'error', inputs: [], name: 'AccountLocked' },
+  { type: 'error', inputs: [], name: 'ContractCreationFailed' },
+  { type: 'error', inputs: [], name: 'ExceedsMaxLockTime' },
+  { type: 'error', inputs: [], name: 'InvalidAccountProof' },
+  { type: 'error', inputs: [], name: 'InvalidERC6551Registry' },
+  { type: 'error', inputs: [], name: 'InvalidEntryPoint' },
+  { type: 'error', inputs: [], name: 'InvalidInput' },
+  { type: 'error', inputs: [], name: 'InvalidMulticallForwarder' },
+  { type: 'error', inputs: [], name: 'InvalidOperation' },
+  { type: 'error', inputs: [], name: 'NotAuthorized' },
+  { type: 'error', inputs: [], name: 'OwnershipCycle' },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'lockedUntil',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'LockUpdated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'selector',
+        internalType: 'bytes4',
+        type: 'bytes4',
+        indexed: false,
+      },
+      {
+        name: 'implementation',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'OverrideUpdated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'caller',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'hasPermission',
+        internalType: 'bool',
+        type: 'bool',
+        indexed: false,
+      },
+    ],
+    name: 'PermissionUpdated',
+  },
+  { stateMutability: 'payable', type: 'fallback' },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'entryPoint',
+    outputs: [
+      { name: '', internalType: 'contract IEntryPoint', type: 'address' },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'erc6551Registry',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
   {
     stateMutability: 'payable',
     type: 'function',
@@ -2554,10 +5879,111 @@ export const packAccountABI = [
       { name: 'to', internalType: 'address', type: 'address' },
       { name: 'value', internalType: 'uint256', type: 'uint256' },
       { name: 'data', internalType: 'bytes', type: 'bytes' },
-      { name: 'operation', internalType: 'uint256', type: 'uint256' },
+      { name: 'operation', internalType: 'uint8', type: 'uint8' },
     ],
     name: 'execute',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'operations',
+        internalType: 'struct BatchExecutor.Operation[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'to', internalType: 'address', type: 'address' },
+          { name: 'value', internalType: 'uint256', type: 'uint256' },
+          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: 'operation', internalType: 'uint8', type: 'uint8' },
+        ],
+      },
+    ],
+    name: 'executeBatch',
+    outputs: [{ name: '', internalType: 'bytes[]', type: 'bytes[]' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+      { name: 'operation', internalType: 'uint8', type: 'uint8' },
+      {
+        name: 'proof',
+        internalType: 'struct NestedAccountExecutor.ERC6551AccountInfo[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'tokenContract', internalType: 'address', type: 'address' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    name: 'executeNested',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcall',
     outputs: [{ name: 'result', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'bytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcreate',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'bytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcreate2',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'slot', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'extsload',
+    outputs: [{ name: 'value', internalType: 'bytes32', type: 'bytes32' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getNonce',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'isLocked',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'forwarder', internalType: 'address', type: 'address' }],
+    name: 'isTrustedForwarder',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
   },
   {
     stateMutability: 'view',
@@ -2574,10 +6000,74 @@ export const packAccountABI = [
     type: 'function',
     inputs: [
       { name: 'signer', internalType: 'address', type: 'address' },
-      { name: '', internalType: 'bytes', type: 'bytes' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
     ],
     name: 'isValidSigner',
+    outputs: [{ name: 'magicValue', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '_lockedUntil', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'lock',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'lockedUntil',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: '', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: '', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'onERC1155BatchReceived',
     outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'onERC1155Received',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'address', type: 'address' },
+      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'onERC721Received',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'bytes4', type: 'bytes4' },
+    ],
+    name: 'overrides',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
   },
   {
     stateMutability: 'view',
@@ -2589,12 +6079,42 @@ export const packAccountABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'address', type: 'address' },
+    ],
+    name: 'permissions',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'selectors', internalType: 'bytes4[]', type: 'bytes4[]' },
+      { name: 'implementations', internalType: 'address[]', type: 'address[]' },
+    ],
+    name: 'setOverrides',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'callers', internalType: 'address[]', type: 'address[]' },
+      { name: '_permissions', internalType: 'bool[]', type: 'bool[]' },
+    ],
+    name: 'setPermissions',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [],
     name: 'state',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
   },
   {
-    stateMutability: 'pure',
+    stateMutability: 'view',
     type: 'function',
     inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
     name: 'supportsInterface',
@@ -2606,9 +6126,51 @@ export const packAccountABI = [
     inputs: [],
     name: 'token',
     outputs: [
-      { name: '', internalType: 'uint256', type: 'uint256' },
-      { name: '', internalType: 'address', type: 'address' },
-      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: 'chainId', internalType: 'uint256', type: 'uint256' },
+      { name: 'tokenContract', internalType: 'address', type: 'address' },
+      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+    ],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'userOp',
+        internalType: 'struct UserOperation',
+        type: 'tuple',
+        components: [
+          { name: 'sender', internalType: 'address', type: 'address' },
+          { name: 'nonce', internalType: 'uint256', type: 'uint256' },
+          { name: 'initCode', internalType: 'bytes', type: 'bytes' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+          { name: 'callGasLimit', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'verificationGasLimit',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          {
+            name: 'preVerificationGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'maxFeePerGas', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'maxPriorityFeePerGas',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'paymasterAndData', internalType: 'bytes', type: 'bytes' },
+          { name: 'signature', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
+      { name: 'userOpHash', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'missingAccountFunds', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'validateUserOp',
+    outputs: [
+      { name: 'validationData', internalType: 'uint256', type: 'uint256' },
     ],
   },
   { stateMutability: 'payable', type: 'receive' },
@@ -2630,7 +6192,7 @@ export const packMainABI = [
       { name: 'registry_', internalType: 'address', type: 'address' },
       { name: 'implementation_', internalType: 'address', type: 'address' },
       { name: 'registryChainId_', internalType: 'uint256', type: 'uint256' },
-      { name: 'salt_', internalType: 'uint256', type: 'uint256' },
+      { name: 'salt_', internalType: 'bytes32', type: 'bytes32' },
       {
         name: 'modulesWhitelist_',
         internalType: 'address[]',
@@ -2638,69 +6200,7 @@ export const packMainABI = [
       },
     ],
   },
-  {
-    type: 'error',
-    inputs: [{ name: 'target', internalType: 'address', type: 'address' }],
-    name: 'AddressEmptyCode',
-  },
-  { type: 'error', inputs: [], name: 'ERC721EnumerableForbiddenBatchMint' },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'sender', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'owner', internalType: 'address', type: 'address' },
-    ],
-    name: 'ERC721IncorrectOwner',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'ERC721InsufficientApproval',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'approver', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidApprover',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'operator', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidOperator',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidOwner',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'receiver', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidReceiver',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidSender',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'ERC721NonexistentToken',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'index', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'ERC721OutOfBoundsIndex',
-  },
   { type: 'error', inputs: [], name: 'EtherTransferFailed' },
-  { type: 'error', inputs: [], name: 'FailedInnerCall' },
   { type: 'error', inputs: [], name: 'InvalidAddress' },
   { type: 'error', inputs: [], name: 'InvalidClaimerSignature' },
   { type: 'error', inputs: [], name: 'InvalidEthValue' },
@@ -2723,16 +6223,6 @@ export const packMainABI = [
     type: 'error',
     inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
     name: 'OnlyOwnerOf',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    name: 'OwnableInvalidOwner',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'OwnableUnauthorizedAccount',
   },
   {
     type: 'error',
@@ -2892,7 +6382,7 @@ export const packMainABI = [
     type: 'function',
     inputs: [],
     name: 'CALL_OPERATION',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
   },
   {
     stateMutability: 'view',
@@ -2907,6 +6397,13 @@ export const packMainABI = [
     inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
     name: 'account',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: '', internalType: 'address', type: 'address' }],
+    name: 'accountNonce',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
   },
   {
     stateMutability: 'nonpayable',
@@ -2992,9 +6489,9 @@ export const packMainABI = [
           { name: 'sigClaimer', internalType: 'bytes', type: 'bytes' },
           { name: 'refundValue', internalType: 'uint256', type: 'uint256' },
           { name: 'maxRefundValue', internalType: 'uint256', type: 'uint256' },
+          { name: 'moduleData', internalType: 'bytes[]', type: 'bytes[]' },
         ],
       },
-      { name: 'moduleData', internalType: 'bytes[]', type: 'bytes[]' },
     ],
     name: 'open',
     outputs: [],
@@ -3115,7 +6612,7 @@ export const packMainABI = [
     type: 'function',
     inputs: [],
     name: 'salt',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
   },
   {
     stateMutability: 'nonpayable',
@@ -3215,62 +6712,6 @@ export const packNftABI = [
       { name: 'name_', internalType: 'string', type: 'string' },
       { name: 'symbol_', internalType: 'string', type: 'string' },
     ],
-  },
-  { type: 'error', inputs: [], name: 'ERC721EnumerableForbiddenBatchMint' },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'sender', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'owner', internalType: 'address', type: 'address' },
-    ],
-    name: 'ERC721IncorrectOwner',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'operator', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'ERC721InsufficientApproval',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'approver', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidApprover',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'operator', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidOperator',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidOwner',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'receiver', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidReceiver',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
-    name: 'ERC721InvalidSender',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'ERC721NonexistentToken',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'index', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'ERC721OutOfBoundsIndex',
   },
   {
     type: 'event',
@@ -3517,6 +6958,12 @@ export const packRegistryABI = [
         indexed: true,
       },
       {
+        name: 'salt',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: false,
+      },
+      {
         name: 'chainId',
         internalType: 'uint256',
         type: 'uint256',
@@ -3534,24 +6981,18 @@ export const packRegistryABI = [
         type: 'uint256',
         indexed: true,
       },
-      {
-        name: 'salt',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
     ],
-    name: 'AccountCreated',
+    name: 'ERC6551AccountCreated',
   },
   {
     stateMutability: 'view',
     type: 'function',
     inputs: [
       { name: 'implementation', internalType: 'address', type: 'address' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
       { name: 'chainId', internalType: 'uint256', type: 'uint256' },
       { name: 'tokenContract', internalType: 'address', type: 'address' },
       { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'salt', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'account',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -3561,11 +7002,10 @@ export const packRegistryABI = [
     type: 'function',
     inputs: [
       { name: 'implementation', internalType: 'address', type: 'address' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
       { name: 'chainId', internalType: 'uint256', type: 'uint256' },
       { name: 'tokenContract', internalType: 'address', type: 'address' },
       { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'salt', internalType: 'uint256', type: 'uint256' },
-      { name: 'initData', internalType: 'bytes', type: 'bytes' },
     ],
     name: 'createAccount',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -3573,23 +7013,130 @@ export const packRegistryABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// SafeERC20
+// Permissioned
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const safeErc20ABI = [
+export const permissionedABI = [
+  { type: 'error', inputs: [], name: 'InvalidInput' },
+  { type: 'error', inputs: [], name: 'NotAuthorized' },
   {
-    type: 'error',
+    type: 'event',
+    anonymous: false,
     inputs: [
-      { name: 'spender', internalType: 'address', type: 'address' },
-      { name: 'currentAllowance', internalType: 'uint256', type: 'uint256' },
-      { name: 'requestedDecrease', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'caller',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'hasPermission',
+        internalType: 'bool',
+        type: 'bool',
+        indexed: false,
+      },
     ],
-    name: 'SafeERC20FailedDecreaseAllowance',
+    name: 'PermissionUpdated',
   },
   {
-    type: 'error',
-    inputs: [{ name: 'token', internalType: 'address', type: 'address' }],
-    name: 'SafeERC20FailedOperation',
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'address', type: 'address' },
+    ],
+    name: 'permissions',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'callers', internalType: 'address[]', type: 'address[]' },
+      { name: '_permissions', internalType: 'bool[]', type: 'bool[]' },
+    ],
+    name: 'setPermissions',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Proxy
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const proxyABI = [
+  { stateMutability: 'payable', type: 'fallback' },
+  { stateMutability: 'payable', type: 'receive' },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SandboxExecutor
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const sandboxExecutorABI = [
+  { type: 'error', inputs: [], name: 'ContractCreationFailed' },
+  { type: 'error', inputs: [], name: 'NotAuthorized' },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcall',
+    outputs: [{ name: 'result', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'bytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcreate',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'bytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcreate2',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'slot', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'extsload',
+    outputs: [{ name: 'value', internalType: 'bytes32', type: 'bytes32' }],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Signatory
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const signatoryABI = [
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'hash', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'signature', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'isValidSignature',
+    outputs: [{ name: 'magicValue', internalType: 'bytes4', type: 'bytes4' }],
   },
 ] as const
 
@@ -3600,26 +7147,4582 @@ export const safeErc20ABI = [
 export const signatureValidatorABI = [
   { type: 'error', inputs: [], name: 'InvalidClaimerSignature' },
   { type: 'error', inputs: [], name: 'InvalidOwnerSignature' },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'registryChainId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'DOMAIN_SEPARATOR',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+  },
+  {
+    stateMutability: 'pure',
+    type: 'function',
+    inputs: [],
+    name: 'STRUCT_TYPEHASH',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+  },
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Strings
+// TokenboundExecutor
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const stringsABI = [
+export const tokenboundExecutorABI = [
+  { type: 'error', inputs: [], name: 'AccountLocked' },
+  { type: 'error', inputs: [], name: 'ContractCreationFailed' },
+  { type: 'error', inputs: [], name: 'InvalidAccountProof' },
+  { type: 'error', inputs: [], name: 'InvalidERC6551Registry' },
+  { type: 'error', inputs: [], name: 'InvalidMulticallForwarder' },
+  { type: 'error', inputs: [], name: 'InvalidOperation' },
+  { type: 'error', inputs: [], name: 'NotAuthorized' },
   {
-    type: 'error',
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'erc6551Registry',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+      { name: 'operation', internalType: 'uint8', type: 'uint8' },
+    ],
+    name: 'execute',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'operations',
+        internalType: 'struct BatchExecutor.Operation[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'to', internalType: 'address', type: 'address' },
+          { name: 'value', internalType: 'uint256', type: 'uint256' },
+          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: 'operation', internalType: 'uint8', type: 'uint8' },
+        ],
+      },
+    ],
+    name: 'executeBatch',
+    outputs: [{ name: '', internalType: 'bytes[]', type: 'bytes[]' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+      { name: 'operation', internalType: 'uint8', type: 'uint8' },
+      {
+        name: 'proof',
+        internalType: 'struct NestedAccountExecutor.ERC6551AccountInfo[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'tokenContract', internalType: 'address', type: 'address' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+    name: 'executeNested',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcall',
+    outputs: [{ name: 'result', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
     inputs: [
       { name: 'value', internalType: 'uint256', type: 'uint256' },
-      { name: 'length', internalType: 'uint256', type: 'uint256' },
+      { name: 'bytecode', internalType: 'bytes', type: 'bytes' },
     ],
-    name: 'StringsInsufficientHexLength',
+    name: 'extcreate',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'salt', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'bytecode', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'extcreate2',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'slot', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'extsload',
+    outputs: [{ name: 'value', internalType: 'bytes32', type: 'bytes32' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'forwarder', internalType: 'address', type: 'address' }],
+    name: 'isTrustedForwarder',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
+    name: 'supportsInterface',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// UUPSUpgradeable
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const uupsUpgradeableABI = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'previousAdmin',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'newAdmin',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'AdminChanged',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'beacon',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'BeaconUpgraded',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'implementation',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'Upgraded',
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'proxiableUUID',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'newImplementation', internalType: 'address', type: 'address' },
+    ],
+    name: 'upgradeTo',
+    outputs: [],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'newImplementation', internalType: 'address', type: 'address' },
+      { name: 'data', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'upgradeToAndCall',
+    outputs: [],
   },
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // React
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountGuardianABI}__.
+ */
+export function useAccountGuardianRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof accountGuardianABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountGuardianABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountGuardianABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountGuardianABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountGuardianABI}__ and `functionName` set to `"isTrustedExecutor"`.
+ */
+export function useAccountGuardianIsTrustedExecutor<
+  TFunctionName extends 'isTrustedExecutor',
+  TSelectData = ReadContractResult<typeof accountGuardianABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountGuardianABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountGuardianABI,
+    functionName: 'isTrustedExecutor',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountGuardianABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountGuardianABI}__ and `functionName` set to `"isTrustedImplementation"`.
+ */
+export function useAccountGuardianIsTrustedImplementation<
+  TFunctionName extends 'isTrustedImplementation',
+  TSelectData = ReadContractResult<typeof accountGuardianABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountGuardianABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountGuardianABI,
+    functionName: 'isTrustedImplementation',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountGuardianABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountGuardianABI}__ and `functionName` set to `"owner"`.
+ */
+export function useAccountGuardianOwner<
+  TFunctionName extends 'owner',
+  TSelectData = ReadContractResult<typeof accountGuardianABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountGuardianABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountGuardianABI,
+    functionName: 'owner',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountGuardianABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountGuardianABI}__ and `functionName` set to `"pendingOwner"`.
+ */
+export function useAccountGuardianPendingOwner<
+  TFunctionName extends 'pendingOwner',
+  TSelectData = ReadContractResult<typeof accountGuardianABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountGuardianABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountGuardianABI,
+    functionName: 'pendingOwner',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountGuardianABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountGuardianABI}__.
+ */
+export function useAccountGuardianWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountGuardianABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<
+        typeof accountGuardianABI,
+        TFunctionName,
+        TMode
+      > & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountGuardianABI, TFunctionName, TMode>({
+    abi: accountGuardianABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountGuardianABI}__ and `functionName` set to `"acceptOwnership"`.
+ */
+export function useAccountGuardianAcceptOwnership<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountGuardianABI,
+          'acceptOwnership'
+        >['request']['abi'],
+        'acceptOwnership',
+        TMode
+      > & { functionName?: 'acceptOwnership' }
+    : UseContractWriteConfig<
+        typeof accountGuardianABI,
+        'acceptOwnership',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'acceptOwnership'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountGuardianABI, 'acceptOwnership', TMode>({
+    abi: accountGuardianABI,
+    functionName: 'acceptOwnership',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountGuardianABI}__ and `functionName` set to `"renounceOwnership"`.
+ */
+export function useAccountGuardianRenounceOwnership<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountGuardianABI,
+          'renounceOwnership'
+        >['request']['abi'],
+        'renounceOwnership',
+        TMode
+      > & { functionName?: 'renounceOwnership' }
+    : UseContractWriteConfig<
+        typeof accountGuardianABI,
+        'renounceOwnership',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'renounceOwnership'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof accountGuardianABI,
+    'renounceOwnership',
+    TMode
+  >({
+    abi: accountGuardianABI,
+    functionName: 'renounceOwnership',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountGuardianABI}__ and `functionName` set to `"setTrustedExecutor"`.
+ */
+export function useAccountGuardianSetTrustedExecutor<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountGuardianABI,
+          'setTrustedExecutor'
+        >['request']['abi'],
+        'setTrustedExecutor',
+        TMode
+      > & { functionName?: 'setTrustedExecutor' }
+    : UseContractWriteConfig<
+        typeof accountGuardianABI,
+        'setTrustedExecutor',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'setTrustedExecutor'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof accountGuardianABI,
+    'setTrustedExecutor',
+    TMode
+  >({
+    abi: accountGuardianABI,
+    functionName: 'setTrustedExecutor',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountGuardianABI}__ and `functionName` set to `"setTrustedImplementation"`.
+ */
+export function useAccountGuardianSetTrustedImplementation<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountGuardianABI,
+          'setTrustedImplementation'
+        >['request']['abi'],
+        'setTrustedImplementation',
+        TMode
+      > & { functionName?: 'setTrustedImplementation' }
+    : UseContractWriteConfig<
+        typeof accountGuardianABI,
+        'setTrustedImplementation',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'setTrustedImplementation'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof accountGuardianABI,
+    'setTrustedImplementation',
+    TMode
+  >({
+    abi: accountGuardianABI,
+    functionName: 'setTrustedImplementation',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountGuardianABI}__ and `functionName` set to `"transferOwnership"`.
+ */
+export function useAccountGuardianTransferOwnership<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountGuardianABI,
+          'transferOwnership'
+        >['request']['abi'],
+        'transferOwnership',
+        TMode
+      > & { functionName?: 'transferOwnership' }
+    : UseContractWriteConfig<
+        typeof accountGuardianABI,
+        'transferOwnership',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'transferOwnership'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof accountGuardianABI,
+    'transferOwnership',
+    TMode
+  >({
+    abi: accountGuardianABI,
+    functionName: 'transferOwnership',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountGuardianABI}__.
+ */
+export function usePrepareAccountGuardianWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountGuardianABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountGuardianABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof accountGuardianABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountGuardianABI}__ and `functionName` set to `"acceptOwnership"`.
+ */
+export function usePrepareAccountGuardianAcceptOwnership(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountGuardianABI, 'acceptOwnership'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountGuardianABI,
+    functionName: 'acceptOwnership',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountGuardianABI,
+    'acceptOwnership'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountGuardianABI}__ and `functionName` set to `"renounceOwnership"`.
+ */
+export function usePrepareAccountGuardianRenounceOwnership(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof accountGuardianABI,
+      'renounceOwnership'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountGuardianABI,
+    functionName: 'renounceOwnership',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountGuardianABI,
+    'renounceOwnership'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountGuardianABI}__ and `functionName` set to `"setTrustedExecutor"`.
+ */
+export function usePrepareAccountGuardianSetTrustedExecutor(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof accountGuardianABI,
+      'setTrustedExecutor'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountGuardianABI,
+    functionName: 'setTrustedExecutor',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountGuardianABI,
+    'setTrustedExecutor'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountGuardianABI}__ and `functionName` set to `"setTrustedImplementation"`.
+ */
+export function usePrepareAccountGuardianSetTrustedImplementation(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof accountGuardianABI,
+      'setTrustedImplementation'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountGuardianABI,
+    functionName: 'setTrustedImplementation',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountGuardianABI,
+    'setTrustedImplementation'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountGuardianABI}__ and `functionName` set to `"transferOwnership"`.
+ */
+export function usePrepareAccountGuardianTransferOwnership(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof accountGuardianABI,
+      'transferOwnership'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountGuardianABI,
+    functionName: 'transferOwnership',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountGuardianABI,
+    'transferOwnership'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountGuardianABI}__.
+ */
+export function useAccountGuardianEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof accountGuardianABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountGuardianABI,
+    ...config,
+  } as UseContractEventConfig<typeof accountGuardianABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountGuardianABI}__ and `eventName` set to `"OwnershipTransferStarted"`.
+ */
+export function useAccountGuardianOwnershipTransferStartedEvent(
+  config: Omit<
+    UseContractEventConfig<
+      typeof accountGuardianABI,
+      'OwnershipTransferStarted'
+    >,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountGuardianABI,
+    eventName: 'OwnershipTransferStarted',
+    ...config,
+  } as UseContractEventConfig<
+    typeof accountGuardianABI,
+    'OwnershipTransferStarted'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountGuardianABI}__ and `eventName` set to `"OwnershipTransferred"`.
+ */
+export function useAccountGuardianOwnershipTransferredEvent(
+  config: Omit<
+    UseContractEventConfig<typeof accountGuardianABI, 'OwnershipTransferred'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountGuardianABI,
+    eventName: 'OwnershipTransferred',
+    ...config,
+  } as UseContractEventConfig<
+    typeof accountGuardianABI,
+    'OwnershipTransferred'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountGuardianABI}__ and `eventName` set to `"TrustedExecutorUpdated"`.
+ */
+export function useAccountGuardianTrustedExecutorUpdatedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof accountGuardianABI, 'TrustedExecutorUpdated'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountGuardianABI,
+    eventName: 'TrustedExecutorUpdated',
+    ...config,
+  } as UseContractEventConfig<
+    typeof accountGuardianABI,
+    'TrustedExecutorUpdated'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountGuardianABI}__ and `eventName` set to `"TrustedImplementationUpdated"`.
+ */
+export function useAccountGuardianTrustedImplementationUpdatedEvent(
+  config: Omit<
+    UseContractEventConfig<
+      typeof accountGuardianABI,
+      'TrustedImplementationUpdated'
+    >,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountGuardianABI,
+    eventName: 'TrustedImplementationUpdated',
+    ...config,
+  } as UseContractEventConfig<
+    typeof accountGuardianABI,
+    'TrustedImplementationUpdated'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountGuardianMockABI}__.
+ */
+export function useAccountGuardianMockRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<
+    typeof accountGuardianMockABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountGuardianMockABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountGuardianMockABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountGuardianMockABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountGuardianMockABI}__ and `functionName` set to `"isTrustedExecutor"`.
+ */
+export function useAccountGuardianMockIsTrustedExecutor<
+  TFunctionName extends 'isTrustedExecutor',
+  TSelectData = ReadContractResult<
+    typeof accountGuardianMockABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountGuardianMockABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountGuardianMockABI,
+    functionName: 'isTrustedExecutor',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountGuardianMockABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountGuardianMockABI}__ and `functionName` set to `"isTrustedImplementation"`.
+ */
+export function useAccountGuardianMockIsTrustedImplementation<
+  TFunctionName extends 'isTrustedImplementation',
+  TSelectData = ReadContractResult<
+    typeof accountGuardianMockABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountGuardianMockABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountGuardianMockABI,
+    functionName: 'isTrustedImplementation',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountGuardianMockABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountGuardianMockABI}__ and `functionName` set to `"owner"`.
+ */
+export function useAccountGuardianMockOwner<
+  TFunctionName extends 'owner',
+  TSelectData = ReadContractResult<
+    typeof accountGuardianMockABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountGuardianMockABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountGuardianMockABI,
+    functionName: 'owner',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountGuardianMockABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountGuardianMockABI}__ and `functionName` set to `"pendingOwner"`.
+ */
+export function useAccountGuardianMockPendingOwner<
+  TFunctionName extends 'pendingOwner',
+  TSelectData = ReadContractResult<
+    typeof accountGuardianMockABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountGuardianMockABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountGuardianMockABI,
+    functionName: 'pendingOwner',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountGuardianMockABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountGuardianMockABI}__.
+ */
+export function useAccountGuardianMockWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountGuardianMockABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<
+        typeof accountGuardianMockABI,
+        TFunctionName,
+        TMode
+      > & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountGuardianMockABI, TFunctionName, TMode>({
+    abi: accountGuardianMockABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountGuardianMockABI}__ and `functionName` set to `"acceptOwnership"`.
+ */
+export function useAccountGuardianMockAcceptOwnership<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountGuardianMockABI,
+          'acceptOwnership'
+        >['request']['abi'],
+        'acceptOwnership',
+        TMode
+      > & { functionName?: 'acceptOwnership' }
+    : UseContractWriteConfig<
+        typeof accountGuardianMockABI,
+        'acceptOwnership',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'acceptOwnership'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof accountGuardianMockABI,
+    'acceptOwnership',
+    TMode
+  >({
+    abi: accountGuardianMockABI,
+    functionName: 'acceptOwnership',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountGuardianMockABI}__ and `functionName` set to `"renounceOwnership"`.
+ */
+export function useAccountGuardianMockRenounceOwnership<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountGuardianMockABI,
+          'renounceOwnership'
+        >['request']['abi'],
+        'renounceOwnership',
+        TMode
+      > & { functionName?: 'renounceOwnership' }
+    : UseContractWriteConfig<
+        typeof accountGuardianMockABI,
+        'renounceOwnership',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'renounceOwnership'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof accountGuardianMockABI,
+    'renounceOwnership',
+    TMode
+  >({
+    abi: accountGuardianMockABI,
+    functionName: 'renounceOwnership',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountGuardianMockABI}__ and `functionName` set to `"setTrustedExecutor"`.
+ */
+export function useAccountGuardianMockSetTrustedExecutor<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountGuardianMockABI,
+          'setTrustedExecutor'
+        >['request']['abi'],
+        'setTrustedExecutor',
+        TMode
+      > & { functionName?: 'setTrustedExecutor' }
+    : UseContractWriteConfig<
+        typeof accountGuardianMockABI,
+        'setTrustedExecutor',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'setTrustedExecutor'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof accountGuardianMockABI,
+    'setTrustedExecutor',
+    TMode
+  >({
+    abi: accountGuardianMockABI,
+    functionName: 'setTrustedExecutor',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountGuardianMockABI}__ and `functionName` set to `"setTrustedImplementation"`.
+ */
+export function useAccountGuardianMockSetTrustedImplementation<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountGuardianMockABI,
+          'setTrustedImplementation'
+        >['request']['abi'],
+        'setTrustedImplementation',
+        TMode
+      > & { functionName?: 'setTrustedImplementation' }
+    : UseContractWriteConfig<
+        typeof accountGuardianMockABI,
+        'setTrustedImplementation',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'setTrustedImplementation'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof accountGuardianMockABI,
+    'setTrustedImplementation',
+    TMode
+  >({
+    abi: accountGuardianMockABI,
+    functionName: 'setTrustedImplementation',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountGuardianMockABI}__ and `functionName` set to `"transferOwnership"`.
+ */
+export function useAccountGuardianMockTransferOwnership<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountGuardianMockABI,
+          'transferOwnership'
+        >['request']['abi'],
+        'transferOwnership',
+        TMode
+      > & { functionName?: 'transferOwnership' }
+    : UseContractWriteConfig<
+        typeof accountGuardianMockABI,
+        'transferOwnership',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'transferOwnership'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof accountGuardianMockABI,
+    'transferOwnership',
+    TMode
+  >({
+    abi: accountGuardianMockABI,
+    functionName: 'transferOwnership',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountGuardianMockABI}__.
+ */
+export function usePrepareAccountGuardianMockWrite<
+  TFunctionName extends string,
+>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountGuardianMockABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountGuardianMockABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountGuardianMockABI,
+    TFunctionName
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountGuardianMockABI}__ and `functionName` set to `"acceptOwnership"`.
+ */
+export function usePrepareAccountGuardianMockAcceptOwnership(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof accountGuardianMockABI,
+      'acceptOwnership'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountGuardianMockABI,
+    functionName: 'acceptOwnership',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountGuardianMockABI,
+    'acceptOwnership'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountGuardianMockABI}__ and `functionName` set to `"renounceOwnership"`.
+ */
+export function usePrepareAccountGuardianMockRenounceOwnership(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof accountGuardianMockABI,
+      'renounceOwnership'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountGuardianMockABI,
+    functionName: 'renounceOwnership',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountGuardianMockABI,
+    'renounceOwnership'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountGuardianMockABI}__ and `functionName` set to `"setTrustedExecutor"`.
+ */
+export function usePrepareAccountGuardianMockSetTrustedExecutor(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof accountGuardianMockABI,
+      'setTrustedExecutor'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountGuardianMockABI,
+    functionName: 'setTrustedExecutor',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountGuardianMockABI,
+    'setTrustedExecutor'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountGuardianMockABI}__ and `functionName` set to `"setTrustedImplementation"`.
+ */
+export function usePrepareAccountGuardianMockSetTrustedImplementation(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof accountGuardianMockABI,
+      'setTrustedImplementation'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountGuardianMockABI,
+    functionName: 'setTrustedImplementation',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountGuardianMockABI,
+    'setTrustedImplementation'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountGuardianMockABI}__ and `functionName` set to `"transferOwnership"`.
+ */
+export function usePrepareAccountGuardianMockTransferOwnership(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof accountGuardianMockABI,
+      'transferOwnership'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountGuardianMockABI,
+    functionName: 'transferOwnership',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountGuardianMockABI,
+    'transferOwnership'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountGuardianMockABI}__.
+ */
+export function useAccountGuardianMockEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof accountGuardianMockABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountGuardianMockABI,
+    ...config,
+  } as UseContractEventConfig<typeof accountGuardianMockABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountGuardianMockABI}__ and `eventName` set to `"OwnershipTransferStarted"`.
+ */
+export function useAccountGuardianMockOwnershipTransferStartedEvent(
+  config: Omit<
+    UseContractEventConfig<
+      typeof accountGuardianMockABI,
+      'OwnershipTransferStarted'
+    >,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountGuardianMockABI,
+    eventName: 'OwnershipTransferStarted',
+    ...config,
+  } as UseContractEventConfig<
+    typeof accountGuardianMockABI,
+    'OwnershipTransferStarted'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountGuardianMockABI}__ and `eventName` set to `"OwnershipTransferred"`.
+ */
+export function useAccountGuardianMockOwnershipTransferredEvent(
+  config: Omit<
+    UseContractEventConfig<
+      typeof accountGuardianMockABI,
+      'OwnershipTransferred'
+    >,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountGuardianMockABI,
+    eventName: 'OwnershipTransferred',
+    ...config,
+  } as UseContractEventConfig<
+    typeof accountGuardianMockABI,
+    'OwnershipTransferred'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountGuardianMockABI}__ and `eventName` set to `"TrustedExecutorUpdated"`.
+ */
+export function useAccountGuardianMockTrustedExecutorUpdatedEvent(
+  config: Omit<
+    UseContractEventConfig<
+      typeof accountGuardianMockABI,
+      'TrustedExecutorUpdated'
+    >,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountGuardianMockABI,
+    eventName: 'TrustedExecutorUpdated',
+    ...config,
+  } as UseContractEventConfig<
+    typeof accountGuardianMockABI,
+    'TrustedExecutorUpdated'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountGuardianMockABI}__ and `eventName` set to `"TrustedImplementationUpdated"`.
+ */
+export function useAccountGuardianMockTrustedImplementationUpdatedEvent(
+  config: Omit<
+    UseContractEventConfig<
+      typeof accountGuardianMockABI,
+      'TrustedImplementationUpdated'
+    >,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountGuardianMockABI,
+    eventName: 'TrustedImplementationUpdated',
+    ...config,
+  } as UseContractEventConfig<
+    typeof accountGuardianMockABI,
+    'TrustedImplementationUpdated'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountProxyABI}__.
+ */
+export function useAccountProxyWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountProxyABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof accountProxyABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountProxyABI, TFunctionName, TMode>({
+    abi: accountProxyABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountProxyABI}__ and `functionName` set to `"initialize"`.
+ */
+export function useAccountProxyInitialize<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountProxyABI,
+          'initialize'
+        >['request']['abi'],
+        'initialize',
+        TMode
+      > & { functionName?: 'initialize' }
+    : UseContractWriteConfig<typeof accountProxyABI, 'initialize', TMode> & {
+        abi?: never
+        functionName?: 'initialize'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountProxyABI, 'initialize', TMode>({
+    abi: accountProxyABI,
+    functionName: 'initialize',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountProxyABI}__.
+ */
+export function usePrepareAccountProxyWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountProxyABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountProxyABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof accountProxyABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountProxyABI}__ and `functionName` set to `"initialize"`.
+ */
+export function usePrepareAccountProxyInitialize(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountProxyABI, 'initialize'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountProxyABI,
+    functionName: 'initialize',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof accountProxyABI, 'initialize'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountProxyABI}__.
+ */
+export function useAccountProxyEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof accountProxyABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountProxyABI,
+    ...config,
+  } as UseContractEventConfig<typeof accountProxyABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountProxyABI}__ and `eventName` set to `"AdminChanged"`.
+ */
+export function useAccountProxyAdminChangedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof accountProxyABI, 'AdminChanged'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountProxyABI,
+    eventName: 'AdminChanged',
+    ...config,
+  } as UseContractEventConfig<typeof accountProxyABI, 'AdminChanged'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountProxyABI}__ and `eventName` set to `"BeaconUpgraded"`.
+ */
+export function useAccountProxyBeaconUpgradedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof accountProxyABI, 'BeaconUpgraded'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountProxyABI,
+    eventName: 'BeaconUpgraded',
+    ...config,
+  } as UseContractEventConfig<typeof accountProxyABI, 'BeaconUpgraded'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountProxyABI}__ and `eventName` set to `"Upgraded"`.
+ */
+export function useAccountProxyUpgradedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof accountProxyABI, 'Upgraded'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountProxyABI,
+    eventName: 'Upgraded',
+    ...config,
+  } as UseContractEventConfig<typeof accountProxyABI, 'Upgraded'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3ABI}__.
+ */
+export function useAccountV3Read<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof accountV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3ABI,
+    ...config,
+  } as UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"entryPoint"`.
+ */
+export function useAccountV3EntryPoint<
+  TFunctionName extends 'entryPoint',
+  TSelectData = ReadContractResult<typeof accountV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3ABI,
+    functionName: 'entryPoint',
+    ...config,
+  } as UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"erc6551Registry"`.
+ */
+export function useAccountV3Erc6551Registry<
+  TFunctionName extends 'erc6551Registry',
+  TSelectData = ReadContractResult<typeof accountV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3ABI,
+    functionName: 'erc6551Registry',
+    ...config,
+  } as UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"extsload"`.
+ */
+export function useAccountV3Extsload<
+  TFunctionName extends 'extsload',
+  TSelectData = ReadContractResult<typeof accountV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3ABI,
+    functionName: 'extsload',
+    ...config,
+  } as UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"getNonce"`.
+ */
+export function useAccountV3GetNonce<
+  TFunctionName extends 'getNonce',
+  TSelectData = ReadContractResult<typeof accountV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3ABI,
+    functionName: 'getNonce',
+    ...config,
+  } as UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"isLocked"`.
+ */
+export function useAccountV3IsLocked<
+  TFunctionName extends 'isLocked',
+  TSelectData = ReadContractResult<typeof accountV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3ABI,
+    functionName: 'isLocked',
+    ...config,
+  } as UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"isTrustedForwarder"`.
+ */
+export function useAccountV3IsTrustedForwarder<
+  TFunctionName extends 'isTrustedForwarder',
+  TSelectData = ReadContractResult<typeof accountV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3ABI,
+    functionName: 'isTrustedForwarder',
+    ...config,
+  } as UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"isValidSignature"`.
+ */
+export function useAccountV3IsValidSignature<
+  TFunctionName extends 'isValidSignature',
+  TSelectData = ReadContractResult<typeof accountV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3ABI,
+    functionName: 'isValidSignature',
+    ...config,
+  } as UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"isValidSigner"`.
+ */
+export function useAccountV3IsValidSigner<
+  TFunctionName extends 'isValidSigner',
+  TSelectData = ReadContractResult<typeof accountV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3ABI,
+    functionName: 'isValidSigner',
+    ...config,
+  } as UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"lockedUntil"`.
+ */
+export function useAccountV3LockedUntil<
+  TFunctionName extends 'lockedUntil',
+  TSelectData = ReadContractResult<typeof accountV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3ABI,
+    functionName: 'lockedUntil',
+    ...config,
+  } as UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"overrides"`.
+ */
+export function useAccountV3Overrides<
+  TFunctionName extends 'overrides',
+  TSelectData = ReadContractResult<typeof accountV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3ABI,
+    functionName: 'overrides',
+    ...config,
+  } as UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"owner"`.
+ */
+export function useAccountV3Owner<
+  TFunctionName extends 'owner',
+  TSelectData = ReadContractResult<typeof accountV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3ABI,
+    functionName: 'owner',
+    ...config,
+  } as UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"permissions"`.
+ */
+export function useAccountV3Permissions<
+  TFunctionName extends 'permissions',
+  TSelectData = ReadContractResult<typeof accountV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3ABI,
+    functionName: 'permissions',
+    ...config,
+  } as UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"state"`.
+ */
+export function useAccountV3State<
+  TFunctionName extends 'state',
+  TSelectData = ReadContractResult<typeof accountV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3ABI,
+    functionName: 'state',
+    ...config,
+  } as UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"supportsInterface"`.
+ */
+export function useAccountV3SupportsInterface<
+  TFunctionName extends 'supportsInterface',
+  TSelectData = ReadContractResult<typeof accountV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3ABI,
+    functionName: 'supportsInterface',
+    ...config,
+  } as UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"token"`.
+ */
+export function useAccountV3Token<
+  TFunctionName extends 'token',
+  TSelectData = ReadContractResult<typeof accountV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3ABI,
+    functionName: 'token',
+    ...config,
+  } as UseContractReadConfig<typeof accountV3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3ABI}__.
+ */
+export function useAccountV3Write<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3ABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof accountV3ABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3ABI, TFunctionName, TMode>({
+    abi: accountV3ABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"execute"`.
+ */
+export function useAccountV3Execute<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3ABI,
+          'execute'
+        >['request']['abi'],
+        'execute',
+        TMode
+      > & { functionName?: 'execute' }
+    : UseContractWriteConfig<typeof accountV3ABI, 'execute', TMode> & {
+        abi?: never
+        functionName?: 'execute'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3ABI, 'execute', TMode>({
+    abi: accountV3ABI,
+    functionName: 'execute',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"executeBatch"`.
+ */
+export function useAccountV3ExecuteBatch<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3ABI,
+          'executeBatch'
+        >['request']['abi'],
+        'executeBatch',
+        TMode
+      > & { functionName?: 'executeBatch' }
+    : UseContractWriteConfig<typeof accountV3ABI, 'executeBatch', TMode> & {
+        abi?: never
+        functionName?: 'executeBatch'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3ABI, 'executeBatch', TMode>({
+    abi: accountV3ABI,
+    functionName: 'executeBatch',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"executeNested"`.
+ */
+export function useAccountV3ExecuteNested<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3ABI,
+          'executeNested'
+        >['request']['abi'],
+        'executeNested',
+        TMode
+      > & { functionName?: 'executeNested' }
+    : UseContractWriteConfig<typeof accountV3ABI, 'executeNested', TMode> & {
+        abi?: never
+        functionName?: 'executeNested'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3ABI, 'executeNested', TMode>({
+    abi: accountV3ABI,
+    functionName: 'executeNested',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"extcall"`.
+ */
+export function useAccountV3Extcall<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3ABI,
+          'extcall'
+        >['request']['abi'],
+        'extcall',
+        TMode
+      > & { functionName?: 'extcall' }
+    : UseContractWriteConfig<typeof accountV3ABI, 'extcall', TMode> & {
+        abi?: never
+        functionName?: 'extcall'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3ABI, 'extcall', TMode>({
+    abi: accountV3ABI,
+    functionName: 'extcall',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"extcreate"`.
+ */
+export function useAccountV3Extcreate<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3ABI,
+          'extcreate'
+        >['request']['abi'],
+        'extcreate',
+        TMode
+      > & { functionName?: 'extcreate' }
+    : UseContractWriteConfig<typeof accountV3ABI, 'extcreate', TMode> & {
+        abi?: never
+        functionName?: 'extcreate'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3ABI, 'extcreate', TMode>({
+    abi: accountV3ABI,
+    functionName: 'extcreate',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"extcreate2"`.
+ */
+export function useAccountV3Extcreate2<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3ABI,
+          'extcreate2'
+        >['request']['abi'],
+        'extcreate2',
+        TMode
+      > & { functionName?: 'extcreate2' }
+    : UseContractWriteConfig<typeof accountV3ABI, 'extcreate2', TMode> & {
+        abi?: never
+        functionName?: 'extcreate2'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3ABI, 'extcreate2', TMode>({
+    abi: accountV3ABI,
+    functionName: 'extcreate2',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"lock"`.
+ */
+export function useAccountV3Lock<TMode extends WriteContractMode = undefined>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3ABI,
+          'lock'
+        >['request']['abi'],
+        'lock',
+        TMode
+      > & { functionName?: 'lock' }
+    : UseContractWriteConfig<typeof accountV3ABI, 'lock', TMode> & {
+        abi?: never
+        functionName?: 'lock'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3ABI, 'lock', TMode>({
+    abi: accountV3ABI,
+    functionName: 'lock',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"onERC1155BatchReceived"`.
+ */
+export function useAccountV3OnErc1155BatchReceived<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3ABI,
+          'onERC1155BatchReceived'
+        >['request']['abi'],
+        'onERC1155BatchReceived',
+        TMode
+      > & { functionName?: 'onERC1155BatchReceived' }
+    : UseContractWriteConfig<
+        typeof accountV3ABI,
+        'onERC1155BatchReceived',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'onERC1155BatchReceived'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3ABI, 'onERC1155BatchReceived', TMode>(
+    {
+      abi: accountV3ABI,
+      functionName: 'onERC1155BatchReceived',
+      ...config,
+    } as any,
+  )
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"onERC1155Received"`.
+ */
+export function useAccountV3OnErc1155Received<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3ABI,
+          'onERC1155Received'
+        >['request']['abi'],
+        'onERC1155Received',
+        TMode
+      > & { functionName?: 'onERC1155Received' }
+    : UseContractWriteConfig<
+        typeof accountV3ABI,
+        'onERC1155Received',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'onERC1155Received'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3ABI, 'onERC1155Received', TMode>({
+    abi: accountV3ABI,
+    functionName: 'onERC1155Received',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"onERC721Received"`.
+ */
+export function useAccountV3OnErc721Received<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3ABI,
+          'onERC721Received'
+        >['request']['abi'],
+        'onERC721Received',
+        TMode
+      > & { functionName?: 'onERC721Received' }
+    : UseContractWriteConfig<typeof accountV3ABI, 'onERC721Received', TMode> & {
+        abi?: never
+        functionName?: 'onERC721Received'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3ABI, 'onERC721Received', TMode>({
+    abi: accountV3ABI,
+    functionName: 'onERC721Received',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"setOverrides"`.
+ */
+export function useAccountV3SetOverrides<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3ABI,
+          'setOverrides'
+        >['request']['abi'],
+        'setOverrides',
+        TMode
+      > & { functionName?: 'setOverrides' }
+    : UseContractWriteConfig<typeof accountV3ABI, 'setOverrides', TMode> & {
+        abi?: never
+        functionName?: 'setOverrides'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3ABI, 'setOverrides', TMode>({
+    abi: accountV3ABI,
+    functionName: 'setOverrides',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"setPermissions"`.
+ */
+export function useAccountV3SetPermissions<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3ABI,
+          'setPermissions'
+        >['request']['abi'],
+        'setPermissions',
+        TMode
+      > & { functionName?: 'setPermissions' }
+    : UseContractWriteConfig<typeof accountV3ABI, 'setPermissions', TMode> & {
+        abi?: never
+        functionName?: 'setPermissions'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3ABI, 'setPermissions', TMode>({
+    abi: accountV3ABI,
+    functionName: 'setPermissions',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"validateUserOp"`.
+ */
+export function useAccountV3ValidateUserOp<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3ABI,
+          'validateUserOp'
+        >['request']['abi'],
+        'validateUserOp',
+        TMode
+      > & { functionName?: 'validateUserOp' }
+    : UseContractWriteConfig<typeof accountV3ABI, 'validateUserOp', TMode> & {
+        abi?: never
+        functionName?: 'validateUserOp'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3ABI, 'validateUserOp', TMode>({
+    abi: accountV3ABI,
+    functionName: 'validateUserOp',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3ABI}__.
+ */
+export function usePrepareAccountV3Write<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountV3ABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3ABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof accountV3ABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"execute"`.
+ */
+export function usePrepareAccountV3Execute(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountV3ABI, 'execute'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3ABI,
+    functionName: 'execute',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof accountV3ABI, 'execute'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"executeBatch"`.
+ */
+export function usePrepareAccountV3ExecuteBatch(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountV3ABI, 'executeBatch'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3ABI,
+    functionName: 'executeBatch',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof accountV3ABI, 'executeBatch'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"executeNested"`.
+ */
+export function usePrepareAccountV3ExecuteNested(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountV3ABI, 'executeNested'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3ABI,
+    functionName: 'executeNested',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof accountV3ABI, 'executeNested'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"extcall"`.
+ */
+export function usePrepareAccountV3Extcall(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountV3ABI, 'extcall'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3ABI,
+    functionName: 'extcall',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof accountV3ABI, 'extcall'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"extcreate"`.
+ */
+export function usePrepareAccountV3Extcreate(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountV3ABI, 'extcreate'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3ABI,
+    functionName: 'extcreate',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof accountV3ABI, 'extcreate'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"extcreate2"`.
+ */
+export function usePrepareAccountV3Extcreate2(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountV3ABI, 'extcreate2'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3ABI,
+    functionName: 'extcreate2',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof accountV3ABI, 'extcreate2'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"lock"`.
+ */
+export function usePrepareAccountV3Lock(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountV3ABI, 'lock'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3ABI,
+    functionName: 'lock',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof accountV3ABI, 'lock'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"onERC1155BatchReceived"`.
+ */
+export function usePrepareAccountV3OnErc1155BatchReceived(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof accountV3ABI,
+      'onERC1155BatchReceived'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3ABI,
+    functionName: 'onERC1155BatchReceived',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountV3ABI,
+    'onERC1155BatchReceived'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"onERC1155Received"`.
+ */
+export function usePrepareAccountV3OnErc1155Received(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountV3ABI, 'onERC1155Received'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3ABI,
+    functionName: 'onERC1155Received',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof accountV3ABI, 'onERC1155Received'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"onERC721Received"`.
+ */
+export function usePrepareAccountV3OnErc721Received(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountV3ABI, 'onERC721Received'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3ABI,
+    functionName: 'onERC721Received',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof accountV3ABI, 'onERC721Received'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"setOverrides"`.
+ */
+export function usePrepareAccountV3SetOverrides(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountV3ABI, 'setOverrides'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3ABI,
+    functionName: 'setOverrides',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof accountV3ABI, 'setOverrides'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"setPermissions"`.
+ */
+export function usePrepareAccountV3SetPermissions(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountV3ABI, 'setPermissions'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3ABI,
+    functionName: 'setPermissions',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof accountV3ABI, 'setPermissions'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3ABI}__ and `functionName` set to `"validateUserOp"`.
+ */
+export function usePrepareAccountV3ValidateUserOp(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountV3ABI, 'validateUserOp'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3ABI,
+    functionName: 'validateUserOp',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof accountV3ABI, 'validateUserOp'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountV3ABI}__.
+ */
+export function useAccountV3Event<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof accountV3ABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountV3ABI,
+    ...config,
+  } as UseContractEventConfig<typeof accountV3ABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountV3ABI}__ and `eventName` set to `"LockUpdated"`.
+ */
+export function useAccountV3LockUpdatedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof accountV3ABI, 'LockUpdated'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountV3ABI,
+    eventName: 'LockUpdated',
+    ...config,
+  } as UseContractEventConfig<typeof accountV3ABI, 'LockUpdated'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountV3ABI}__ and `eventName` set to `"OverrideUpdated"`.
+ */
+export function useAccountV3OverrideUpdatedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof accountV3ABI, 'OverrideUpdated'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountV3ABI,
+    eventName: 'OverrideUpdated',
+    ...config,
+  } as UseContractEventConfig<typeof accountV3ABI, 'OverrideUpdated'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountV3ABI}__ and `eventName` set to `"PermissionUpdated"`.
+ */
+export function useAccountV3PermissionUpdatedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof accountV3ABI, 'PermissionUpdated'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountV3ABI,
+    eventName: 'PermissionUpdated',
+    ...config,
+  } as UseContractEventConfig<typeof accountV3ABI, 'PermissionUpdated'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3UpgradableABI}__.
+ */
+export function useAccountV3UpgradableRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<
+    typeof accountV3UpgradableABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountV3UpgradableABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3UpgradableABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountV3UpgradableABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"entryPoint"`.
+ */
+export function useAccountV3UpgradableEntryPoint<
+  TFunctionName extends 'entryPoint',
+  TSelectData = ReadContractResult<
+    typeof accountV3UpgradableABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountV3UpgradableABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3UpgradableABI,
+    functionName: 'entryPoint',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountV3UpgradableABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"erc6551Registry"`.
+ */
+export function useAccountV3UpgradableErc6551Registry<
+  TFunctionName extends 'erc6551Registry',
+  TSelectData = ReadContractResult<
+    typeof accountV3UpgradableABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountV3UpgradableABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3UpgradableABI,
+    functionName: 'erc6551Registry',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountV3UpgradableABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"extsload"`.
+ */
+export function useAccountV3UpgradableExtsload<
+  TFunctionName extends 'extsload',
+  TSelectData = ReadContractResult<
+    typeof accountV3UpgradableABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountV3UpgradableABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3UpgradableABI,
+    functionName: 'extsload',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountV3UpgradableABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"getNonce"`.
+ */
+export function useAccountV3UpgradableGetNonce<
+  TFunctionName extends 'getNonce',
+  TSelectData = ReadContractResult<
+    typeof accountV3UpgradableABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountV3UpgradableABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3UpgradableABI,
+    functionName: 'getNonce',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountV3UpgradableABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"isLocked"`.
+ */
+export function useAccountV3UpgradableIsLocked<
+  TFunctionName extends 'isLocked',
+  TSelectData = ReadContractResult<
+    typeof accountV3UpgradableABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountV3UpgradableABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3UpgradableABI,
+    functionName: 'isLocked',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountV3UpgradableABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"isTrustedForwarder"`.
+ */
+export function useAccountV3UpgradableIsTrustedForwarder<
+  TFunctionName extends 'isTrustedForwarder',
+  TSelectData = ReadContractResult<
+    typeof accountV3UpgradableABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountV3UpgradableABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3UpgradableABI,
+    functionName: 'isTrustedForwarder',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountV3UpgradableABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"isValidSignature"`.
+ */
+export function useAccountV3UpgradableIsValidSignature<
+  TFunctionName extends 'isValidSignature',
+  TSelectData = ReadContractResult<
+    typeof accountV3UpgradableABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountV3UpgradableABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3UpgradableABI,
+    functionName: 'isValidSignature',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountV3UpgradableABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"isValidSigner"`.
+ */
+export function useAccountV3UpgradableIsValidSigner<
+  TFunctionName extends 'isValidSigner',
+  TSelectData = ReadContractResult<
+    typeof accountV3UpgradableABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountV3UpgradableABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3UpgradableABI,
+    functionName: 'isValidSigner',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountV3UpgradableABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"lockedUntil"`.
+ */
+export function useAccountV3UpgradableLockedUntil<
+  TFunctionName extends 'lockedUntil',
+  TSelectData = ReadContractResult<
+    typeof accountV3UpgradableABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountV3UpgradableABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3UpgradableABI,
+    functionName: 'lockedUntil',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountV3UpgradableABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"overrides"`.
+ */
+export function useAccountV3UpgradableOverrides<
+  TFunctionName extends 'overrides',
+  TSelectData = ReadContractResult<
+    typeof accountV3UpgradableABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountV3UpgradableABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3UpgradableABI,
+    functionName: 'overrides',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountV3UpgradableABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"owner"`.
+ */
+export function useAccountV3UpgradableOwner<
+  TFunctionName extends 'owner',
+  TSelectData = ReadContractResult<
+    typeof accountV3UpgradableABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountV3UpgradableABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3UpgradableABI,
+    functionName: 'owner',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountV3UpgradableABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"permissions"`.
+ */
+export function useAccountV3UpgradablePermissions<
+  TFunctionName extends 'permissions',
+  TSelectData = ReadContractResult<
+    typeof accountV3UpgradableABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountV3UpgradableABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3UpgradableABI,
+    functionName: 'permissions',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountV3UpgradableABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"proxiableUUID"`.
+ */
+export function useAccountV3UpgradableProxiableUuid<
+  TFunctionName extends 'proxiableUUID',
+  TSelectData = ReadContractResult<
+    typeof accountV3UpgradableABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountV3UpgradableABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3UpgradableABI,
+    functionName: 'proxiableUUID',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountV3UpgradableABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"state"`.
+ */
+export function useAccountV3UpgradableState<
+  TFunctionName extends 'state',
+  TSelectData = ReadContractResult<
+    typeof accountV3UpgradableABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountV3UpgradableABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3UpgradableABI,
+    functionName: 'state',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountV3UpgradableABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"supportsInterface"`.
+ */
+export function useAccountV3UpgradableSupportsInterface<
+  TFunctionName extends 'supportsInterface',
+  TSelectData = ReadContractResult<
+    typeof accountV3UpgradableABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountV3UpgradableABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3UpgradableABI,
+    functionName: 'supportsInterface',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountV3UpgradableABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"token"`.
+ */
+export function useAccountV3UpgradableToken<
+  TFunctionName extends 'token',
+  TSelectData = ReadContractResult<
+    typeof accountV3UpgradableABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof accountV3UpgradableABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accountV3UpgradableABI,
+    functionName: 'token',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accountV3UpgradableABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__.
+ */
+export function useAccountV3UpgradableWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3UpgradableABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<
+        typeof accountV3UpgradableABI,
+        TFunctionName,
+        TMode
+      > & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3UpgradableABI, TFunctionName, TMode>({
+    abi: accountV3UpgradableABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"execute"`.
+ */
+export function useAccountV3UpgradableExecute<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3UpgradableABI,
+          'execute'
+        >['request']['abi'],
+        'execute',
+        TMode
+      > & { functionName?: 'execute' }
+    : UseContractWriteConfig<
+        typeof accountV3UpgradableABI,
+        'execute',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'execute'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3UpgradableABI, 'execute', TMode>({
+    abi: accountV3UpgradableABI,
+    functionName: 'execute',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"executeBatch"`.
+ */
+export function useAccountV3UpgradableExecuteBatch<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3UpgradableABI,
+          'executeBatch'
+        >['request']['abi'],
+        'executeBatch',
+        TMode
+      > & { functionName?: 'executeBatch' }
+    : UseContractWriteConfig<
+        typeof accountV3UpgradableABI,
+        'executeBatch',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'executeBatch'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3UpgradableABI, 'executeBatch', TMode>(
+    {
+      abi: accountV3UpgradableABI,
+      functionName: 'executeBatch',
+      ...config,
+    } as any,
+  )
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"executeNested"`.
+ */
+export function useAccountV3UpgradableExecuteNested<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3UpgradableABI,
+          'executeNested'
+        >['request']['abi'],
+        'executeNested',
+        TMode
+      > & { functionName?: 'executeNested' }
+    : UseContractWriteConfig<
+        typeof accountV3UpgradableABI,
+        'executeNested',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'executeNested'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof accountV3UpgradableABI,
+    'executeNested',
+    TMode
+  >({
+    abi: accountV3UpgradableABI,
+    functionName: 'executeNested',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"extcall"`.
+ */
+export function useAccountV3UpgradableExtcall<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3UpgradableABI,
+          'extcall'
+        >['request']['abi'],
+        'extcall',
+        TMode
+      > & { functionName?: 'extcall' }
+    : UseContractWriteConfig<
+        typeof accountV3UpgradableABI,
+        'extcall',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'extcall'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3UpgradableABI, 'extcall', TMode>({
+    abi: accountV3UpgradableABI,
+    functionName: 'extcall',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"extcreate"`.
+ */
+export function useAccountV3UpgradableExtcreate<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3UpgradableABI,
+          'extcreate'
+        >['request']['abi'],
+        'extcreate',
+        TMode
+      > & { functionName?: 'extcreate' }
+    : UseContractWriteConfig<
+        typeof accountV3UpgradableABI,
+        'extcreate',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'extcreate'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3UpgradableABI, 'extcreate', TMode>({
+    abi: accountV3UpgradableABI,
+    functionName: 'extcreate',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"extcreate2"`.
+ */
+export function useAccountV3UpgradableExtcreate2<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3UpgradableABI,
+          'extcreate2'
+        >['request']['abi'],
+        'extcreate2',
+        TMode
+      > & { functionName?: 'extcreate2' }
+    : UseContractWriteConfig<
+        typeof accountV3UpgradableABI,
+        'extcreate2',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'extcreate2'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3UpgradableABI, 'extcreate2', TMode>({
+    abi: accountV3UpgradableABI,
+    functionName: 'extcreate2',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"lock"`.
+ */
+export function useAccountV3UpgradableLock<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3UpgradableABI,
+          'lock'
+        >['request']['abi'],
+        'lock',
+        TMode
+      > & { functionName?: 'lock' }
+    : UseContractWriteConfig<typeof accountV3UpgradableABI, 'lock', TMode> & {
+        abi?: never
+        functionName?: 'lock'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3UpgradableABI, 'lock', TMode>({
+    abi: accountV3UpgradableABI,
+    functionName: 'lock',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"onERC1155BatchReceived"`.
+ */
+export function useAccountV3UpgradableOnErc1155BatchReceived<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3UpgradableABI,
+          'onERC1155BatchReceived'
+        >['request']['abi'],
+        'onERC1155BatchReceived',
+        TMode
+      > & { functionName?: 'onERC1155BatchReceived' }
+    : UseContractWriteConfig<
+        typeof accountV3UpgradableABI,
+        'onERC1155BatchReceived',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'onERC1155BatchReceived'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof accountV3UpgradableABI,
+    'onERC1155BatchReceived',
+    TMode
+  >({
+    abi: accountV3UpgradableABI,
+    functionName: 'onERC1155BatchReceived',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"onERC1155Received"`.
+ */
+export function useAccountV3UpgradableOnErc1155Received<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3UpgradableABI,
+          'onERC1155Received'
+        >['request']['abi'],
+        'onERC1155Received',
+        TMode
+      > & { functionName?: 'onERC1155Received' }
+    : UseContractWriteConfig<
+        typeof accountV3UpgradableABI,
+        'onERC1155Received',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'onERC1155Received'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof accountV3UpgradableABI,
+    'onERC1155Received',
+    TMode
+  >({
+    abi: accountV3UpgradableABI,
+    functionName: 'onERC1155Received',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"onERC721Received"`.
+ */
+export function useAccountV3UpgradableOnErc721Received<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3UpgradableABI,
+          'onERC721Received'
+        >['request']['abi'],
+        'onERC721Received',
+        TMode
+      > & { functionName?: 'onERC721Received' }
+    : UseContractWriteConfig<
+        typeof accountV3UpgradableABI,
+        'onERC721Received',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'onERC721Received'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof accountV3UpgradableABI,
+    'onERC721Received',
+    TMode
+  >({
+    abi: accountV3UpgradableABI,
+    functionName: 'onERC721Received',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"setOverrides"`.
+ */
+export function useAccountV3UpgradableSetOverrides<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3UpgradableABI,
+          'setOverrides'
+        >['request']['abi'],
+        'setOverrides',
+        TMode
+      > & { functionName?: 'setOverrides' }
+    : UseContractWriteConfig<
+        typeof accountV3UpgradableABI,
+        'setOverrides',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'setOverrides'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3UpgradableABI, 'setOverrides', TMode>(
+    {
+      abi: accountV3UpgradableABI,
+      functionName: 'setOverrides',
+      ...config,
+    } as any,
+  )
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"setPermissions"`.
+ */
+export function useAccountV3UpgradableSetPermissions<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3UpgradableABI,
+          'setPermissions'
+        >['request']['abi'],
+        'setPermissions',
+        TMode
+      > & { functionName?: 'setPermissions' }
+    : UseContractWriteConfig<
+        typeof accountV3UpgradableABI,
+        'setPermissions',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'setPermissions'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof accountV3UpgradableABI,
+    'setPermissions',
+    TMode
+  >({
+    abi: accountV3UpgradableABI,
+    functionName: 'setPermissions',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"upgradeTo"`.
+ */
+export function useAccountV3UpgradableUpgradeTo<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3UpgradableABI,
+          'upgradeTo'
+        >['request']['abi'],
+        'upgradeTo',
+        TMode
+      > & { functionName?: 'upgradeTo' }
+    : UseContractWriteConfig<
+        typeof accountV3UpgradableABI,
+        'upgradeTo',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'upgradeTo'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accountV3UpgradableABI, 'upgradeTo', TMode>({
+    abi: accountV3UpgradableABI,
+    functionName: 'upgradeTo',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"upgradeToAndCall"`.
+ */
+export function useAccountV3UpgradableUpgradeToAndCall<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3UpgradableABI,
+          'upgradeToAndCall'
+        >['request']['abi'],
+        'upgradeToAndCall',
+        TMode
+      > & { functionName?: 'upgradeToAndCall' }
+    : UseContractWriteConfig<
+        typeof accountV3UpgradableABI,
+        'upgradeToAndCall',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'upgradeToAndCall'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof accountV3UpgradableABI,
+    'upgradeToAndCall',
+    TMode
+  >({
+    abi: accountV3UpgradableABI,
+    functionName: 'upgradeToAndCall',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"validateUserOp"`.
+ */
+export function useAccountV3UpgradableValidateUserOp<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accountV3UpgradableABI,
+          'validateUserOp'
+        >['request']['abi'],
+        'validateUserOp',
+        TMode
+      > & { functionName?: 'validateUserOp' }
+    : UseContractWriteConfig<
+        typeof accountV3UpgradableABI,
+        'validateUserOp',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'validateUserOp'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof accountV3UpgradableABI,
+    'validateUserOp',
+    TMode
+  >({
+    abi: accountV3UpgradableABI,
+    functionName: 'validateUserOp',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__.
+ */
+export function usePrepareAccountV3UpgradableWrite<
+  TFunctionName extends string,
+>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountV3UpgradableABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3UpgradableABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountV3UpgradableABI,
+    TFunctionName
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"execute"`.
+ */
+export function usePrepareAccountV3UpgradableExecute(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountV3UpgradableABI, 'execute'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3UpgradableABI,
+    functionName: 'execute',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof accountV3UpgradableABI, 'execute'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"executeBatch"`.
+ */
+export function usePrepareAccountV3UpgradableExecuteBatch(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof accountV3UpgradableABI,
+      'executeBatch'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3UpgradableABI,
+    functionName: 'executeBatch',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountV3UpgradableABI,
+    'executeBatch'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"executeNested"`.
+ */
+export function usePrepareAccountV3UpgradableExecuteNested(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof accountV3UpgradableABI,
+      'executeNested'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3UpgradableABI,
+    functionName: 'executeNested',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountV3UpgradableABI,
+    'executeNested'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"extcall"`.
+ */
+export function usePrepareAccountV3UpgradableExtcall(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountV3UpgradableABI, 'extcall'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3UpgradableABI,
+    functionName: 'extcall',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof accountV3UpgradableABI, 'extcall'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"extcreate"`.
+ */
+export function usePrepareAccountV3UpgradableExtcreate(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountV3UpgradableABI, 'extcreate'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3UpgradableABI,
+    functionName: 'extcreate',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountV3UpgradableABI,
+    'extcreate'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"extcreate2"`.
+ */
+export function usePrepareAccountV3UpgradableExtcreate2(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountV3UpgradableABI, 'extcreate2'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3UpgradableABI,
+    functionName: 'extcreate2',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountV3UpgradableABI,
+    'extcreate2'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"lock"`.
+ */
+export function usePrepareAccountV3UpgradableLock(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountV3UpgradableABI, 'lock'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3UpgradableABI,
+    functionName: 'lock',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof accountV3UpgradableABI, 'lock'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"onERC1155BatchReceived"`.
+ */
+export function usePrepareAccountV3UpgradableOnErc1155BatchReceived(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof accountV3UpgradableABI,
+      'onERC1155BatchReceived'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3UpgradableABI,
+    functionName: 'onERC1155BatchReceived',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountV3UpgradableABI,
+    'onERC1155BatchReceived'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"onERC1155Received"`.
+ */
+export function usePrepareAccountV3UpgradableOnErc1155Received(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof accountV3UpgradableABI,
+      'onERC1155Received'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3UpgradableABI,
+    functionName: 'onERC1155Received',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountV3UpgradableABI,
+    'onERC1155Received'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"onERC721Received"`.
+ */
+export function usePrepareAccountV3UpgradableOnErc721Received(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof accountV3UpgradableABI,
+      'onERC721Received'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3UpgradableABI,
+    functionName: 'onERC721Received',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountV3UpgradableABI,
+    'onERC721Received'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"setOverrides"`.
+ */
+export function usePrepareAccountV3UpgradableSetOverrides(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof accountV3UpgradableABI,
+      'setOverrides'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3UpgradableABI,
+    functionName: 'setOverrides',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountV3UpgradableABI,
+    'setOverrides'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"setPermissions"`.
+ */
+export function usePrepareAccountV3UpgradableSetPermissions(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof accountV3UpgradableABI,
+      'setPermissions'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3UpgradableABI,
+    functionName: 'setPermissions',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountV3UpgradableABI,
+    'setPermissions'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"upgradeTo"`.
+ */
+export function usePrepareAccountV3UpgradableUpgradeTo(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accountV3UpgradableABI, 'upgradeTo'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3UpgradableABI,
+    functionName: 'upgradeTo',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountV3UpgradableABI,
+    'upgradeTo'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"upgradeToAndCall"`.
+ */
+export function usePrepareAccountV3UpgradableUpgradeToAndCall(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof accountV3UpgradableABI,
+      'upgradeToAndCall'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3UpgradableABI,
+    functionName: 'upgradeToAndCall',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountV3UpgradableABI,
+    'upgradeToAndCall'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `functionName` set to `"validateUserOp"`.
+ */
+export function usePrepareAccountV3UpgradableValidateUserOp(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof accountV3UpgradableABI,
+      'validateUserOp'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accountV3UpgradableABI,
+    functionName: 'validateUserOp',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof accountV3UpgradableABI,
+    'validateUserOp'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountV3UpgradableABI}__.
+ */
+export function useAccountV3UpgradableEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof accountV3UpgradableABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountV3UpgradableABI,
+    ...config,
+  } as UseContractEventConfig<typeof accountV3UpgradableABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `eventName` set to `"AdminChanged"`.
+ */
+export function useAccountV3UpgradableAdminChangedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof accountV3UpgradableABI, 'AdminChanged'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountV3UpgradableABI,
+    eventName: 'AdminChanged',
+    ...config,
+  } as UseContractEventConfig<typeof accountV3UpgradableABI, 'AdminChanged'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `eventName` set to `"BeaconUpgraded"`.
+ */
+export function useAccountV3UpgradableBeaconUpgradedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof accountV3UpgradableABI, 'BeaconUpgraded'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountV3UpgradableABI,
+    eventName: 'BeaconUpgraded',
+    ...config,
+  } as UseContractEventConfig<typeof accountV3UpgradableABI, 'BeaconUpgraded'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `eventName` set to `"LockUpdated"`.
+ */
+export function useAccountV3UpgradableLockUpdatedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof accountV3UpgradableABI, 'LockUpdated'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountV3UpgradableABI,
+    eventName: 'LockUpdated',
+    ...config,
+  } as UseContractEventConfig<typeof accountV3UpgradableABI, 'LockUpdated'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `eventName` set to `"OverrideUpdated"`.
+ */
+export function useAccountV3UpgradableOverrideUpdatedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof accountV3UpgradableABI, 'OverrideUpdated'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountV3UpgradableABI,
+    eventName: 'OverrideUpdated',
+    ...config,
+  } as UseContractEventConfig<typeof accountV3UpgradableABI, 'OverrideUpdated'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `eventName` set to `"PermissionUpdated"`.
+ */
+export function useAccountV3UpgradablePermissionUpdatedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof accountV3UpgradableABI, 'PermissionUpdated'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountV3UpgradableABI,
+    eventName: 'PermissionUpdated',
+    ...config,
+  } as UseContractEventConfig<
+    typeof accountV3UpgradableABI,
+    'PermissionUpdated'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accountV3UpgradableABI}__ and `eventName` set to `"Upgraded"`.
+ */
+export function useAccountV3UpgradableUpgradedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof accountV3UpgradableABI, 'Upgraded'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: accountV3UpgradableABI,
+    eventName: 'Upgraded',
+    ...config,
+  } as UseContractEventConfig<typeof accountV3UpgradableABI, 'Upgraded'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link baseAccountABI}__.
+ */
+export function useBaseAccountRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof baseAccountABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof baseAccountABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: baseAccountABI,
+    ...config,
+  } as UseContractReadConfig<typeof baseAccountABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link baseAccountABI}__ and `functionName` set to `"entryPoint"`.
+ */
+export function useBaseAccountEntryPoint<
+  TFunctionName extends 'entryPoint',
+  TSelectData = ReadContractResult<typeof baseAccountABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof baseAccountABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: baseAccountABI,
+    functionName: 'entryPoint',
+    ...config,
+  } as UseContractReadConfig<typeof baseAccountABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link baseAccountABI}__ and `functionName` set to `"getNonce"`.
+ */
+export function useBaseAccountGetNonce<
+  TFunctionName extends 'getNonce',
+  TSelectData = ReadContractResult<typeof baseAccountABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof baseAccountABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: baseAccountABI,
+    functionName: 'getNonce',
+    ...config,
+  } as UseContractReadConfig<typeof baseAccountABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link baseAccountABI}__.
+ */
+export function useBaseAccountWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof baseAccountABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof baseAccountABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof baseAccountABI, TFunctionName, TMode>({
+    abi: baseAccountABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link baseAccountABI}__ and `functionName` set to `"validateUserOp"`.
+ */
+export function useBaseAccountValidateUserOp<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof baseAccountABI,
+          'validateUserOp'
+        >['request']['abi'],
+        'validateUserOp',
+        TMode
+      > & { functionName?: 'validateUserOp' }
+    : UseContractWriteConfig<typeof baseAccountABI, 'validateUserOp', TMode> & {
+        abi?: never
+        functionName?: 'validateUserOp'
+      } = {} as any,
+) {
+  return useContractWrite<typeof baseAccountABI, 'validateUserOp', TMode>({
+    abi: baseAccountABI,
+    functionName: 'validateUserOp',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link baseAccountABI}__.
+ */
+export function usePrepareBaseAccountWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof baseAccountABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: baseAccountABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof baseAccountABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link baseAccountABI}__ and `functionName` set to `"validateUserOp"`.
+ */
+export function usePrepareBaseAccountValidateUserOp(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof baseAccountABI, 'validateUserOp'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: baseAccountABI,
+    functionName: 'validateUserOp',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof baseAccountABI, 'validateUserOp'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link baseExecutorABI}__.
+ */
+export function useBaseExecutorRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof baseExecutorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof baseExecutorABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: baseExecutorABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof baseExecutorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link baseExecutorABI}__ and `functionName` set to `"extsload"`.
+ */
+export function useBaseExecutorExtsload<
+  TFunctionName extends 'extsload',
+  TSelectData = ReadContractResult<typeof baseExecutorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof baseExecutorABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: baseExecutorABI,
+    functionName: 'extsload',
+    ...config,
+  } as UseContractReadConfig<
+    typeof baseExecutorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link baseExecutorABI}__.
+ */
+export function useBaseExecutorWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof baseExecutorABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof baseExecutorABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof baseExecutorABI, TFunctionName, TMode>({
+    abi: baseExecutorABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link baseExecutorABI}__ and `functionName` set to `"extcall"`.
+ */
+export function useBaseExecutorExtcall<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof baseExecutorABI,
+          'extcall'
+        >['request']['abi'],
+        'extcall',
+        TMode
+      > & { functionName?: 'extcall' }
+    : UseContractWriteConfig<typeof baseExecutorABI, 'extcall', TMode> & {
+        abi?: never
+        functionName?: 'extcall'
+      } = {} as any,
+) {
+  return useContractWrite<typeof baseExecutorABI, 'extcall', TMode>({
+    abi: baseExecutorABI,
+    functionName: 'extcall',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link baseExecutorABI}__ and `functionName` set to `"extcreate"`.
+ */
+export function useBaseExecutorExtcreate<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof baseExecutorABI,
+          'extcreate'
+        >['request']['abi'],
+        'extcreate',
+        TMode
+      > & { functionName?: 'extcreate' }
+    : UseContractWriteConfig<typeof baseExecutorABI, 'extcreate', TMode> & {
+        abi?: never
+        functionName?: 'extcreate'
+      } = {} as any,
+) {
+  return useContractWrite<typeof baseExecutorABI, 'extcreate', TMode>({
+    abi: baseExecutorABI,
+    functionName: 'extcreate',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link baseExecutorABI}__ and `functionName` set to `"extcreate2"`.
+ */
+export function useBaseExecutorExtcreate2<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof baseExecutorABI,
+          'extcreate2'
+        >['request']['abi'],
+        'extcreate2',
+        TMode
+      > & { functionName?: 'extcreate2' }
+    : UseContractWriteConfig<typeof baseExecutorABI, 'extcreate2', TMode> & {
+        abi?: never
+        functionName?: 'extcreate2'
+      } = {} as any,
+) {
+  return useContractWrite<typeof baseExecutorABI, 'extcreate2', TMode>({
+    abi: baseExecutorABI,
+    functionName: 'extcreate2',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link baseExecutorABI}__.
+ */
+export function usePrepareBaseExecutorWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof baseExecutorABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: baseExecutorABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof baseExecutorABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link baseExecutorABI}__ and `functionName` set to `"extcall"`.
+ */
+export function usePrepareBaseExecutorExtcall(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof baseExecutorABI, 'extcall'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: baseExecutorABI,
+    functionName: 'extcall',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof baseExecutorABI, 'extcall'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link baseExecutorABI}__ and `functionName` set to `"extcreate"`.
+ */
+export function usePrepareBaseExecutorExtcreate(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof baseExecutorABI, 'extcreate'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: baseExecutorABI,
+    functionName: 'extcreate',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof baseExecutorABI, 'extcreate'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link baseExecutorABI}__ and `functionName` set to `"extcreate2"`.
+ */
+export function usePrepareBaseExecutorExtcreate2(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof baseExecutorABI, 'extcreate2'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: baseExecutorABI,
+    functionName: 'extcreate2',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof baseExecutorABI, 'extcreate2'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link batchExecutorABI}__.
+ */
+export function useBatchExecutorRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof batchExecutorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof batchExecutorABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: batchExecutorABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof batchExecutorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link batchExecutorABI}__ and `functionName` set to `"extsload"`.
+ */
+export function useBatchExecutorExtsload<
+  TFunctionName extends 'extsload',
+  TSelectData = ReadContractResult<typeof batchExecutorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof batchExecutorABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: batchExecutorABI,
+    functionName: 'extsload',
+    ...config,
+  } as UseContractReadConfig<
+    typeof batchExecutorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link batchExecutorABI}__.
+ */
+export function useBatchExecutorWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof batchExecutorABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof batchExecutorABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof batchExecutorABI, TFunctionName, TMode>({
+    abi: batchExecutorABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link batchExecutorABI}__ and `functionName` set to `"executeBatch"`.
+ */
+export function useBatchExecutorExecuteBatch<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof batchExecutorABI,
+          'executeBatch'
+        >['request']['abi'],
+        'executeBatch',
+        TMode
+      > & { functionName?: 'executeBatch' }
+    : UseContractWriteConfig<typeof batchExecutorABI, 'executeBatch', TMode> & {
+        abi?: never
+        functionName?: 'executeBatch'
+      } = {} as any,
+) {
+  return useContractWrite<typeof batchExecutorABI, 'executeBatch', TMode>({
+    abi: batchExecutorABI,
+    functionName: 'executeBatch',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link batchExecutorABI}__ and `functionName` set to `"extcall"`.
+ */
+export function useBatchExecutorExtcall<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof batchExecutorABI,
+          'extcall'
+        >['request']['abi'],
+        'extcall',
+        TMode
+      > & { functionName?: 'extcall' }
+    : UseContractWriteConfig<typeof batchExecutorABI, 'extcall', TMode> & {
+        abi?: never
+        functionName?: 'extcall'
+      } = {} as any,
+) {
+  return useContractWrite<typeof batchExecutorABI, 'extcall', TMode>({
+    abi: batchExecutorABI,
+    functionName: 'extcall',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link batchExecutorABI}__ and `functionName` set to `"extcreate"`.
+ */
+export function useBatchExecutorExtcreate<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof batchExecutorABI,
+          'extcreate'
+        >['request']['abi'],
+        'extcreate',
+        TMode
+      > & { functionName?: 'extcreate' }
+    : UseContractWriteConfig<typeof batchExecutorABI, 'extcreate', TMode> & {
+        abi?: never
+        functionName?: 'extcreate'
+      } = {} as any,
+) {
+  return useContractWrite<typeof batchExecutorABI, 'extcreate', TMode>({
+    abi: batchExecutorABI,
+    functionName: 'extcreate',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link batchExecutorABI}__ and `functionName` set to `"extcreate2"`.
+ */
+export function useBatchExecutorExtcreate2<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof batchExecutorABI,
+          'extcreate2'
+        >['request']['abi'],
+        'extcreate2',
+        TMode
+      > & { functionName?: 'extcreate2' }
+    : UseContractWriteConfig<typeof batchExecutorABI, 'extcreate2', TMode> & {
+        abi?: never
+        functionName?: 'extcreate2'
+      } = {} as any,
+) {
+  return useContractWrite<typeof batchExecutorABI, 'extcreate2', TMode>({
+    abi: batchExecutorABI,
+    functionName: 'extcreate2',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link batchExecutorABI}__.
+ */
+export function usePrepareBatchExecutorWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof batchExecutorABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: batchExecutorABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof batchExecutorABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link batchExecutorABI}__ and `functionName` set to `"executeBatch"`.
+ */
+export function usePrepareBatchExecutorExecuteBatch(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof batchExecutorABI, 'executeBatch'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: batchExecutorABI,
+    functionName: 'executeBatch',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof batchExecutorABI, 'executeBatch'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link batchExecutorABI}__ and `functionName` set to `"extcall"`.
+ */
+export function usePrepareBatchExecutorExtcall(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof batchExecutorABI, 'extcall'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: batchExecutorABI,
+    functionName: 'extcall',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof batchExecutorABI, 'extcall'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link batchExecutorABI}__ and `functionName` set to `"extcreate"`.
+ */
+export function usePrepareBatchExecutorExtcreate(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof batchExecutorABI, 'extcreate'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: batchExecutorABI,
+    functionName: 'extcreate',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof batchExecutorABI, 'extcreate'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link batchExecutorABI}__ and `functionName` set to `"extcreate2"`.
+ */
+export function usePrepareBatchExecutorExtcreate2(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof batchExecutorABI, 'extcreate2'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: batchExecutorABI,
+    functionName: 'extcreate2',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof batchExecutorABI, 'extcreate2'>)
+}
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link create2FactoryABI}__.
@@ -3782,6 +11885,411 @@ export function useCreate2FactoryDeployedEvent(
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link erc1155HolderABI}__.
+ */
+export function useErc1155HolderRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof erc1155HolderABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof erc1155HolderABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: erc1155HolderABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof erc1155HolderABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link erc1155HolderABI}__ and `functionName` set to `"supportsInterface"`.
+ */
+export function useErc1155HolderSupportsInterface<
+  TFunctionName extends 'supportsInterface',
+  TSelectData = ReadContractResult<typeof erc1155HolderABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof erc1155HolderABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: erc1155HolderABI,
+    functionName: 'supportsInterface',
+    ...config,
+  } as UseContractReadConfig<
+    typeof erc1155HolderABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc1155HolderABI}__.
+ */
+export function useErc1155HolderWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof erc1155HolderABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof erc1155HolderABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof erc1155HolderABI, TFunctionName, TMode>({
+    abi: erc1155HolderABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc1155HolderABI}__ and `functionName` set to `"onERC1155BatchReceived"`.
+ */
+export function useErc1155HolderOnErc1155BatchReceived<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof erc1155HolderABI,
+          'onERC1155BatchReceived'
+        >['request']['abi'],
+        'onERC1155BatchReceived',
+        TMode
+      > & { functionName?: 'onERC1155BatchReceived' }
+    : UseContractWriteConfig<
+        typeof erc1155HolderABI,
+        'onERC1155BatchReceived',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'onERC1155BatchReceived'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof erc1155HolderABI,
+    'onERC1155BatchReceived',
+    TMode
+  >({
+    abi: erc1155HolderABI,
+    functionName: 'onERC1155BatchReceived',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc1155HolderABI}__ and `functionName` set to `"onERC1155Received"`.
+ */
+export function useErc1155HolderOnErc1155Received<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof erc1155HolderABI,
+          'onERC1155Received'
+        >['request']['abi'],
+        'onERC1155Received',
+        TMode
+      > & { functionName?: 'onERC1155Received' }
+    : UseContractWriteConfig<
+        typeof erc1155HolderABI,
+        'onERC1155Received',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'onERC1155Received'
+      } = {} as any,
+) {
+  return useContractWrite<typeof erc1155HolderABI, 'onERC1155Received', TMode>({
+    abi: erc1155HolderABI,
+    functionName: 'onERC1155Received',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link erc1155HolderABI}__.
+ */
+export function usePrepareErc1155HolderWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof erc1155HolderABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: erc1155HolderABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof erc1155HolderABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link erc1155HolderABI}__ and `functionName` set to `"onERC1155BatchReceived"`.
+ */
+export function usePrepareErc1155HolderOnErc1155BatchReceived(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof erc1155HolderABI,
+      'onERC1155BatchReceived'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: erc1155HolderABI,
+    functionName: 'onERC1155BatchReceived',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof erc1155HolderABI,
+    'onERC1155BatchReceived'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link erc1155HolderABI}__ and `functionName` set to `"onERC1155Received"`.
+ */
+export function usePrepareErc1155HolderOnErc1155Received(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof erc1155HolderABI, 'onERC1155Received'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: erc1155HolderABI,
+    functionName: 'onERC1155Received',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof erc1155HolderABI,
+    'onERC1155Received'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link erc1155ReceiverABI}__.
+ */
+export function useErc1155ReceiverRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof erc1155ReceiverABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof erc1155ReceiverABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: erc1155ReceiverABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof erc1155ReceiverABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link erc1155ReceiverABI}__ and `functionName` set to `"supportsInterface"`.
+ */
+export function useErc1155ReceiverSupportsInterface<
+  TFunctionName extends 'supportsInterface',
+  TSelectData = ReadContractResult<typeof erc1155ReceiverABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof erc1155ReceiverABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: erc1155ReceiverABI,
+    functionName: 'supportsInterface',
+    ...config,
+  } as UseContractReadConfig<
+    typeof erc1155ReceiverABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc1155ReceiverABI}__.
+ */
+export function useErc1155ReceiverWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof erc1155ReceiverABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<
+        typeof erc1155ReceiverABI,
+        TFunctionName,
+        TMode
+      > & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof erc1155ReceiverABI, TFunctionName, TMode>({
+    abi: erc1155ReceiverABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc1155ReceiverABI}__ and `functionName` set to `"onERC1155BatchReceived"`.
+ */
+export function useErc1155ReceiverOnErc1155BatchReceived<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof erc1155ReceiverABI,
+          'onERC1155BatchReceived'
+        >['request']['abi'],
+        'onERC1155BatchReceived',
+        TMode
+      > & { functionName?: 'onERC1155BatchReceived' }
+    : UseContractWriteConfig<
+        typeof erc1155ReceiverABI,
+        'onERC1155BatchReceived',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'onERC1155BatchReceived'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof erc1155ReceiverABI,
+    'onERC1155BatchReceived',
+    TMode
+  >({
+    abi: erc1155ReceiverABI,
+    functionName: 'onERC1155BatchReceived',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc1155ReceiverABI}__ and `functionName` set to `"onERC1155Received"`.
+ */
+export function useErc1155ReceiverOnErc1155Received<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof erc1155ReceiverABI,
+          'onERC1155Received'
+        >['request']['abi'],
+        'onERC1155Received',
+        TMode
+      > & { functionName?: 'onERC1155Received' }
+    : UseContractWriteConfig<
+        typeof erc1155ReceiverABI,
+        'onERC1155Received',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'onERC1155Received'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof erc1155ReceiverABI,
+    'onERC1155Received',
+    TMode
+  >({
+    abi: erc1155ReceiverABI,
+    functionName: 'onERC1155Received',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link erc1155ReceiverABI}__.
+ */
+export function usePrepareErc1155ReceiverWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof erc1155ReceiverABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: erc1155ReceiverABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof erc1155ReceiverABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link erc1155ReceiverABI}__ and `functionName` set to `"onERC1155BatchReceived"`.
+ */
+export function usePrepareErc1155ReceiverOnErc1155BatchReceived(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof erc1155ReceiverABI,
+      'onERC1155BatchReceived'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: erc1155ReceiverABI,
+    functionName: 'onERC1155BatchReceived',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof erc1155ReceiverABI,
+    'onERC1155BatchReceived'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link erc1155ReceiverABI}__ and `functionName` set to `"onERC1155Received"`.
+ */
+export function usePrepareErc1155ReceiverOnErc1155Received(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof erc1155ReceiverABI,
+      'onERC1155Received'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: erc1155ReceiverABI,
+    functionName: 'onERC1155Received',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof erc1155ReceiverABI,
+    'onERC1155Received'
+  >)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link erc165ABI}__.
  */
 export function useErc165Read<
@@ -3817,6 +12325,69 @@ export function useErc165SupportsInterface<
     functionName: 'supportsInterface',
     ...config,
   } as UseContractReadConfig<typeof erc165ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link erc1967UpgradeABI}__.
+ */
+export function useErc1967UpgradeEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof erc1967UpgradeABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: erc1967UpgradeABI,
+    ...config,
+  } as UseContractEventConfig<typeof erc1967UpgradeABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link erc1967UpgradeABI}__ and `eventName` set to `"AdminChanged"`.
+ */
+export function useErc1967UpgradeAdminChangedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof erc1967UpgradeABI, 'AdminChanged'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: erc1967UpgradeABI,
+    eventName: 'AdminChanged',
+    ...config,
+  } as UseContractEventConfig<typeof erc1967UpgradeABI, 'AdminChanged'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link erc1967UpgradeABI}__ and `eventName` set to `"BeaconUpgraded"`.
+ */
+export function useErc1967UpgradeBeaconUpgradedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof erc1967UpgradeABI, 'BeaconUpgraded'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: erc1967UpgradeABI,
+    eventName: 'BeaconUpgraded',
+    ...config,
+  } as UseContractEventConfig<typeof erc1967UpgradeABI, 'BeaconUpgraded'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link erc1967UpgradeABI}__ and `eventName` set to `"Upgraded"`.
+ */
+export function useErc1967UpgradeUpgradedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof erc1967UpgradeABI, 'Upgraded'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: erc1967UpgradeABI,
+    eventName: 'Upgraded',
+    ...config,
+  } as UseContractEventConfig<typeof erc1967UpgradeABI, 'Upgraded'>)
 }
 
 /**
@@ -4001,6 +12572,60 @@ export function useErc20Approve<TMode extends WriteContractMode = undefined>(
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc20ABI}__ and `functionName` set to `"decreaseAllowance"`.
+ */
+export function useErc20DecreaseAllowance<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof erc20ABI,
+          'decreaseAllowance'
+        >['request']['abi'],
+        'decreaseAllowance',
+        TMode
+      > & { functionName?: 'decreaseAllowance' }
+    : UseContractWriteConfig<typeof erc20ABI, 'decreaseAllowance', TMode> & {
+        abi?: never
+        functionName?: 'decreaseAllowance'
+      } = {} as any,
+) {
+  return useContractWrite<typeof erc20ABI, 'decreaseAllowance', TMode>({
+    abi: erc20ABI,
+    functionName: 'decreaseAllowance',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc20ABI}__ and `functionName` set to `"increaseAllowance"`.
+ */
+export function useErc20IncreaseAllowance<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof erc20ABI,
+          'increaseAllowance'
+        >['request']['abi'],
+        'increaseAllowance',
+        TMode
+      > & { functionName?: 'increaseAllowance' }
+    : UseContractWriteConfig<typeof erc20ABI, 'increaseAllowance', TMode> & {
+        abi?: never
+        functionName?: 'increaseAllowance'
+      } = {} as any,
+) {
+  return useContractWrite<typeof erc20ABI, 'increaseAllowance', TMode>({
+    abi: erc20ABI,
+    functionName: 'increaseAllowance',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc20ABI}__ and `functionName` set to `"transfer"`.
  */
 export function useErc20Transfer<TMode extends WriteContractMode = undefined>(
@@ -4081,6 +12706,38 @@ export function usePrepareErc20Approve(
     functionName: 'approve',
     ...config,
   } as UsePrepareContractWriteConfig<typeof erc20ABI, 'approve'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link erc20ABI}__ and `functionName` set to `"decreaseAllowance"`.
+ */
+export function usePrepareErc20DecreaseAllowance(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof erc20ABI, 'decreaseAllowance'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: erc20ABI,
+    functionName: 'decreaseAllowance',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof erc20ABI, 'decreaseAllowance'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link erc20ABI}__ and `functionName` set to `"increaseAllowance"`.
+ */
+export function usePrepareErc20IncreaseAllowance(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof erc20ABI, 'increaseAllowance'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: erc20ABI,
+    functionName: 'increaseAllowance',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof erc20ABI, 'increaseAllowance'>)
 }
 
 /**
@@ -4348,6 +13005,68 @@ export function useErc20MockApprove<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc20MockABI}__ and `functionName` set to `"decreaseAllowance"`.
+ */
+export function useErc20MockDecreaseAllowance<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof erc20MockABI,
+          'decreaseAllowance'
+        >['request']['abi'],
+        'decreaseAllowance',
+        TMode
+      > & { functionName?: 'decreaseAllowance' }
+    : UseContractWriteConfig<
+        typeof erc20MockABI,
+        'decreaseAllowance',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'decreaseAllowance'
+      } = {} as any,
+) {
+  return useContractWrite<typeof erc20MockABI, 'decreaseAllowance', TMode>({
+    abi: erc20MockABI,
+    functionName: 'decreaseAllowance',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc20MockABI}__ and `functionName` set to `"increaseAllowance"`.
+ */
+export function useErc20MockIncreaseAllowance<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof erc20MockABI,
+          'increaseAllowance'
+        >['request']['abi'],
+        'increaseAllowance',
+        TMode
+      > & { functionName?: 'increaseAllowance' }
+    : UseContractWriteConfig<
+        typeof erc20MockABI,
+        'increaseAllowance',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'increaseAllowance'
+      } = {} as any,
+) {
+  return useContractWrite<typeof erc20MockABI, 'increaseAllowance', TMode>({
+    abi: erc20MockABI,
+    functionName: 'increaseAllowance',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc20MockABI}__ and `functionName` set to `"mint"`.
  */
 export function useErc20MockMint<TMode extends WriteContractMode = undefined>(
@@ -4455,6 +13174,38 @@ export function usePrepareErc20MockApprove(
     functionName: 'approve',
     ...config,
   } as UsePrepareContractWriteConfig<typeof erc20MockABI, 'approve'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link erc20MockABI}__ and `functionName` set to `"decreaseAllowance"`.
+ */
+export function usePrepareErc20MockDecreaseAllowance(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof erc20MockABI, 'decreaseAllowance'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: erc20MockABI,
+    functionName: 'decreaseAllowance',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof erc20MockABI, 'decreaseAllowance'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link erc20MockABI}__ and `functionName` set to `"increaseAllowance"`.
+ */
+export function usePrepareErc20MockIncreaseAllowance(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof erc20MockABI, 'increaseAllowance'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: erc20MockABI,
+    functionName: 'increaseAllowance',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof erc20MockABI, 'increaseAllowance'>)
 }
 
 /**
@@ -4776,6 +13527,644 @@ export function usePrepareErc20ModuleOnRevoke(
     functionName: 'onRevoke',
     ...config,
   } as UsePrepareContractWriteConfig<typeof erc20ModuleABI, 'onRevoke'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link erc2771ContextABI}__.
+ */
+export function useErc2771ContextRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof erc2771ContextABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof erc2771ContextABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: erc2771ContextABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof erc2771ContextABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link erc2771ContextABI}__ and `functionName` set to `"isTrustedForwarder"`.
+ */
+export function useErc2771ContextIsTrustedForwarder<
+  TFunctionName extends 'isTrustedForwarder',
+  TSelectData = ReadContractResult<typeof erc2771ContextABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof erc2771ContextABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: erc2771ContextABI,
+    functionName: 'isTrustedForwarder',
+    ...config,
+  } as UseContractReadConfig<
+    typeof erc2771ContextABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link erc4337AccountABI}__.
+ */
+export function useErc4337AccountRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof erc4337AccountABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof erc4337AccountABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: erc4337AccountABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof erc4337AccountABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link erc4337AccountABI}__ and `functionName` set to `"entryPoint"`.
+ */
+export function useErc4337AccountEntryPoint<
+  TFunctionName extends 'entryPoint',
+  TSelectData = ReadContractResult<typeof erc4337AccountABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof erc4337AccountABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: erc4337AccountABI,
+    functionName: 'entryPoint',
+    ...config,
+  } as UseContractReadConfig<
+    typeof erc4337AccountABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link erc4337AccountABI}__ and `functionName` set to `"getNonce"`.
+ */
+export function useErc4337AccountGetNonce<
+  TFunctionName extends 'getNonce',
+  TSelectData = ReadContractResult<typeof erc4337AccountABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof erc4337AccountABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: erc4337AccountABI,
+    functionName: 'getNonce',
+    ...config,
+  } as UseContractReadConfig<
+    typeof erc4337AccountABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc4337AccountABI}__.
+ */
+export function useErc4337AccountWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof erc4337AccountABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof erc4337AccountABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof erc4337AccountABI, TFunctionName, TMode>({
+    abi: erc4337AccountABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc4337AccountABI}__ and `functionName` set to `"validateUserOp"`.
+ */
+export function useErc4337AccountValidateUserOp<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof erc4337AccountABI,
+          'validateUserOp'
+        >['request']['abi'],
+        'validateUserOp',
+        TMode
+      > & { functionName?: 'validateUserOp' }
+    : UseContractWriteConfig<
+        typeof erc4337AccountABI,
+        'validateUserOp',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'validateUserOp'
+      } = {} as any,
+) {
+  return useContractWrite<typeof erc4337AccountABI, 'validateUserOp', TMode>({
+    abi: erc4337AccountABI,
+    functionName: 'validateUserOp',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link erc4337AccountABI}__.
+ */
+export function usePrepareErc4337AccountWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof erc4337AccountABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: erc4337AccountABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof erc4337AccountABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link erc4337AccountABI}__ and `functionName` set to `"validateUserOp"`.
+ */
+export function usePrepareErc4337AccountValidateUserOp(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof erc4337AccountABI, 'validateUserOp'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: erc4337AccountABI,
+    functionName: 'validateUserOp',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof erc4337AccountABI,
+    'validateUserOp'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link erc6551AccountABI}__.
+ */
+export function useErc6551AccountRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof erc6551AccountABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof erc6551AccountABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: erc6551AccountABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof erc6551AccountABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link erc6551AccountABI}__ and `functionName` set to `"isValidSignature"`.
+ */
+export function useErc6551AccountIsValidSignature<
+  TFunctionName extends 'isValidSignature',
+  TSelectData = ReadContractResult<typeof erc6551AccountABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof erc6551AccountABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: erc6551AccountABI,
+    functionName: 'isValidSignature',
+    ...config,
+  } as UseContractReadConfig<
+    typeof erc6551AccountABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link erc6551AccountABI}__ and `functionName` set to `"isValidSigner"`.
+ */
+export function useErc6551AccountIsValidSigner<
+  TFunctionName extends 'isValidSigner',
+  TSelectData = ReadContractResult<typeof erc6551AccountABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof erc6551AccountABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: erc6551AccountABI,
+    functionName: 'isValidSigner',
+    ...config,
+  } as UseContractReadConfig<
+    typeof erc6551AccountABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link erc6551AccountABI}__ and `functionName` set to `"state"`.
+ */
+export function useErc6551AccountState<
+  TFunctionName extends 'state',
+  TSelectData = ReadContractResult<typeof erc6551AccountABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof erc6551AccountABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: erc6551AccountABI,
+    functionName: 'state',
+    ...config,
+  } as UseContractReadConfig<
+    typeof erc6551AccountABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link erc6551AccountABI}__ and `functionName` set to `"supportsInterface"`.
+ */
+export function useErc6551AccountSupportsInterface<
+  TFunctionName extends 'supportsInterface',
+  TSelectData = ReadContractResult<typeof erc6551AccountABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof erc6551AccountABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: erc6551AccountABI,
+    functionName: 'supportsInterface',
+    ...config,
+  } as UseContractReadConfig<
+    typeof erc6551AccountABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link erc6551AccountABI}__ and `functionName` set to `"token"`.
+ */
+export function useErc6551AccountToken<
+  TFunctionName extends 'token',
+  TSelectData = ReadContractResult<typeof erc6551AccountABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof erc6551AccountABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: erc6551AccountABI,
+    functionName: 'token',
+    ...config,
+  } as UseContractReadConfig<
+    typeof erc6551AccountABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link erc6551ExecutorABI}__.
+ */
+export function useErc6551ExecutorRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof erc6551ExecutorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof erc6551ExecutorABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: erc6551ExecutorABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof erc6551ExecutorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link erc6551ExecutorABI}__ and `functionName` set to `"extsload"`.
+ */
+export function useErc6551ExecutorExtsload<
+  TFunctionName extends 'extsload',
+  TSelectData = ReadContractResult<typeof erc6551ExecutorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof erc6551ExecutorABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: erc6551ExecutorABI,
+    functionName: 'extsload',
+    ...config,
+  } as UseContractReadConfig<
+    typeof erc6551ExecutorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link erc6551ExecutorABI}__ and `functionName` set to `"supportsInterface"`.
+ */
+export function useErc6551ExecutorSupportsInterface<
+  TFunctionName extends 'supportsInterface',
+  TSelectData = ReadContractResult<typeof erc6551ExecutorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof erc6551ExecutorABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: erc6551ExecutorABI,
+    functionName: 'supportsInterface',
+    ...config,
+  } as UseContractReadConfig<
+    typeof erc6551ExecutorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc6551ExecutorABI}__.
+ */
+export function useErc6551ExecutorWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof erc6551ExecutorABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<
+        typeof erc6551ExecutorABI,
+        TFunctionName,
+        TMode
+      > & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof erc6551ExecutorABI, TFunctionName, TMode>({
+    abi: erc6551ExecutorABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc6551ExecutorABI}__ and `functionName` set to `"execute"`.
+ */
+export function useErc6551ExecutorExecute<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof erc6551ExecutorABI,
+          'execute'
+        >['request']['abi'],
+        'execute',
+        TMode
+      > & { functionName?: 'execute' }
+    : UseContractWriteConfig<typeof erc6551ExecutorABI, 'execute', TMode> & {
+        abi?: never
+        functionName?: 'execute'
+      } = {} as any,
+) {
+  return useContractWrite<typeof erc6551ExecutorABI, 'execute', TMode>({
+    abi: erc6551ExecutorABI,
+    functionName: 'execute',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc6551ExecutorABI}__ and `functionName` set to `"extcall"`.
+ */
+export function useErc6551ExecutorExtcall<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof erc6551ExecutorABI,
+          'extcall'
+        >['request']['abi'],
+        'extcall',
+        TMode
+      > & { functionName?: 'extcall' }
+    : UseContractWriteConfig<typeof erc6551ExecutorABI, 'extcall', TMode> & {
+        abi?: never
+        functionName?: 'extcall'
+      } = {} as any,
+) {
+  return useContractWrite<typeof erc6551ExecutorABI, 'extcall', TMode>({
+    abi: erc6551ExecutorABI,
+    functionName: 'extcall',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc6551ExecutorABI}__ and `functionName` set to `"extcreate"`.
+ */
+export function useErc6551ExecutorExtcreate<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof erc6551ExecutorABI,
+          'extcreate'
+        >['request']['abi'],
+        'extcreate',
+        TMode
+      > & { functionName?: 'extcreate' }
+    : UseContractWriteConfig<typeof erc6551ExecutorABI, 'extcreate', TMode> & {
+        abi?: never
+        functionName?: 'extcreate'
+      } = {} as any,
+) {
+  return useContractWrite<typeof erc6551ExecutorABI, 'extcreate', TMode>({
+    abi: erc6551ExecutorABI,
+    functionName: 'extcreate',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc6551ExecutorABI}__ and `functionName` set to `"extcreate2"`.
+ */
+export function useErc6551ExecutorExtcreate2<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof erc6551ExecutorABI,
+          'extcreate2'
+        >['request']['abi'],
+        'extcreate2',
+        TMode
+      > & { functionName?: 'extcreate2' }
+    : UseContractWriteConfig<typeof erc6551ExecutorABI, 'extcreate2', TMode> & {
+        abi?: never
+        functionName?: 'extcreate2'
+      } = {} as any,
+) {
+  return useContractWrite<typeof erc6551ExecutorABI, 'extcreate2', TMode>({
+    abi: erc6551ExecutorABI,
+    functionName: 'extcreate2',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link erc6551ExecutorABI}__.
+ */
+export function usePrepareErc6551ExecutorWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof erc6551ExecutorABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: erc6551ExecutorABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof erc6551ExecutorABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link erc6551ExecutorABI}__ and `functionName` set to `"execute"`.
+ */
+export function usePrepareErc6551ExecutorExecute(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof erc6551ExecutorABI, 'execute'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: erc6551ExecutorABI,
+    functionName: 'execute',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof erc6551ExecutorABI, 'execute'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link erc6551ExecutorABI}__ and `functionName` set to `"extcall"`.
+ */
+export function usePrepareErc6551ExecutorExtcall(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof erc6551ExecutorABI, 'extcall'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: erc6551ExecutorABI,
+    functionName: 'extcall',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof erc6551ExecutorABI, 'extcall'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link erc6551ExecutorABI}__ and `functionName` set to `"extcreate"`.
+ */
+export function usePrepareErc6551ExecutorExtcreate(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof erc6551ExecutorABI, 'extcreate'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: erc6551ExecutorABI,
+    functionName: 'extcreate',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof erc6551ExecutorABI, 'extcreate'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link erc6551ExecutorABI}__ and `functionName` set to `"extcreate2"`.
+ */
+export function usePrepareErc6551ExecutorExtcreate2(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof erc6551ExecutorABI, 'extcreate2'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: erc6551ExecutorABI,
+    functionName: 'extcreate2',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof erc6551ExecutorABI, 'extcreate2'>)
 }
 
 /**
@@ -5859,6 +15248,97 @@ export function useErc721EnumerableTransferEvent(
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc721HolderABI}__.
+ */
+export function useErc721HolderWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof erc721HolderABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof erc721HolderABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof erc721HolderABI, TFunctionName, TMode>({
+    abi: erc721HolderABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc721HolderABI}__ and `functionName` set to `"onERC721Received"`.
+ */
+export function useErc721HolderOnErc721Received<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof erc721HolderABI,
+          'onERC721Received'
+        >['request']['abi'],
+        'onERC721Received',
+        TMode
+      > & { functionName?: 'onERC721Received' }
+    : UseContractWriteConfig<
+        typeof erc721HolderABI,
+        'onERC721Received',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'onERC721Received'
+      } = {} as any,
+) {
+  return useContractWrite<typeof erc721HolderABI, 'onERC721Received', TMode>({
+    abi: erc721HolderABI,
+    functionName: 'onERC721Received',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link erc721HolderABI}__.
+ */
+export function usePrepareErc721HolderWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof erc721HolderABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: erc721HolderABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof erc721HolderABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link erc721HolderABI}__ and `functionName` set to `"onERC721Received"`.
+ */
+export function usePrepareErc721HolderOnErc721Received(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof erc721HolderABI, 'onERC721Received'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: erc721HolderABI,
+    functionName: 'onERC721Received',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof erc721HolderABI,
+    'onERC721Received'
+  >)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link erc721MockABI}__.
  */
 export function useErc721MockRead<
@@ -6592,6 +16072,680 @@ export function usePrepareErc721ModuleOnRevoke(
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iAccountABI}__.
+ */
+export function useIAccountWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iAccountABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof iAccountABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof iAccountABI, TFunctionName, TMode>({
+    abi: iAccountABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iAccountABI}__ and `functionName` set to `"validateUserOp"`.
+ */
+export function useIAccountValidateUserOp<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iAccountABI,
+          'validateUserOp'
+        >['request']['abi'],
+        'validateUserOp',
+        TMode
+      > & { functionName?: 'validateUserOp' }
+    : UseContractWriteConfig<typeof iAccountABI, 'validateUserOp', TMode> & {
+        abi?: never
+        functionName?: 'validateUserOp'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iAccountABI, 'validateUserOp', TMode>({
+    abi: iAccountABI,
+    functionName: 'validateUserOp',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iAccountABI}__.
+ */
+export function usePrepareIAccountWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iAccountABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iAccountABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iAccountABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iAccountABI}__ and `functionName` set to `"validateUserOp"`.
+ */
+export function usePrepareIAccountValidateUserOp(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iAccountABI, 'validateUserOp'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iAccountABI,
+    functionName: 'validateUserOp',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iAccountABI, 'validateUserOp'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iAccountGuardianABI}__.
+ */
+export function useIAccountGuardianRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof iAccountGuardianABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iAccountGuardianABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iAccountGuardianABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof iAccountGuardianABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iAccountGuardianABI}__ and `functionName` set to `"defaultImplementation"`.
+ */
+export function useIAccountGuardianDefaultImplementation<
+  TFunctionName extends 'defaultImplementation',
+  TSelectData = ReadContractResult<typeof iAccountGuardianABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iAccountGuardianABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iAccountGuardianABI,
+    functionName: 'defaultImplementation',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iAccountGuardianABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iAccountGuardianABI}__ and `functionName` set to `"isTrustedExecutor"`.
+ */
+export function useIAccountGuardianIsTrustedExecutor<
+  TFunctionName extends 'isTrustedExecutor',
+  TSelectData = ReadContractResult<typeof iAccountGuardianABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iAccountGuardianABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iAccountGuardianABI,
+    functionName: 'isTrustedExecutor',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iAccountGuardianABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iAccountGuardianABI}__ and `functionName` set to `"isTrustedImplementation"`.
+ */
+export function useIAccountGuardianIsTrustedImplementation<
+  TFunctionName extends 'isTrustedImplementation',
+  TSelectData = ReadContractResult<typeof iAccountGuardianABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iAccountGuardianABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iAccountGuardianABI,
+    functionName: 'isTrustedImplementation',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iAccountGuardianABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iAccountGuardianABI}__.
+ */
+export function useIAccountGuardianWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iAccountGuardianABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<
+        typeof iAccountGuardianABI,
+        TFunctionName,
+        TMode
+      > & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof iAccountGuardianABI, TFunctionName, TMode>({
+    abi: iAccountGuardianABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iAccountGuardianABI}__ and `functionName` set to `"setTrustedExecutor"`.
+ */
+export function useIAccountGuardianSetTrustedExecutor<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iAccountGuardianABI,
+          'setTrustedExecutor'
+        >['request']['abi'],
+        'setTrustedExecutor',
+        TMode
+      > & { functionName?: 'setTrustedExecutor' }
+    : UseContractWriteConfig<
+        typeof iAccountGuardianABI,
+        'setTrustedExecutor',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'setTrustedExecutor'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof iAccountGuardianABI,
+    'setTrustedExecutor',
+    TMode
+  >({
+    abi: iAccountGuardianABI,
+    functionName: 'setTrustedExecutor',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iAccountGuardianABI}__ and `functionName` set to `"setTrustedImplementation"`.
+ */
+export function useIAccountGuardianSetTrustedImplementation<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iAccountGuardianABI,
+          'setTrustedImplementation'
+        >['request']['abi'],
+        'setTrustedImplementation',
+        TMode
+      > & { functionName?: 'setTrustedImplementation' }
+    : UseContractWriteConfig<
+        typeof iAccountGuardianABI,
+        'setTrustedImplementation',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'setTrustedImplementation'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof iAccountGuardianABI,
+    'setTrustedImplementation',
+    TMode
+  >({
+    abi: iAccountGuardianABI,
+    functionName: 'setTrustedImplementation',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iAccountGuardianABI}__.
+ */
+export function usePrepareIAccountGuardianWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iAccountGuardianABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iAccountGuardianABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iAccountGuardianABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iAccountGuardianABI}__ and `functionName` set to `"setTrustedExecutor"`.
+ */
+export function usePrepareIAccountGuardianSetTrustedExecutor(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof iAccountGuardianABI,
+      'setTrustedExecutor'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iAccountGuardianABI,
+    functionName: 'setTrustedExecutor',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iAccountGuardianABI,
+    'setTrustedExecutor'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iAccountGuardianABI}__ and `functionName` set to `"setTrustedImplementation"`.
+ */
+export function usePrepareIAccountGuardianSetTrustedImplementation(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof iAccountGuardianABI,
+      'setTrustedImplementation'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iAccountGuardianABI,
+    functionName: 'setTrustedImplementation',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iAccountGuardianABI,
+    'setTrustedImplementation'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iAggregatorABI}__.
+ */
+export function useIAggregatorRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof iAggregatorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iAggregatorABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iAggregatorABI,
+    ...config,
+  } as UseContractReadConfig<typeof iAggregatorABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iAggregatorABI}__ and `functionName` set to `"aggregateSignatures"`.
+ */
+export function useIAggregatorAggregateSignatures<
+  TFunctionName extends 'aggregateSignatures',
+  TSelectData = ReadContractResult<typeof iAggregatorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iAggregatorABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iAggregatorABI,
+    functionName: 'aggregateSignatures',
+    ...config,
+  } as UseContractReadConfig<typeof iAggregatorABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iAggregatorABI}__ and `functionName` set to `"validateSignatures"`.
+ */
+export function useIAggregatorValidateSignatures<
+  TFunctionName extends 'validateSignatures',
+  TSelectData = ReadContractResult<typeof iAggregatorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iAggregatorABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iAggregatorABI,
+    functionName: 'validateSignatures',
+    ...config,
+  } as UseContractReadConfig<typeof iAggregatorABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iAggregatorABI}__ and `functionName` set to `"validateUserOpSignature"`.
+ */
+export function useIAggregatorValidateUserOpSignature<
+  TFunctionName extends 'validateUserOpSignature',
+  TSelectData = ReadContractResult<typeof iAggregatorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iAggregatorABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iAggregatorABI,
+    functionName: 'validateUserOpSignature',
+    ...config,
+  } as UseContractReadConfig<typeof iAggregatorABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iBeaconABI}__.
+ */
+export function useIBeaconRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof iBeaconABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iBeaconABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iBeaconABI,
+    ...config,
+  } as UseContractReadConfig<typeof iBeaconABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iBeaconABI}__ and `functionName` set to `"implementation"`.
+ */
+export function useIBeaconImplementation<
+  TFunctionName extends 'implementation',
+  TSelectData = ReadContractResult<typeof iBeaconABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iBeaconABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iBeaconABI,
+    functionName: 'implementation',
+    ...config,
+  } as UseContractReadConfig<typeof iBeaconABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link ierc1155ReceiverABI}__.
+ */
+export function useIerc1155ReceiverRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof ierc1155ReceiverABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof ierc1155ReceiverABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: ierc1155ReceiverABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof ierc1155ReceiverABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link ierc1155ReceiverABI}__ and `functionName` set to `"supportsInterface"`.
+ */
+export function useIerc1155ReceiverSupportsInterface<
+  TFunctionName extends 'supportsInterface',
+  TSelectData = ReadContractResult<typeof ierc1155ReceiverABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof ierc1155ReceiverABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: ierc1155ReceiverABI,
+    functionName: 'supportsInterface',
+    ...config,
+  } as UseContractReadConfig<
+    typeof ierc1155ReceiverABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link ierc1155ReceiverABI}__.
+ */
+export function useIerc1155ReceiverWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof ierc1155ReceiverABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<
+        typeof ierc1155ReceiverABI,
+        TFunctionName,
+        TMode
+      > & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof ierc1155ReceiverABI, TFunctionName, TMode>({
+    abi: ierc1155ReceiverABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link ierc1155ReceiverABI}__ and `functionName` set to `"onERC1155BatchReceived"`.
+ */
+export function useIerc1155ReceiverOnErc1155BatchReceived<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof ierc1155ReceiverABI,
+          'onERC1155BatchReceived'
+        >['request']['abi'],
+        'onERC1155BatchReceived',
+        TMode
+      > & { functionName?: 'onERC1155BatchReceived' }
+    : UseContractWriteConfig<
+        typeof ierc1155ReceiverABI,
+        'onERC1155BatchReceived',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'onERC1155BatchReceived'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof ierc1155ReceiverABI,
+    'onERC1155BatchReceived',
+    TMode
+  >({
+    abi: ierc1155ReceiverABI,
+    functionName: 'onERC1155BatchReceived',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link ierc1155ReceiverABI}__ and `functionName` set to `"onERC1155Received"`.
+ */
+export function useIerc1155ReceiverOnErc1155Received<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof ierc1155ReceiverABI,
+          'onERC1155Received'
+        >['request']['abi'],
+        'onERC1155Received',
+        TMode
+      > & { functionName?: 'onERC1155Received' }
+    : UseContractWriteConfig<
+        typeof ierc1155ReceiverABI,
+        'onERC1155Received',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'onERC1155Received'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof ierc1155ReceiverABI,
+    'onERC1155Received',
+    TMode
+  >({
+    abi: ierc1155ReceiverABI,
+    functionName: 'onERC1155Received',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link ierc1155ReceiverABI}__.
+ */
+export function usePrepareIerc1155ReceiverWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof ierc1155ReceiverABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: ierc1155ReceiverABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof ierc1155ReceiverABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link ierc1155ReceiverABI}__ and `functionName` set to `"onERC1155BatchReceived"`.
+ */
+export function usePrepareIerc1155ReceiverOnErc1155BatchReceived(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof ierc1155ReceiverABI,
+      'onERC1155BatchReceived'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: ierc1155ReceiverABI,
+    functionName: 'onERC1155BatchReceived',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof ierc1155ReceiverABI,
+    'onERC1155BatchReceived'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link ierc1155ReceiverABI}__ and `functionName` set to `"onERC1155Received"`.
+ */
+export function usePrepareIerc1155ReceiverOnErc1155Received(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof ierc1155ReceiverABI,
+      'onERC1155Received'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: ierc1155ReceiverABI,
+    functionName: 'onERC1155Received',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof ierc1155ReceiverABI,
+    'onERC1155Received'
+  >)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link ierc1271ABI}__.
  */
 export function useIerc1271Read<
@@ -6663,6 +16817,122 @@ export function useIerc165SupportsInterface<
     functionName: 'supportsInterface',
     ...config,
   } as UseContractReadConfig<typeof ierc165ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link ierc1822ProxiableABI}__.
+ */
+export function useIerc1822ProxiableRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof ierc1822ProxiableABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof ierc1822ProxiableABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: ierc1822ProxiableABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof ierc1822ProxiableABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link ierc1822ProxiableABI}__ and `functionName` set to `"proxiableUUID"`.
+ */
+export function useIerc1822ProxiableProxiableUuid<
+  TFunctionName extends 'proxiableUUID',
+  TSelectData = ReadContractResult<typeof ierc1822ProxiableABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof ierc1822ProxiableABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: ierc1822ProxiableABI,
+    functionName: 'proxiableUUID',
+    ...config,
+  } as UseContractReadConfig<
+    typeof ierc1822ProxiableABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link ierc1967ABI}__.
+ */
+export function useIerc1967Event<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof ierc1967ABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: ierc1967ABI,
+    ...config,
+  } as UseContractEventConfig<typeof ierc1967ABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link ierc1967ABI}__ and `eventName` set to `"AdminChanged"`.
+ */
+export function useIerc1967AdminChangedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof ierc1967ABI, 'AdminChanged'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: ierc1967ABI,
+    eventName: 'AdminChanged',
+    ...config,
+  } as UseContractEventConfig<typeof ierc1967ABI, 'AdminChanged'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link ierc1967ABI}__ and `eventName` set to `"BeaconUpgraded"`.
+ */
+export function useIerc1967BeaconUpgradedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof ierc1967ABI, 'BeaconUpgraded'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: ierc1967ABI,
+    eventName: 'BeaconUpgraded',
+    ...config,
+  } as UseContractEventConfig<typeof ierc1967ABI, 'BeaconUpgraded'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link ierc1967ABI}__ and `eventName` set to `"Upgraded"`.
+ */
+export function useIerc1967UpgradedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof ierc1967ABI, 'Upgraded'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: ierc1967ABI,
+    eventName: 'Upgraded',
+    ...config,
+  } as UseContractEventConfig<typeof ierc1967ABI, 'Upgraded'>)
 }
 
 /**
@@ -7846,19 +18116,22 @@ export function useIerc6551RegistryEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link ierc6551RegistryABI}__ and `eventName` set to `"AccountCreated"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link ierc6551RegistryABI}__ and `eventName` set to `"ERC6551AccountCreated"`.
  */
-export function useIerc6551RegistryAccountCreatedEvent(
+export function useIerc6551RegistryErc6551AccountCreatedEvent(
   config: Omit<
-    UseContractEventConfig<typeof ierc6551RegistryABI, 'AccountCreated'>,
+    UseContractEventConfig<typeof ierc6551RegistryABI, 'ERC6551AccountCreated'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: ierc6551RegistryABI,
-    eventName: 'AccountCreated',
+    eventName: 'ERC6551AccountCreated',
     ...config,
-  } as UseContractEventConfig<typeof ierc6551RegistryABI, 'AccountCreated'>)
+  } as UseContractEventConfig<
+    typeof ierc6551RegistryABI,
+    'ERC6551AccountCreated'
+  >)
 }
 
 /**
@@ -9458,6 +19731,950 @@ export function usePrepareIerc721ReceiverOnErc721Received(
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iEntryPointABI}__.
+ */
+export function useIEntryPointRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof iEntryPointABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iEntryPointABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iEntryPointABI,
+    ...config,
+  } as UseContractReadConfig<typeof iEntryPointABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"balanceOf"`.
+ */
+export function useIEntryPointBalanceOf<
+  TFunctionName extends 'balanceOf',
+  TSelectData = ReadContractResult<typeof iEntryPointABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iEntryPointABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iEntryPointABI,
+    functionName: 'balanceOf',
+    ...config,
+  } as UseContractReadConfig<typeof iEntryPointABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"getDepositInfo"`.
+ */
+export function useIEntryPointGetDepositInfo<
+  TFunctionName extends 'getDepositInfo',
+  TSelectData = ReadContractResult<typeof iEntryPointABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iEntryPointABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iEntryPointABI,
+    functionName: 'getDepositInfo',
+    ...config,
+  } as UseContractReadConfig<typeof iEntryPointABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"getNonce"`.
+ */
+export function useIEntryPointGetNonce<
+  TFunctionName extends 'getNonce',
+  TSelectData = ReadContractResult<typeof iEntryPointABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iEntryPointABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iEntryPointABI,
+    functionName: 'getNonce',
+    ...config,
+  } as UseContractReadConfig<typeof iEntryPointABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"getUserOpHash"`.
+ */
+export function useIEntryPointGetUserOpHash<
+  TFunctionName extends 'getUserOpHash',
+  TSelectData = ReadContractResult<typeof iEntryPointABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iEntryPointABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iEntryPointABI,
+    functionName: 'getUserOpHash',
+    ...config,
+  } as UseContractReadConfig<typeof iEntryPointABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iEntryPointABI}__.
+ */
+export function useIEntryPointWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iEntryPointABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof iEntryPointABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof iEntryPointABI, TFunctionName, TMode>({
+    abi: iEntryPointABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"addStake"`.
+ */
+export function useIEntryPointAddStake<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iEntryPointABI,
+          'addStake'
+        >['request']['abi'],
+        'addStake',
+        TMode
+      > & { functionName?: 'addStake' }
+    : UseContractWriteConfig<typeof iEntryPointABI, 'addStake', TMode> & {
+        abi?: never
+        functionName?: 'addStake'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iEntryPointABI, 'addStake', TMode>({
+    abi: iEntryPointABI,
+    functionName: 'addStake',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"depositTo"`.
+ */
+export function useIEntryPointDepositTo<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iEntryPointABI,
+          'depositTo'
+        >['request']['abi'],
+        'depositTo',
+        TMode
+      > & { functionName?: 'depositTo' }
+    : UseContractWriteConfig<typeof iEntryPointABI, 'depositTo', TMode> & {
+        abi?: never
+        functionName?: 'depositTo'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iEntryPointABI, 'depositTo', TMode>({
+    abi: iEntryPointABI,
+    functionName: 'depositTo',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"getSenderAddress"`.
+ */
+export function useIEntryPointGetSenderAddress<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iEntryPointABI,
+          'getSenderAddress'
+        >['request']['abi'],
+        'getSenderAddress',
+        TMode
+      > & { functionName?: 'getSenderAddress' }
+    : UseContractWriteConfig<
+        typeof iEntryPointABI,
+        'getSenderAddress',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'getSenderAddress'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iEntryPointABI, 'getSenderAddress', TMode>({
+    abi: iEntryPointABI,
+    functionName: 'getSenderAddress',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"handleAggregatedOps"`.
+ */
+export function useIEntryPointHandleAggregatedOps<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iEntryPointABI,
+          'handleAggregatedOps'
+        >['request']['abi'],
+        'handleAggregatedOps',
+        TMode
+      > & { functionName?: 'handleAggregatedOps' }
+    : UseContractWriteConfig<
+        typeof iEntryPointABI,
+        'handleAggregatedOps',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'handleAggregatedOps'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iEntryPointABI, 'handleAggregatedOps', TMode>({
+    abi: iEntryPointABI,
+    functionName: 'handleAggregatedOps',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"handleOps"`.
+ */
+export function useIEntryPointHandleOps<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iEntryPointABI,
+          'handleOps'
+        >['request']['abi'],
+        'handleOps',
+        TMode
+      > & { functionName?: 'handleOps' }
+    : UseContractWriteConfig<typeof iEntryPointABI, 'handleOps', TMode> & {
+        abi?: never
+        functionName?: 'handleOps'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iEntryPointABI, 'handleOps', TMode>({
+    abi: iEntryPointABI,
+    functionName: 'handleOps',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"incrementNonce"`.
+ */
+export function useIEntryPointIncrementNonce<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iEntryPointABI,
+          'incrementNonce'
+        >['request']['abi'],
+        'incrementNonce',
+        TMode
+      > & { functionName?: 'incrementNonce' }
+    : UseContractWriteConfig<typeof iEntryPointABI, 'incrementNonce', TMode> & {
+        abi?: never
+        functionName?: 'incrementNonce'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iEntryPointABI, 'incrementNonce', TMode>({
+    abi: iEntryPointABI,
+    functionName: 'incrementNonce',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"simulateHandleOp"`.
+ */
+export function useIEntryPointSimulateHandleOp<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iEntryPointABI,
+          'simulateHandleOp'
+        >['request']['abi'],
+        'simulateHandleOp',
+        TMode
+      > & { functionName?: 'simulateHandleOp' }
+    : UseContractWriteConfig<
+        typeof iEntryPointABI,
+        'simulateHandleOp',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'simulateHandleOp'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iEntryPointABI, 'simulateHandleOp', TMode>({
+    abi: iEntryPointABI,
+    functionName: 'simulateHandleOp',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"simulateValidation"`.
+ */
+export function useIEntryPointSimulateValidation<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iEntryPointABI,
+          'simulateValidation'
+        >['request']['abi'],
+        'simulateValidation',
+        TMode
+      > & { functionName?: 'simulateValidation' }
+    : UseContractWriteConfig<
+        typeof iEntryPointABI,
+        'simulateValidation',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'simulateValidation'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iEntryPointABI, 'simulateValidation', TMode>({
+    abi: iEntryPointABI,
+    functionName: 'simulateValidation',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"unlockStake"`.
+ */
+export function useIEntryPointUnlockStake<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iEntryPointABI,
+          'unlockStake'
+        >['request']['abi'],
+        'unlockStake',
+        TMode
+      > & { functionName?: 'unlockStake' }
+    : UseContractWriteConfig<typeof iEntryPointABI, 'unlockStake', TMode> & {
+        abi?: never
+        functionName?: 'unlockStake'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iEntryPointABI, 'unlockStake', TMode>({
+    abi: iEntryPointABI,
+    functionName: 'unlockStake',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"withdrawStake"`.
+ */
+export function useIEntryPointWithdrawStake<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iEntryPointABI,
+          'withdrawStake'
+        >['request']['abi'],
+        'withdrawStake',
+        TMode
+      > & { functionName?: 'withdrawStake' }
+    : UseContractWriteConfig<typeof iEntryPointABI, 'withdrawStake', TMode> & {
+        abi?: never
+        functionName?: 'withdrawStake'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iEntryPointABI, 'withdrawStake', TMode>({
+    abi: iEntryPointABI,
+    functionName: 'withdrawStake',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"withdrawTo"`.
+ */
+export function useIEntryPointWithdrawTo<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iEntryPointABI,
+          'withdrawTo'
+        >['request']['abi'],
+        'withdrawTo',
+        TMode
+      > & { functionName?: 'withdrawTo' }
+    : UseContractWriteConfig<typeof iEntryPointABI, 'withdrawTo', TMode> & {
+        abi?: never
+        functionName?: 'withdrawTo'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iEntryPointABI, 'withdrawTo', TMode>({
+    abi: iEntryPointABI,
+    functionName: 'withdrawTo',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iEntryPointABI}__.
+ */
+export function usePrepareIEntryPointWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iEntryPointABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iEntryPointABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iEntryPointABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"addStake"`.
+ */
+export function usePrepareIEntryPointAddStake(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iEntryPointABI, 'addStake'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iEntryPointABI,
+    functionName: 'addStake',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iEntryPointABI, 'addStake'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"depositTo"`.
+ */
+export function usePrepareIEntryPointDepositTo(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iEntryPointABI, 'depositTo'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iEntryPointABI,
+    functionName: 'depositTo',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iEntryPointABI, 'depositTo'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"getSenderAddress"`.
+ */
+export function usePrepareIEntryPointGetSenderAddress(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iEntryPointABI, 'getSenderAddress'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iEntryPointABI,
+    functionName: 'getSenderAddress',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iEntryPointABI, 'getSenderAddress'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"handleAggregatedOps"`.
+ */
+export function usePrepareIEntryPointHandleAggregatedOps(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iEntryPointABI, 'handleAggregatedOps'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iEntryPointABI,
+    functionName: 'handleAggregatedOps',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iEntryPointABI,
+    'handleAggregatedOps'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"handleOps"`.
+ */
+export function usePrepareIEntryPointHandleOps(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iEntryPointABI, 'handleOps'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iEntryPointABI,
+    functionName: 'handleOps',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iEntryPointABI, 'handleOps'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"incrementNonce"`.
+ */
+export function usePrepareIEntryPointIncrementNonce(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iEntryPointABI, 'incrementNonce'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iEntryPointABI,
+    functionName: 'incrementNonce',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iEntryPointABI, 'incrementNonce'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"simulateHandleOp"`.
+ */
+export function usePrepareIEntryPointSimulateHandleOp(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iEntryPointABI, 'simulateHandleOp'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iEntryPointABI,
+    functionName: 'simulateHandleOp',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iEntryPointABI, 'simulateHandleOp'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"simulateValidation"`.
+ */
+export function usePrepareIEntryPointSimulateValidation(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iEntryPointABI, 'simulateValidation'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iEntryPointABI,
+    functionName: 'simulateValidation',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iEntryPointABI,
+    'simulateValidation'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"unlockStake"`.
+ */
+export function usePrepareIEntryPointUnlockStake(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iEntryPointABI, 'unlockStake'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iEntryPointABI,
+    functionName: 'unlockStake',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iEntryPointABI, 'unlockStake'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"withdrawStake"`.
+ */
+export function usePrepareIEntryPointWithdrawStake(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iEntryPointABI, 'withdrawStake'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iEntryPointABI,
+    functionName: 'withdrawStake',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iEntryPointABI, 'withdrawStake'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iEntryPointABI}__ and `functionName` set to `"withdrawTo"`.
+ */
+export function usePrepareIEntryPointWithdrawTo(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iEntryPointABI, 'withdrawTo'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iEntryPointABI,
+    functionName: 'withdrawTo',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iEntryPointABI, 'withdrawTo'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iEntryPointABI}__.
+ */
+export function useIEntryPointEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof iEntryPointABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iEntryPointABI,
+    ...config,
+  } as UseContractEventConfig<typeof iEntryPointABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iEntryPointABI}__ and `eventName` set to `"AccountDeployed"`.
+ */
+export function useIEntryPointAccountDeployedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iEntryPointABI, 'AccountDeployed'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iEntryPointABI,
+    eventName: 'AccountDeployed',
+    ...config,
+  } as UseContractEventConfig<typeof iEntryPointABI, 'AccountDeployed'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iEntryPointABI}__ and `eventName` set to `"BeforeExecution"`.
+ */
+export function useIEntryPointBeforeExecutionEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iEntryPointABI, 'BeforeExecution'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iEntryPointABI,
+    eventName: 'BeforeExecution',
+    ...config,
+  } as UseContractEventConfig<typeof iEntryPointABI, 'BeforeExecution'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iEntryPointABI}__ and `eventName` set to `"Deposited"`.
+ */
+export function useIEntryPointDepositedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iEntryPointABI, 'Deposited'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iEntryPointABI,
+    eventName: 'Deposited',
+    ...config,
+  } as UseContractEventConfig<typeof iEntryPointABI, 'Deposited'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iEntryPointABI}__ and `eventName` set to `"SignatureAggregatorChanged"`.
+ */
+export function useIEntryPointSignatureAggregatorChangedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iEntryPointABI, 'SignatureAggregatorChanged'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iEntryPointABI,
+    eventName: 'SignatureAggregatorChanged',
+    ...config,
+  } as UseContractEventConfig<
+    typeof iEntryPointABI,
+    'SignatureAggregatorChanged'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iEntryPointABI}__ and `eventName` set to `"StakeLocked"`.
+ */
+export function useIEntryPointStakeLockedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iEntryPointABI, 'StakeLocked'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iEntryPointABI,
+    eventName: 'StakeLocked',
+    ...config,
+  } as UseContractEventConfig<typeof iEntryPointABI, 'StakeLocked'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iEntryPointABI}__ and `eventName` set to `"StakeUnlocked"`.
+ */
+export function useIEntryPointStakeUnlockedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iEntryPointABI, 'StakeUnlocked'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iEntryPointABI,
+    eventName: 'StakeUnlocked',
+    ...config,
+  } as UseContractEventConfig<typeof iEntryPointABI, 'StakeUnlocked'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iEntryPointABI}__ and `eventName` set to `"StakeWithdrawn"`.
+ */
+export function useIEntryPointStakeWithdrawnEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iEntryPointABI, 'StakeWithdrawn'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iEntryPointABI,
+    eventName: 'StakeWithdrawn',
+    ...config,
+  } as UseContractEventConfig<typeof iEntryPointABI, 'StakeWithdrawn'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iEntryPointABI}__ and `eventName` set to `"UserOperationEvent"`.
+ */
+export function useIEntryPointUserOperationEventEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iEntryPointABI, 'UserOperationEvent'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iEntryPointABI,
+    eventName: 'UserOperationEvent',
+    ...config,
+  } as UseContractEventConfig<typeof iEntryPointABI, 'UserOperationEvent'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iEntryPointABI}__ and `eventName` set to `"UserOperationRevertReason"`.
+ */
+export function useIEntryPointUserOperationRevertReasonEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iEntryPointABI, 'UserOperationRevertReason'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iEntryPointABI,
+    eventName: 'UserOperationRevertReason',
+    ...config,
+  } as UseContractEventConfig<
+    typeof iEntryPointABI,
+    'UserOperationRevertReason'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iEntryPointABI}__ and `eventName` set to `"Withdrawn"`.
+ */
+export function useIEntryPointWithdrawnEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iEntryPointABI, 'Withdrawn'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iEntryPointABI,
+    eventName: 'Withdrawn',
+    ...config,
+  } as UseContractEventConfig<typeof iEntryPointABI, 'Withdrawn'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iNonceManagerABI}__.
+ */
+export function useINonceManagerRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof iNonceManagerABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iNonceManagerABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iNonceManagerABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof iNonceManagerABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iNonceManagerABI}__ and `functionName` set to `"getNonce"`.
+ */
+export function useINonceManagerGetNonce<
+  TFunctionName extends 'getNonce',
+  TSelectData = ReadContractResult<typeof iNonceManagerABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iNonceManagerABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iNonceManagerABI,
+    functionName: 'getNonce',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iNonceManagerABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iNonceManagerABI}__.
+ */
+export function useINonceManagerWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iNonceManagerABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof iNonceManagerABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof iNonceManagerABI, TFunctionName, TMode>({
+    abi: iNonceManagerABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iNonceManagerABI}__ and `functionName` set to `"incrementNonce"`.
+ */
+export function useINonceManagerIncrementNonce<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iNonceManagerABI,
+          'incrementNonce'
+        >['request']['abi'],
+        'incrementNonce',
+        TMode
+      > & { functionName?: 'incrementNonce' }
+    : UseContractWriteConfig<
+        typeof iNonceManagerABI,
+        'incrementNonce',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'incrementNonce'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iNonceManagerABI, 'incrementNonce', TMode>({
+    abi: iNonceManagerABI,
+    functionName: 'incrementNonce',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iNonceManagerABI}__.
+ */
+export function usePrepareINonceManagerWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iNonceManagerABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iNonceManagerABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iNonceManagerABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iNonceManagerABI}__ and `functionName` set to `"incrementNonce"`.
+ */
+export function usePrepareINonceManagerIncrementNonce(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iNonceManagerABI, 'incrementNonce'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iNonceManagerABI,
+    functionName: 'incrementNonce',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iNonceManagerABI, 'incrementNonce'>)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPackModuleABI}__.
  */
 export function useIPackModuleWrite<
@@ -9625,6 +20842,1910 @@ export function usePrepareIPackModuleOnRevoke(
     functionName: 'onRevoke',
     ...config,
   } as UsePrepareContractWriteConfig<typeof iPackModuleABI, 'onRevoke'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iSandboxExecutorABI}__.
+ */
+export function useISandboxExecutorRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof iSandboxExecutorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iSandboxExecutorABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iSandboxExecutorABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof iSandboxExecutorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iSandboxExecutorABI}__ and `functionName` set to `"extsload"`.
+ */
+export function useISandboxExecutorExtsload<
+  TFunctionName extends 'extsload',
+  TSelectData = ReadContractResult<typeof iSandboxExecutorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iSandboxExecutorABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iSandboxExecutorABI,
+    functionName: 'extsload',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iSandboxExecutorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iSandboxExecutorABI}__.
+ */
+export function useISandboxExecutorWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iSandboxExecutorABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<
+        typeof iSandboxExecutorABI,
+        TFunctionName,
+        TMode
+      > & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof iSandboxExecutorABI, TFunctionName, TMode>({
+    abi: iSandboxExecutorABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iSandboxExecutorABI}__ and `functionName` set to `"extcall"`.
+ */
+export function useISandboxExecutorExtcall<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iSandboxExecutorABI,
+          'extcall'
+        >['request']['abi'],
+        'extcall',
+        TMode
+      > & { functionName?: 'extcall' }
+    : UseContractWriteConfig<typeof iSandboxExecutorABI, 'extcall', TMode> & {
+        abi?: never
+        functionName?: 'extcall'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iSandboxExecutorABI, 'extcall', TMode>({
+    abi: iSandboxExecutorABI,
+    functionName: 'extcall',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iSandboxExecutorABI}__ and `functionName` set to `"extcreate"`.
+ */
+export function useISandboxExecutorExtcreate<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iSandboxExecutorABI,
+          'extcreate'
+        >['request']['abi'],
+        'extcreate',
+        TMode
+      > & { functionName?: 'extcreate' }
+    : UseContractWriteConfig<typeof iSandboxExecutorABI, 'extcreate', TMode> & {
+        abi?: never
+        functionName?: 'extcreate'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iSandboxExecutorABI, 'extcreate', TMode>({
+    abi: iSandboxExecutorABI,
+    functionName: 'extcreate',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iSandboxExecutorABI}__ and `functionName` set to `"extcreate2"`.
+ */
+export function useISandboxExecutorExtcreate2<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iSandboxExecutorABI,
+          'extcreate2'
+        >['request']['abi'],
+        'extcreate2',
+        TMode
+      > & { functionName?: 'extcreate2' }
+    : UseContractWriteConfig<
+        typeof iSandboxExecutorABI,
+        'extcreate2',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'extcreate2'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iSandboxExecutorABI, 'extcreate2', TMode>({
+    abi: iSandboxExecutorABI,
+    functionName: 'extcreate2',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iSandboxExecutorABI}__.
+ */
+export function usePrepareISandboxExecutorWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iSandboxExecutorABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iSandboxExecutorABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iSandboxExecutorABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iSandboxExecutorABI}__ and `functionName` set to `"extcall"`.
+ */
+export function usePrepareISandboxExecutorExtcall(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iSandboxExecutorABI, 'extcall'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iSandboxExecutorABI,
+    functionName: 'extcall',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iSandboxExecutorABI, 'extcall'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iSandboxExecutorABI}__ and `functionName` set to `"extcreate"`.
+ */
+export function usePrepareISandboxExecutorExtcreate(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iSandboxExecutorABI, 'extcreate'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iSandboxExecutorABI,
+    functionName: 'extcreate',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iSandboxExecutorABI, 'extcreate'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iSandboxExecutorABI}__ and `functionName` set to `"extcreate2"`.
+ */
+export function usePrepareISandboxExecutorExtcreate2(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iSandboxExecutorABI, 'extcreate2'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iSandboxExecutorABI,
+    functionName: 'extcreate2',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iSandboxExecutorABI, 'extcreate2'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iStakeManagerABI}__.
+ */
+export function useIStakeManagerRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof iStakeManagerABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iStakeManagerABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iStakeManagerABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof iStakeManagerABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iStakeManagerABI}__ and `functionName` set to `"balanceOf"`.
+ */
+export function useIStakeManagerBalanceOf<
+  TFunctionName extends 'balanceOf',
+  TSelectData = ReadContractResult<typeof iStakeManagerABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iStakeManagerABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iStakeManagerABI,
+    functionName: 'balanceOf',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iStakeManagerABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iStakeManagerABI}__ and `functionName` set to `"getDepositInfo"`.
+ */
+export function useIStakeManagerGetDepositInfo<
+  TFunctionName extends 'getDepositInfo',
+  TSelectData = ReadContractResult<typeof iStakeManagerABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iStakeManagerABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iStakeManagerABI,
+    functionName: 'getDepositInfo',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iStakeManagerABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iStakeManagerABI}__.
+ */
+export function useIStakeManagerWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iStakeManagerABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof iStakeManagerABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof iStakeManagerABI, TFunctionName, TMode>({
+    abi: iStakeManagerABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iStakeManagerABI}__ and `functionName` set to `"addStake"`.
+ */
+export function useIStakeManagerAddStake<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iStakeManagerABI,
+          'addStake'
+        >['request']['abi'],
+        'addStake',
+        TMode
+      > & { functionName?: 'addStake' }
+    : UseContractWriteConfig<typeof iStakeManagerABI, 'addStake', TMode> & {
+        abi?: never
+        functionName?: 'addStake'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iStakeManagerABI, 'addStake', TMode>({
+    abi: iStakeManagerABI,
+    functionName: 'addStake',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iStakeManagerABI}__ and `functionName` set to `"depositTo"`.
+ */
+export function useIStakeManagerDepositTo<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iStakeManagerABI,
+          'depositTo'
+        >['request']['abi'],
+        'depositTo',
+        TMode
+      > & { functionName?: 'depositTo' }
+    : UseContractWriteConfig<typeof iStakeManagerABI, 'depositTo', TMode> & {
+        abi?: never
+        functionName?: 'depositTo'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iStakeManagerABI, 'depositTo', TMode>({
+    abi: iStakeManagerABI,
+    functionName: 'depositTo',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iStakeManagerABI}__ and `functionName` set to `"unlockStake"`.
+ */
+export function useIStakeManagerUnlockStake<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iStakeManagerABI,
+          'unlockStake'
+        >['request']['abi'],
+        'unlockStake',
+        TMode
+      > & { functionName?: 'unlockStake' }
+    : UseContractWriteConfig<typeof iStakeManagerABI, 'unlockStake', TMode> & {
+        abi?: never
+        functionName?: 'unlockStake'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iStakeManagerABI, 'unlockStake', TMode>({
+    abi: iStakeManagerABI,
+    functionName: 'unlockStake',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iStakeManagerABI}__ and `functionName` set to `"withdrawStake"`.
+ */
+export function useIStakeManagerWithdrawStake<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iStakeManagerABI,
+          'withdrawStake'
+        >['request']['abi'],
+        'withdrawStake',
+        TMode
+      > & { functionName?: 'withdrawStake' }
+    : UseContractWriteConfig<
+        typeof iStakeManagerABI,
+        'withdrawStake',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'withdrawStake'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iStakeManagerABI, 'withdrawStake', TMode>({
+    abi: iStakeManagerABI,
+    functionName: 'withdrawStake',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iStakeManagerABI}__ and `functionName` set to `"withdrawTo"`.
+ */
+export function useIStakeManagerWithdrawTo<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iStakeManagerABI,
+          'withdrawTo'
+        >['request']['abi'],
+        'withdrawTo',
+        TMode
+      > & { functionName?: 'withdrawTo' }
+    : UseContractWriteConfig<typeof iStakeManagerABI, 'withdrawTo', TMode> & {
+        abi?: never
+        functionName?: 'withdrawTo'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iStakeManagerABI, 'withdrawTo', TMode>({
+    abi: iStakeManagerABI,
+    functionName: 'withdrawTo',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iStakeManagerABI}__.
+ */
+export function usePrepareIStakeManagerWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iStakeManagerABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iStakeManagerABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iStakeManagerABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iStakeManagerABI}__ and `functionName` set to `"addStake"`.
+ */
+export function usePrepareIStakeManagerAddStake(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iStakeManagerABI, 'addStake'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iStakeManagerABI,
+    functionName: 'addStake',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iStakeManagerABI, 'addStake'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iStakeManagerABI}__ and `functionName` set to `"depositTo"`.
+ */
+export function usePrepareIStakeManagerDepositTo(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iStakeManagerABI, 'depositTo'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iStakeManagerABI,
+    functionName: 'depositTo',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iStakeManagerABI, 'depositTo'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iStakeManagerABI}__ and `functionName` set to `"unlockStake"`.
+ */
+export function usePrepareIStakeManagerUnlockStake(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iStakeManagerABI, 'unlockStake'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iStakeManagerABI,
+    functionName: 'unlockStake',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iStakeManagerABI, 'unlockStake'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iStakeManagerABI}__ and `functionName` set to `"withdrawStake"`.
+ */
+export function usePrepareIStakeManagerWithdrawStake(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iStakeManagerABI, 'withdrawStake'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iStakeManagerABI,
+    functionName: 'withdrawStake',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iStakeManagerABI, 'withdrawStake'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iStakeManagerABI}__ and `functionName` set to `"withdrawTo"`.
+ */
+export function usePrepareIStakeManagerWithdrawTo(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iStakeManagerABI, 'withdrawTo'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iStakeManagerABI,
+    functionName: 'withdrawTo',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iStakeManagerABI, 'withdrawTo'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iStakeManagerABI}__.
+ */
+export function useIStakeManagerEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof iStakeManagerABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iStakeManagerABI,
+    ...config,
+  } as UseContractEventConfig<typeof iStakeManagerABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iStakeManagerABI}__ and `eventName` set to `"Deposited"`.
+ */
+export function useIStakeManagerDepositedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iStakeManagerABI, 'Deposited'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iStakeManagerABI,
+    eventName: 'Deposited',
+    ...config,
+  } as UseContractEventConfig<typeof iStakeManagerABI, 'Deposited'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iStakeManagerABI}__ and `eventName` set to `"StakeLocked"`.
+ */
+export function useIStakeManagerStakeLockedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iStakeManagerABI, 'StakeLocked'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iStakeManagerABI,
+    eventName: 'StakeLocked',
+    ...config,
+  } as UseContractEventConfig<typeof iStakeManagerABI, 'StakeLocked'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iStakeManagerABI}__ and `eventName` set to `"StakeUnlocked"`.
+ */
+export function useIStakeManagerStakeUnlockedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iStakeManagerABI, 'StakeUnlocked'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iStakeManagerABI,
+    eventName: 'StakeUnlocked',
+    ...config,
+  } as UseContractEventConfig<typeof iStakeManagerABI, 'StakeUnlocked'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iStakeManagerABI}__ and `eventName` set to `"StakeWithdrawn"`.
+ */
+export function useIStakeManagerStakeWithdrawnEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iStakeManagerABI, 'StakeWithdrawn'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iStakeManagerABI,
+    eventName: 'StakeWithdrawn',
+    ...config,
+  } as UseContractEventConfig<typeof iStakeManagerABI, 'StakeWithdrawn'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iStakeManagerABI}__ and `eventName` set to `"Withdrawn"`.
+ */
+export function useIStakeManagerWithdrawnEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iStakeManagerABI, 'Withdrawn'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iStakeManagerABI,
+    eventName: 'Withdrawn',
+    ...config,
+  } as UseContractEventConfig<typeof iStakeManagerABI, 'Withdrawn'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link libSandboxABI}__.
+ */
+export function useLibSandboxRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof libSandboxABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof libSandboxABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: libSandboxABI,
+    ...config,
+  } as UseContractReadConfig<typeof libSandboxABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link libSandboxABI}__ and `functionName` set to `"footer"`.
+ */
+export function useLibSandboxFooter<
+  TFunctionName extends 'footer',
+  TSelectData = ReadContractResult<typeof libSandboxABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof libSandboxABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: libSandboxABI,
+    functionName: 'footer',
+    ...config,
+  } as UseContractReadConfig<typeof libSandboxABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link libSandboxABI}__ and `functionName` set to `"header"`.
+ */
+export function useLibSandboxHeader<
+  TFunctionName extends 'header',
+  TSelectData = ReadContractResult<typeof libSandboxABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof libSandboxABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: libSandboxABI,
+    functionName: 'header',
+    ...config,
+  } as UseContractReadConfig<typeof libSandboxABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link lockableABI}__.
+ */
+export function useLockableRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof lockableABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof lockableABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: lockableABI,
+    ...config,
+  } as UseContractReadConfig<typeof lockableABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link lockableABI}__ and `functionName` set to `"isLocked"`.
+ */
+export function useLockableIsLocked<
+  TFunctionName extends 'isLocked',
+  TSelectData = ReadContractResult<typeof lockableABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof lockableABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: lockableABI,
+    functionName: 'isLocked',
+    ...config,
+  } as UseContractReadConfig<typeof lockableABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link lockableABI}__ and `functionName` set to `"lockedUntil"`.
+ */
+export function useLockableLockedUntil<
+  TFunctionName extends 'lockedUntil',
+  TSelectData = ReadContractResult<typeof lockableABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof lockableABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: lockableABI,
+    functionName: 'lockedUntil',
+    ...config,
+  } as UseContractReadConfig<typeof lockableABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link lockableABI}__.
+ */
+export function useLockableWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof lockableABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof lockableABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof lockableABI, TFunctionName, TMode>({
+    abi: lockableABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link lockableABI}__ and `functionName` set to `"lock"`.
+ */
+export function useLockableLock<TMode extends WriteContractMode = undefined>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof lockableABI,
+          'lock'
+        >['request']['abi'],
+        'lock',
+        TMode
+      > & { functionName?: 'lock' }
+    : UseContractWriteConfig<typeof lockableABI, 'lock', TMode> & {
+        abi?: never
+        functionName?: 'lock'
+      } = {} as any,
+) {
+  return useContractWrite<typeof lockableABI, 'lock', TMode>({
+    abi: lockableABI,
+    functionName: 'lock',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link lockableABI}__.
+ */
+export function usePrepareLockableWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof lockableABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: lockableABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof lockableABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link lockableABI}__ and `functionName` set to `"lock"`.
+ */
+export function usePrepareLockableLock(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof lockableABI, 'lock'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: lockableABI,
+    functionName: 'lock',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof lockableABI, 'lock'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link lockableABI}__.
+ */
+export function useLockableEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof lockableABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: lockableABI,
+    ...config,
+  } as UseContractEventConfig<typeof lockableABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link lockableABI}__ and `eventName` set to `"LockUpdated"`.
+ */
+export function useLockableLockUpdatedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof lockableABI, 'LockUpdated'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: lockableABI,
+    eventName: 'LockUpdated',
+    ...config,
+  } as UseContractEventConfig<typeof lockableABI, 'LockUpdated'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link multicall3ABI}__.
+ */
+export function useMulticall3Read<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof multicall3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: multicall3ABI,
+    ...config,
+  } as UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"getBasefee"`.
+ */
+export function useMulticall3GetBasefee<
+  TFunctionName extends 'getBasefee',
+  TSelectData = ReadContractResult<typeof multicall3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: multicall3ABI,
+    functionName: 'getBasefee',
+    ...config,
+  } as UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"getBlockHash"`.
+ */
+export function useMulticall3GetBlockHash<
+  TFunctionName extends 'getBlockHash',
+  TSelectData = ReadContractResult<typeof multicall3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: multicall3ABI,
+    functionName: 'getBlockHash',
+    ...config,
+  } as UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"getBlockNumber"`.
+ */
+export function useMulticall3GetBlockNumber<
+  TFunctionName extends 'getBlockNumber',
+  TSelectData = ReadContractResult<typeof multicall3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: multicall3ABI,
+    functionName: 'getBlockNumber',
+    ...config,
+  } as UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"getChainId"`.
+ */
+export function useMulticall3GetChainId<
+  TFunctionName extends 'getChainId',
+  TSelectData = ReadContractResult<typeof multicall3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: multicall3ABI,
+    functionName: 'getChainId',
+    ...config,
+  } as UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"getCurrentBlockCoinbase"`.
+ */
+export function useMulticall3GetCurrentBlockCoinbase<
+  TFunctionName extends 'getCurrentBlockCoinbase',
+  TSelectData = ReadContractResult<typeof multicall3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: multicall3ABI,
+    functionName: 'getCurrentBlockCoinbase',
+    ...config,
+  } as UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"getCurrentBlockDifficulty"`.
+ */
+export function useMulticall3GetCurrentBlockDifficulty<
+  TFunctionName extends 'getCurrentBlockDifficulty',
+  TSelectData = ReadContractResult<typeof multicall3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: multicall3ABI,
+    functionName: 'getCurrentBlockDifficulty',
+    ...config,
+  } as UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"getCurrentBlockGasLimit"`.
+ */
+export function useMulticall3GetCurrentBlockGasLimit<
+  TFunctionName extends 'getCurrentBlockGasLimit',
+  TSelectData = ReadContractResult<typeof multicall3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: multicall3ABI,
+    functionName: 'getCurrentBlockGasLimit',
+    ...config,
+  } as UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"getCurrentBlockTimestamp"`.
+ */
+export function useMulticall3GetCurrentBlockTimestamp<
+  TFunctionName extends 'getCurrentBlockTimestamp',
+  TSelectData = ReadContractResult<typeof multicall3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: multicall3ABI,
+    functionName: 'getCurrentBlockTimestamp',
+    ...config,
+  } as UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"getEthBalance"`.
+ */
+export function useMulticall3GetEthBalance<
+  TFunctionName extends 'getEthBalance',
+  TSelectData = ReadContractResult<typeof multicall3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: multicall3ABI,
+    functionName: 'getEthBalance',
+    ...config,
+  } as UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"getLastBlockHash"`.
+ */
+export function useMulticall3GetLastBlockHash<
+  TFunctionName extends 'getLastBlockHash',
+  TSelectData = ReadContractResult<typeof multicall3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: multicall3ABI,
+    functionName: 'getLastBlockHash',
+    ...config,
+  } as UseContractReadConfig<typeof multicall3ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link multicall3ABI}__.
+ */
+export function useMulticall3Write<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof multicall3ABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof multicall3ABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof multicall3ABI, TFunctionName, TMode>({
+    abi: multicall3ABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"aggregate"`.
+ */
+export function useMulticall3Aggregate<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof multicall3ABI,
+          'aggregate'
+        >['request']['abi'],
+        'aggregate',
+        TMode
+      > & { functionName?: 'aggregate' }
+    : UseContractWriteConfig<typeof multicall3ABI, 'aggregate', TMode> & {
+        abi?: never
+        functionName?: 'aggregate'
+      } = {} as any,
+) {
+  return useContractWrite<typeof multicall3ABI, 'aggregate', TMode>({
+    abi: multicall3ABI,
+    functionName: 'aggregate',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"aggregate3"`.
+ */
+export function useMulticall3Aggregate3<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof multicall3ABI,
+          'aggregate3'
+        >['request']['abi'],
+        'aggregate3',
+        TMode
+      > & { functionName?: 'aggregate3' }
+    : UseContractWriteConfig<typeof multicall3ABI, 'aggregate3', TMode> & {
+        abi?: never
+        functionName?: 'aggregate3'
+      } = {} as any,
+) {
+  return useContractWrite<typeof multicall3ABI, 'aggregate3', TMode>({
+    abi: multicall3ABI,
+    functionName: 'aggregate3',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"aggregate3Value"`.
+ */
+export function useMulticall3Aggregate3Value<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof multicall3ABI,
+          'aggregate3Value'
+        >['request']['abi'],
+        'aggregate3Value',
+        TMode
+      > & { functionName?: 'aggregate3Value' }
+    : UseContractWriteConfig<typeof multicall3ABI, 'aggregate3Value', TMode> & {
+        abi?: never
+        functionName?: 'aggregate3Value'
+      } = {} as any,
+) {
+  return useContractWrite<typeof multicall3ABI, 'aggregate3Value', TMode>({
+    abi: multicall3ABI,
+    functionName: 'aggregate3Value',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"blockAndAggregate"`.
+ */
+export function useMulticall3BlockAndAggregate<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof multicall3ABI,
+          'blockAndAggregate'
+        >['request']['abi'],
+        'blockAndAggregate',
+        TMode
+      > & { functionName?: 'blockAndAggregate' }
+    : UseContractWriteConfig<
+        typeof multicall3ABI,
+        'blockAndAggregate',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'blockAndAggregate'
+      } = {} as any,
+) {
+  return useContractWrite<typeof multicall3ABI, 'blockAndAggregate', TMode>({
+    abi: multicall3ABI,
+    functionName: 'blockAndAggregate',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"tryAggregate"`.
+ */
+export function useMulticall3TryAggregate<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof multicall3ABI,
+          'tryAggregate'
+        >['request']['abi'],
+        'tryAggregate',
+        TMode
+      > & { functionName?: 'tryAggregate' }
+    : UseContractWriteConfig<typeof multicall3ABI, 'tryAggregate', TMode> & {
+        abi?: never
+        functionName?: 'tryAggregate'
+      } = {} as any,
+) {
+  return useContractWrite<typeof multicall3ABI, 'tryAggregate', TMode>({
+    abi: multicall3ABI,
+    functionName: 'tryAggregate',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"tryBlockAndAggregate"`.
+ */
+export function useMulticall3TryBlockAndAggregate<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof multicall3ABI,
+          'tryBlockAndAggregate'
+        >['request']['abi'],
+        'tryBlockAndAggregate',
+        TMode
+      > & { functionName?: 'tryBlockAndAggregate' }
+    : UseContractWriteConfig<
+        typeof multicall3ABI,
+        'tryBlockAndAggregate',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'tryBlockAndAggregate'
+      } = {} as any,
+) {
+  return useContractWrite<typeof multicall3ABI, 'tryBlockAndAggregate', TMode>({
+    abi: multicall3ABI,
+    functionName: 'tryBlockAndAggregate',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link multicall3ABI}__.
+ */
+export function usePrepareMulticall3Write<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof multicall3ABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: multicall3ABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof multicall3ABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"aggregate"`.
+ */
+export function usePrepareMulticall3Aggregate(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof multicall3ABI, 'aggregate'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: multicall3ABI,
+    functionName: 'aggregate',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof multicall3ABI, 'aggregate'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"aggregate3"`.
+ */
+export function usePrepareMulticall3Aggregate3(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof multicall3ABI, 'aggregate3'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: multicall3ABI,
+    functionName: 'aggregate3',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof multicall3ABI, 'aggregate3'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"aggregate3Value"`.
+ */
+export function usePrepareMulticall3Aggregate3Value(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof multicall3ABI, 'aggregate3Value'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: multicall3ABI,
+    functionName: 'aggregate3Value',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof multicall3ABI, 'aggregate3Value'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"blockAndAggregate"`.
+ */
+export function usePrepareMulticall3BlockAndAggregate(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof multicall3ABI, 'blockAndAggregate'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: multicall3ABI,
+    functionName: 'blockAndAggregate',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof multicall3ABI, 'blockAndAggregate'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"tryAggregate"`.
+ */
+export function usePrepareMulticall3TryAggregate(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof multicall3ABI, 'tryAggregate'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: multicall3ABI,
+    functionName: 'tryAggregate',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof multicall3ABI, 'tryAggregate'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link multicall3ABI}__ and `functionName` set to `"tryBlockAndAggregate"`.
+ */
+export function usePrepareMulticall3TryBlockAndAggregate(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof multicall3ABI, 'tryBlockAndAggregate'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: multicall3ABI,
+    functionName: 'tryBlockAndAggregate',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof multicall3ABI,
+    'tryBlockAndAggregate'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link nestedAccountExecutorABI}__.
+ */
+export function useNestedAccountExecutorRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<
+    typeof nestedAccountExecutorABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof nestedAccountExecutorABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: nestedAccountExecutorABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof nestedAccountExecutorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link nestedAccountExecutorABI}__ and `functionName` set to `"erc6551Registry"`.
+ */
+export function useNestedAccountExecutorErc6551Registry<
+  TFunctionName extends 'erc6551Registry',
+  TSelectData = ReadContractResult<
+    typeof nestedAccountExecutorABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof nestedAccountExecutorABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: nestedAccountExecutorABI,
+    functionName: 'erc6551Registry',
+    ...config,
+  } as UseContractReadConfig<
+    typeof nestedAccountExecutorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link nestedAccountExecutorABI}__ and `functionName` set to `"extsload"`.
+ */
+export function useNestedAccountExecutorExtsload<
+  TFunctionName extends 'extsload',
+  TSelectData = ReadContractResult<
+    typeof nestedAccountExecutorABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof nestedAccountExecutorABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: nestedAccountExecutorABI,
+    functionName: 'extsload',
+    ...config,
+  } as UseContractReadConfig<
+    typeof nestedAccountExecutorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link nestedAccountExecutorABI}__.
+ */
+export function useNestedAccountExecutorWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof nestedAccountExecutorABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<
+        typeof nestedAccountExecutorABI,
+        TFunctionName,
+        TMode
+      > & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof nestedAccountExecutorABI,
+    TFunctionName,
+    TMode
+  >({ abi: nestedAccountExecutorABI, ...config } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link nestedAccountExecutorABI}__ and `functionName` set to `"executeNested"`.
+ */
+export function useNestedAccountExecutorExecuteNested<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof nestedAccountExecutorABI,
+          'executeNested'
+        >['request']['abi'],
+        'executeNested',
+        TMode
+      > & { functionName?: 'executeNested' }
+    : UseContractWriteConfig<
+        typeof nestedAccountExecutorABI,
+        'executeNested',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'executeNested'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof nestedAccountExecutorABI,
+    'executeNested',
+    TMode
+  >({
+    abi: nestedAccountExecutorABI,
+    functionName: 'executeNested',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link nestedAccountExecutorABI}__ and `functionName` set to `"extcall"`.
+ */
+export function useNestedAccountExecutorExtcall<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof nestedAccountExecutorABI,
+          'extcall'
+        >['request']['abi'],
+        'extcall',
+        TMode
+      > & { functionName?: 'extcall' }
+    : UseContractWriteConfig<
+        typeof nestedAccountExecutorABI,
+        'extcall',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'extcall'
+      } = {} as any,
+) {
+  return useContractWrite<typeof nestedAccountExecutorABI, 'extcall', TMode>({
+    abi: nestedAccountExecutorABI,
+    functionName: 'extcall',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link nestedAccountExecutorABI}__ and `functionName` set to `"extcreate"`.
+ */
+export function useNestedAccountExecutorExtcreate<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof nestedAccountExecutorABI,
+          'extcreate'
+        >['request']['abi'],
+        'extcreate',
+        TMode
+      > & { functionName?: 'extcreate' }
+    : UseContractWriteConfig<
+        typeof nestedAccountExecutorABI,
+        'extcreate',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'extcreate'
+      } = {} as any,
+) {
+  return useContractWrite<typeof nestedAccountExecutorABI, 'extcreate', TMode>({
+    abi: nestedAccountExecutorABI,
+    functionName: 'extcreate',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link nestedAccountExecutorABI}__ and `functionName` set to `"extcreate2"`.
+ */
+export function useNestedAccountExecutorExtcreate2<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof nestedAccountExecutorABI,
+          'extcreate2'
+        >['request']['abi'],
+        'extcreate2',
+        TMode
+      > & { functionName?: 'extcreate2' }
+    : UseContractWriteConfig<
+        typeof nestedAccountExecutorABI,
+        'extcreate2',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'extcreate2'
+      } = {} as any,
+) {
+  return useContractWrite<typeof nestedAccountExecutorABI, 'extcreate2', TMode>(
+    {
+      abi: nestedAccountExecutorABI,
+      functionName: 'extcreate2',
+      ...config,
+    } as any,
+  )
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link nestedAccountExecutorABI}__.
+ */
+export function usePrepareNestedAccountExecutorWrite<
+  TFunctionName extends string,
+>(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof nestedAccountExecutorABI,
+      TFunctionName
+    >,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: nestedAccountExecutorABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof nestedAccountExecutorABI,
+    TFunctionName
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link nestedAccountExecutorABI}__ and `functionName` set to `"executeNested"`.
+ */
+export function usePrepareNestedAccountExecutorExecuteNested(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof nestedAccountExecutorABI,
+      'executeNested'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: nestedAccountExecutorABI,
+    functionName: 'executeNested',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof nestedAccountExecutorABI,
+    'executeNested'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link nestedAccountExecutorABI}__ and `functionName` set to `"extcall"`.
+ */
+export function usePrepareNestedAccountExecutorExtcall(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof nestedAccountExecutorABI, 'extcall'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: nestedAccountExecutorABI,
+    functionName: 'extcall',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof nestedAccountExecutorABI,
+    'extcall'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link nestedAccountExecutorABI}__ and `functionName` set to `"extcreate"`.
+ */
+export function usePrepareNestedAccountExecutorExtcreate(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof nestedAccountExecutorABI, 'extcreate'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: nestedAccountExecutorABI,
+    functionName: 'extcreate',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof nestedAccountExecutorABI,
+    'extcreate'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link nestedAccountExecutorABI}__ and `functionName` set to `"extcreate2"`.
+ */
+export function usePrepareNestedAccountExecutorExtcreate2(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof nestedAccountExecutorABI,
+      'extcreate2'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: nestedAccountExecutorABI,
+    functionName: 'extcreate2',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof nestedAccountExecutorABI,
+    'extcreate2'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link overridableABI}__.
+ */
+export function useOverridableRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof overridableABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof overridableABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: overridableABI,
+    ...config,
+  } as UseContractReadConfig<typeof overridableABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link overridableABI}__ and `functionName` set to `"overrides"`.
+ */
+export function useOverridableOverrides<
+  TFunctionName extends 'overrides',
+  TSelectData = ReadContractResult<typeof overridableABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof overridableABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: overridableABI,
+    functionName: 'overrides',
+    ...config,
+  } as UseContractReadConfig<typeof overridableABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link overridableABI}__.
+ */
+export function useOverridableWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof overridableABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof overridableABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof overridableABI, TFunctionName, TMode>({
+    abi: overridableABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link overridableABI}__ and `functionName` set to `"setOverrides"`.
+ */
+export function useOverridableSetOverrides<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof overridableABI,
+          'setOverrides'
+        >['request']['abi'],
+        'setOverrides',
+        TMode
+      > & { functionName?: 'setOverrides' }
+    : UseContractWriteConfig<typeof overridableABI, 'setOverrides', TMode> & {
+        abi?: never
+        functionName?: 'setOverrides'
+      } = {} as any,
+) {
+  return useContractWrite<typeof overridableABI, 'setOverrides', TMode>({
+    abi: overridableABI,
+    functionName: 'setOverrides',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link overridableABI}__.
+ */
+export function usePrepareOverridableWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof overridableABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: overridableABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof overridableABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link overridableABI}__ and `functionName` set to `"setOverrides"`.
+ */
+export function usePrepareOverridableSetOverrides(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof overridableABI, 'setOverrides'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: overridableABI,
+    functionName: 'setOverrides',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof overridableABI, 'setOverrides'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link overridableABI}__.
+ */
+export function useOverridableEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof overridableABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: overridableABI,
+    ...config,
+  } as UseContractEventConfig<typeof overridableABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link overridableABI}__ and `eventName` set to `"OverrideUpdated"`.
+ */
+export function useOverridableOverrideUpdatedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof overridableABI, 'OverrideUpdated'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: overridableABI,
+    eventName: 'OverrideUpdated',
+    ...config,
+  } as UseContractEventConfig<typeof overridableABI, 'OverrideUpdated'>)
 }
 
 /**
@@ -9820,6 +22941,312 @@ export function useOwnableOwnershipTransferredEvent(
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link ownable2StepABI}__.
+ */
+export function useOwnable2StepRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof ownable2StepABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof ownable2StepABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: ownable2StepABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof ownable2StepABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link ownable2StepABI}__ and `functionName` set to `"owner"`.
+ */
+export function useOwnable2StepOwner<
+  TFunctionName extends 'owner',
+  TSelectData = ReadContractResult<typeof ownable2StepABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof ownable2StepABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: ownable2StepABI,
+    functionName: 'owner',
+    ...config,
+  } as UseContractReadConfig<
+    typeof ownable2StepABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link ownable2StepABI}__ and `functionName` set to `"pendingOwner"`.
+ */
+export function useOwnable2StepPendingOwner<
+  TFunctionName extends 'pendingOwner',
+  TSelectData = ReadContractResult<typeof ownable2StepABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof ownable2StepABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: ownable2StepABI,
+    functionName: 'pendingOwner',
+    ...config,
+  } as UseContractReadConfig<
+    typeof ownable2StepABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link ownable2StepABI}__.
+ */
+export function useOwnable2StepWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof ownable2StepABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof ownable2StepABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof ownable2StepABI, TFunctionName, TMode>({
+    abi: ownable2StepABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link ownable2StepABI}__ and `functionName` set to `"acceptOwnership"`.
+ */
+export function useOwnable2StepAcceptOwnership<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof ownable2StepABI,
+          'acceptOwnership'
+        >['request']['abi'],
+        'acceptOwnership',
+        TMode
+      > & { functionName?: 'acceptOwnership' }
+    : UseContractWriteConfig<
+        typeof ownable2StepABI,
+        'acceptOwnership',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'acceptOwnership'
+      } = {} as any,
+) {
+  return useContractWrite<typeof ownable2StepABI, 'acceptOwnership', TMode>({
+    abi: ownable2StepABI,
+    functionName: 'acceptOwnership',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link ownable2StepABI}__ and `functionName` set to `"renounceOwnership"`.
+ */
+export function useOwnable2StepRenounceOwnership<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof ownable2StepABI,
+          'renounceOwnership'
+        >['request']['abi'],
+        'renounceOwnership',
+        TMode
+      > & { functionName?: 'renounceOwnership' }
+    : UseContractWriteConfig<
+        typeof ownable2StepABI,
+        'renounceOwnership',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'renounceOwnership'
+      } = {} as any,
+) {
+  return useContractWrite<typeof ownable2StepABI, 'renounceOwnership', TMode>({
+    abi: ownable2StepABI,
+    functionName: 'renounceOwnership',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link ownable2StepABI}__ and `functionName` set to `"transferOwnership"`.
+ */
+export function useOwnable2StepTransferOwnership<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof ownable2StepABI,
+          'transferOwnership'
+        >['request']['abi'],
+        'transferOwnership',
+        TMode
+      > & { functionName?: 'transferOwnership' }
+    : UseContractWriteConfig<
+        typeof ownable2StepABI,
+        'transferOwnership',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'transferOwnership'
+      } = {} as any,
+) {
+  return useContractWrite<typeof ownable2StepABI, 'transferOwnership', TMode>({
+    abi: ownable2StepABI,
+    functionName: 'transferOwnership',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link ownable2StepABI}__.
+ */
+export function usePrepareOwnable2StepWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof ownable2StepABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: ownable2StepABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof ownable2StepABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link ownable2StepABI}__ and `functionName` set to `"acceptOwnership"`.
+ */
+export function usePrepareOwnable2StepAcceptOwnership(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof ownable2StepABI, 'acceptOwnership'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: ownable2StepABI,
+    functionName: 'acceptOwnership',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof ownable2StepABI, 'acceptOwnership'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link ownable2StepABI}__ and `functionName` set to `"renounceOwnership"`.
+ */
+export function usePrepareOwnable2StepRenounceOwnership(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof ownable2StepABI, 'renounceOwnership'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: ownable2StepABI,
+    functionName: 'renounceOwnership',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof ownable2StepABI,
+    'renounceOwnership'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link ownable2StepABI}__ and `functionName` set to `"transferOwnership"`.
+ */
+export function usePrepareOwnable2StepTransferOwnership(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof ownable2StepABI, 'transferOwnership'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: ownable2StepABI,
+    functionName: 'transferOwnership',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof ownable2StepABI,
+    'transferOwnership'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link ownable2StepABI}__.
+ */
+export function useOwnable2StepEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof ownable2StepABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: ownable2StepABI,
+    ...config,
+  } as UseContractEventConfig<typeof ownable2StepABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link ownable2StepABI}__ and `eventName` set to `"OwnershipTransferStarted"`.
+ */
+export function useOwnable2StepOwnershipTransferStartedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof ownable2StepABI, 'OwnershipTransferStarted'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: ownable2StepABI,
+    eventName: 'OwnershipTransferStarted',
+    ...config,
+  } as UseContractEventConfig<
+    typeof ownable2StepABI,
+    'OwnershipTransferStarted'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link ownable2StepABI}__ and `eventName` set to `"OwnershipTransferred"`.
+ */
+export function useOwnable2StepOwnershipTransferredEvent(
+  config: Omit<
+    UseContractEventConfig<typeof ownable2StepABI, 'OwnershipTransferred'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: ownable2StepABI,
+    eventName: 'OwnershipTransferred',
+    ...config,
+  } as UseContractEventConfig<typeof ownable2StepABI, 'OwnershipTransferred'>)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link packAccountABI}__.
  */
 export function usePackAccountRead<
@@ -9833,6 +23260,120 @@ export function usePackAccountRead<
 ) {
   return useContractRead({
     abi: packAccountABI,
+    ...config,
+  } as UseContractReadConfig<typeof packAccountABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"entryPoint"`.
+ */
+export function usePackAccountEntryPoint<
+  TFunctionName extends 'entryPoint',
+  TSelectData = ReadContractResult<typeof packAccountABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof packAccountABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: packAccountABI,
+    functionName: 'entryPoint',
+    ...config,
+  } as UseContractReadConfig<typeof packAccountABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"erc6551Registry"`.
+ */
+export function usePackAccountErc6551Registry<
+  TFunctionName extends 'erc6551Registry',
+  TSelectData = ReadContractResult<typeof packAccountABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof packAccountABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: packAccountABI,
+    functionName: 'erc6551Registry',
+    ...config,
+  } as UseContractReadConfig<typeof packAccountABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"extsload"`.
+ */
+export function usePackAccountExtsload<
+  TFunctionName extends 'extsload',
+  TSelectData = ReadContractResult<typeof packAccountABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof packAccountABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: packAccountABI,
+    functionName: 'extsload',
+    ...config,
+  } as UseContractReadConfig<typeof packAccountABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"getNonce"`.
+ */
+export function usePackAccountGetNonce<
+  TFunctionName extends 'getNonce',
+  TSelectData = ReadContractResult<typeof packAccountABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof packAccountABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: packAccountABI,
+    functionName: 'getNonce',
+    ...config,
+  } as UseContractReadConfig<typeof packAccountABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"isLocked"`.
+ */
+export function usePackAccountIsLocked<
+  TFunctionName extends 'isLocked',
+  TSelectData = ReadContractResult<typeof packAccountABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof packAccountABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: packAccountABI,
+    functionName: 'isLocked',
+    ...config,
+  } as UseContractReadConfig<typeof packAccountABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"isTrustedForwarder"`.
+ */
+export function usePackAccountIsTrustedForwarder<
+  TFunctionName extends 'isTrustedForwarder',
+  TSelectData = ReadContractResult<typeof packAccountABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof packAccountABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: packAccountABI,
+    functionName: 'isTrustedForwarder',
     ...config,
   } as UseContractReadConfig<typeof packAccountABI, TFunctionName, TSelectData>)
 }
@@ -9876,6 +23417,44 @@ export function usePackAccountIsValidSigner<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"lockedUntil"`.
+ */
+export function usePackAccountLockedUntil<
+  TFunctionName extends 'lockedUntil',
+  TSelectData = ReadContractResult<typeof packAccountABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof packAccountABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: packAccountABI,
+    functionName: 'lockedUntil',
+    ...config,
+  } as UseContractReadConfig<typeof packAccountABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"overrides"`.
+ */
+export function usePackAccountOverrides<
+  TFunctionName extends 'overrides',
+  TSelectData = ReadContractResult<typeof packAccountABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof packAccountABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: packAccountABI,
+    functionName: 'overrides',
+    ...config,
+  } as UseContractReadConfig<typeof packAccountABI, TFunctionName, TSelectData>)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"owner"`.
  */
 export function usePackAccountOwner<
@@ -9890,6 +23469,25 @@ export function usePackAccountOwner<
   return useContractRead({
     abi: packAccountABI,
     functionName: 'owner',
+    ...config,
+  } as UseContractReadConfig<typeof packAccountABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"permissions"`.
+ */
+export function usePackAccountPermissions<
+  TFunctionName extends 'permissions',
+  TSelectData = ReadContractResult<typeof packAccountABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof packAccountABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: packAccountABI,
+    functionName: 'permissions',
     ...config,
   } as UseContractReadConfig<typeof packAccountABI, TFunctionName, TSelectData>)
 }
@@ -10005,6 +23603,344 @@ export function usePackAccountExecute<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"executeBatch"`.
+ */
+export function usePackAccountExecuteBatch<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof packAccountABI,
+          'executeBatch'
+        >['request']['abi'],
+        'executeBatch',
+        TMode
+      > & { functionName?: 'executeBatch' }
+    : UseContractWriteConfig<typeof packAccountABI, 'executeBatch', TMode> & {
+        abi?: never
+        functionName?: 'executeBatch'
+      } = {} as any,
+) {
+  return useContractWrite<typeof packAccountABI, 'executeBatch', TMode>({
+    abi: packAccountABI,
+    functionName: 'executeBatch',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"executeNested"`.
+ */
+export function usePackAccountExecuteNested<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof packAccountABI,
+          'executeNested'
+        >['request']['abi'],
+        'executeNested',
+        TMode
+      > & { functionName?: 'executeNested' }
+    : UseContractWriteConfig<typeof packAccountABI, 'executeNested', TMode> & {
+        abi?: never
+        functionName?: 'executeNested'
+      } = {} as any,
+) {
+  return useContractWrite<typeof packAccountABI, 'executeNested', TMode>({
+    abi: packAccountABI,
+    functionName: 'executeNested',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"extcall"`.
+ */
+export function usePackAccountExtcall<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof packAccountABI,
+          'extcall'
+        >['request']['abi'],
+        'extcall',
+        TMode
+      > & { functionName?: 'extcall' }
+    : UseContractWriteConfig<typeof packAccountABI, 'extcall', TMode> & {
+        abi?: never
+        functionName?: 'extcall'
+      } = {} as any,
+) {
+  return useContractWrite<typeof packAccountABI, 'extcall', TMode>({
+    abi: packAccountABI,
+    functionName: 'extcall',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"extcreate"`.
+ */
+export function usePackAccountExtcreate<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof packAccountABI,
+          'extcreate'
+        >['request']['abi'],
+        'extcreate',
+        TMode
+      > & { functionName?: 'extcreate' }
+    : UseContractWriteConfig<typeof packAccountABI, 'extcreate', TMode> & {
+        abi?: never
+        functionName?: 'extcreate'
+      } = {} as any,
+) {
+  return useContractWrite<typeof packAccountABI, 'extcreate', TMode>({
+    abi: packAccountABI,
+    functionName: 'extcreate',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"extcreate2"`.
+ */
+export function usePackAccountExtcreate2<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof packAccountABI,
+          'extcreate2'
+        >['request']['abi'],
+        'extcreate2',
+        TMode
+      > & { functionName?: 'extcreate2' }
+    : UseContractWriteConfig<typeof packAccountABI, 'extcreate2', TMode> & {
+        abi?: never
+        functionName?: 'extcreate2'
+      } = {} as any,
+) {
+  return useContractWrite<typeof packAccountABI, 'extcreate2', TMode>({
+    abi: packAccountABI,
+    functionName: 'extcreate2',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"lock"`.
+ */
+export function usePackAccountLock<TMode extends WriteContractMode = undefined>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof packAccountABI,
+          'lock'
+        >['request']['abi'],
+        'lock',
+        TMode
+      > & { functionName?: 'lock' }
+    : UseContractWriteConfig<typeof packAccountABI, 'lock', TMode> & {
+        abi?: never
+        functionName?: 'lock'
+      } = {} as any,
+) {
+  return useContractWrite<typeof packAccountABI, 'lock', TMode>({
+    abi: packAccountABI,
+    functionName: 'lock',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"onERC1155BatchReceived"`.
+ */
+export function usePackAccountOnErc1155BatchReceived<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof packAccountABI,
+          'onERC1155BatchReceived'
+        >['request']['abi'],
+        'onERC1155BatchReceived',
+        TMode
+      > & { functionName?: 'onERC1155BatchReceived' }
+    : UseContractWriteConfig<
+        typeof packAccountABI,
+        'onERC1155BatchReceived',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'onERC1155BatchReceived'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof packAccountABI,
+    'onERC1155BatchReceived',
+    TMode
+  >({
+    abi: packAccountABI,
+    functionName: 'onERC1155BatchReceived',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"onERC1155Received"`.
+ */
+export function usePackAccountOnErc1155Received<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof packAccountABI,
+          'onERC1155Received'
+        >['request']['abi'],
+        'onERC1155Received',
+        TMode
+      > & { functionName?: 'onERC1155Received' }
+    : UseContractWriteConfig<
+        typeof packAccountABI,
+        'onERC1155Received',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'onERC1155Received'
+      } = {} as any,
+) {
+  return useContractWrite<typeof packAccountABI, 'onERC1155Received', TMode>({
+    abi: packAccountABI,
+    functionName: 'onERC1155Received',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"onERC721Received"`.
+ */
+export function usePackAccountOnErc721Received<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof packAccountABI,
+          'onERC721Received'
+        >['request']['abi'],
+        'onERC721Received',
+        TMode
+      > & { functionName?: 'onERC721Received' }
+    : UseContractWriteConfig<
+        typeof packAccountABI,
+        'onERC721Received',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'onERC721Received'
+      } = {} as any,
+) {
+  return useContractWrite<typeof packAccountABI, 'onERC721Received', TMode>({
+    abi: packAccountABI,
+    functionName: 'onERC721Received',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"setOverrides"`.
+ */
+export function usePackAccountSetOverrides<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof packAccountABI,
+          'setOverrides'
+        >['request']['abi'],
+        'setOverrides',
+        TMode
+      > & { functionName?: 'setOverrides' }
+    : UseContractWriteConfig<typeof packAccountABI, 'setOverrides', TMode> & {
+        abi?: never
+        functionName?: 'setOverrides'
+      } = {} as any,
+) {
+  return useContractWrite<typeof packAccountABI, 'setOverrides', TMode>({
+    abi: packAccountABI,
+    functionName: 'setOverrides',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"setPermissions"`.
+ */
+export function usePackAccountSetPermissions<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof packAccountABI,
+          'setPermissions'
+        >['request']['abi'],
+        'setPermissions',
+        TMode
+      > & { functionName?: 'setPermissions' }
+    : UseContractWriteConfig<typeof packAccountABI, 'setPermissions', TMode> & {
+        abi?: never
+        functionName?: 'setPermissions'
+      } = {} as any,
+) {
+  return useContractWrite<typeof packAccountABI, 'setPermissions', TMode>({
+    abi: packAccountABI,
+    functionName: 'setPermissions',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"validateUserOp"`.
+ */
+export function usePackAccountValidateUserOp<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof packAccountABI,
+          'validateUserOp'
+        >['request']['abi'],
+        'validateUserOp',
+        TMode
+      > & { functionName?: 'validateUserOp' }
+    : UseContractWriteConfig<typeof packAccountABI, 'validateUserOp', TMode> & {
+        abi?: never
+        functionName?: 'validateUserOp'
+      } = {} as any,
+) {
+  return useContractWrite<typeof packAccountABI, 'validateUserOp', TMode>({
+    abi: packAccountABI,
+    functionName: 'validateUserOp',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link packAccountABI}__.
  */
 export function usePreparePackAccountWrite<TFunctionName extends string>(
@@ -10033,6 +23969,270 @@ export function usePreparePackAccountExecute(
     functionName: 'execute',
     ...config,
   } as UsePrepareContractWriteConfig<typeof packAccountABI, 'execute'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"executeBatch"`.
+ */
+export function usePreparePackAccountExecuteBatch(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof packAccountABI, 'executeBatch'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: packAccountABI,
+    functionName: 'executeBatch',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof packAccountABI, 'executeBatch'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"executeNested"`.
+ */
+export function usePreparePackAccountExecuteNested(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof packAccountABI, 'executeNested'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: packAccountABI,
+    functionName: 'executeNested',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof packAccountABI, 'executeNested'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"extcall"`.
+ */
+export function usePreparePackAccountExtcall(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof packAccountABI, 'extcall'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: packAccountABI,
+    functionName: 'extcall',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof packAccountABI, 'extcall'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"extcreate"`.
+ */
+export function usePreparePackAccountExtcreate(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof packAccountABI, 'extcreate'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: packAccountABI,
+    functionName: 'extcreate',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof packAccountABI, 'extcreate'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"extcreate2"`.
+ */
+export function usePreparePackAccountExtcreate2(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof packAccountABI, 'extcreate2'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: packAccountABI,
+    functionName: 'extcreate2',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof packAccountABI, 'extcreate2'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"lock"`.
+ */
+export function usePreparePackAccountLock(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof packAccountABI, 'lock'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: packAccountABI,
+    functionName: 'lock',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof packAccountABI, 'lock'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"onERC1155BatchReceived"`.
+ */
+export function usePreparePackAccountOnErc1155BatchReceived(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof packAccountABI,
+      'onERC1155BatchReceived'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: packAccountABI,
+    functionName: 'onERC1155BatchReceived',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof packAccountABI,
+    'onERC1155BatchReceived'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"onERC1155Received"`.
+ */
+export function usePreparePackAccountOnErc1155Received(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof packAccountABI, 'onERC1155Received'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: packAccountABI,
+    functionName: 'onERC1155Received',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof packAccountABI,
+    'onERC1155Received'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"onERC721Received"`.
+ */
+export function usePreparePackAccountOnErc721Received(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof packAccountABI, 'onERC721Received'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: packAccountABI,
+    functionName: 'onERC721Received',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof packAccountABI, 'onERC721Received'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"setOverrides"`.
+ */
+export function usePreparePackAccountSetOverrides(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof packAccountABI, 'setOverrides'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: packAccountABI,
+    functionName: 'setOverrides',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof packAccountABI, 'setOverrides'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"setPermissions"`.
+ */
+export function usePreparePackAccountSetPermissions(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof packAccountABI, 'setPermissions'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: packAccountABI,
+    functionName: 'setPermissions',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof packAccountABI, 'setPermissions'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link packAccountABI}__ and `functionName` set to `"validateUserOp"`.
+ */
+export function usePreparePackAccountValidateUserOp(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof packAccountABI, 'validateUserOp'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: packAccountABI,
+    functionName: 'validateUserOp',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof packAccountABI, 'validateUserOp'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link packAccountABI}__.
+ */
+export function usePackAccountEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof packAccountABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: packAccountABI,
+    ...config,
+  } as UseContractEventConfig<typeof packAccountABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link packAccountABI}__ and `eventName` set to `"LockUpdated"`.
+ */
+export function usePackAccountLockUpdatedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof packAccountABI, 'LockUpdated'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: packAccountABI,
+    eventName: 'LockUpdated',
+    ...config,
+  } as UseContractEventConfig<typeof packAccountABI, 'LockUpdated'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link packAccountABI}__ and `eventName` set to `"OverrideUpdated"`.
+ */
+export function usePackAccountOverrideUpdatedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof packAccountABI, 'OverrideUpdated'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: packAccountABI,
+    eventName: 'OverrideUpdated',
+    ...config,
+  } as UseContractEventConfig<typeof packAccountABI, 'OverrideUpdated'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link packAccountABI}__ and `eventName` set to `"PermissionUpdated"`.
+ */
+export function usePackAccountPermissionUpdatedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof packAccountABI, 'PermissionUpdated'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: packAccountABI,
+    eventName: 'PermissionUpdated',
+    ...config,
+  } as UseContractEventConfig<typeof packAccountABI, 'PermissionUpdated'>)
 }
 
 /**
@@ -10106,6 +24306,25 @@ export function usePackMainAccount<
   return useContractRead({
     abi: packMainABI,
     functionName: 'account',
+    ...config,
+  } as UseContractReadConfig<typeof packMainABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link packMainABI}__ and `functionName` set to `"accountNonce"`.
+ */
+export function usePackMainAccountNonce<
+  TFunctionName extends 'accountNonce',
+  TSelectData = ReadContractResult<typeof packMainABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof packMainABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: packMainABI,
+    functionName: 'accountNonce',
     ...config,
   } as UseContractReadConfig<typeof packMainABI, TFunctionName, TSelectData>)
 }
@@ -11822,17 +26041,1254 @@ export function usePackRegistryEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link packRegistryABI}__ and `eventName` set to `"AccountCreated"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link packRegistryABI}__ and `eventName` set to `"ERC6551AccountCreated"`.
  */
-export function usePackRegistryAccountCreatedEvent(
+export function usePackRegistryErc6551AccountCreatedEvent(
   config: Omit<
-    UseContractEventConfig<typeof packRegistryABI, 'AccountCreated'>,
+    UseContractEventConfig<typeof packRegistryABI, 'ERC6551AccountCreated'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: packRegistryABI,
-    eventName: 'AccountCreated',
+    eventName: 'ERC6551AccountCreated',
     ...config,
-  } as UseContractEventConfig<typeof packRegistryABI, 'AccountCreated'>)
+  } as UseContractEventConfig<typeof packRegistryABI, 'ERC6551AccountCreated'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link permissionedABI}__.
+ */
+export function usePermissionedRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof permissionedABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof permissionedABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: permissionedABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof permissionedABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link permissionedABI}__ and `functionName` set to `"permissions"`.
+ */
+export function usePermissionedPermissions<
+  TFunctionName extends 'permissions',
+  TSelectData = ReadContractResult<typeof permissionedABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof permissionedABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: permissionedABI,
+    functionName: 'permissions',
+    ...config,
+  } as UseContractReadConfig<
+    typeof permissionedABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link permissionedABI}__.
+ */
+export function usePermissionedWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof permissionedABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof permissionedABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof permissionedABI, TFunctionName, TMode>({
+    abi: permissionedABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link permissionedABI}__ and `functionName` set to `"setPermissions"`.
+ */
+export function usePermissionedSetPermissions<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof permissionedABI,
+          'setPermissions'
+        >['request']['abi'],
+        'setPermissions',
+        TMode
+      > & { functionName?: 'setPermissions' }
+    : UseContractWriteConfig<
+        typeof permissionedABI,
+        'setPermissions',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'setPermissions'
+      } = {} as any,
+) {
+  return useContractWrite<typeof permissionedABI, 'setPermissions', TMode>({
+    abi: permissionedABI,
+    functionName: 'setPermissions',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link permissionedABI}__.
+ */
+export function usePreparePermissionedWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof permissionedABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: permissionedABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof permissionedABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link permissionedABI}__ and `functionName` set to `"setPermissions"`.
+ */
+export function usePreparePermissionedSetPermissions(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof permissionedABI, 'setPermissions'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: permissionedABI,
+    functionName: 'setPermissions',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof permissionedABI, 'setPermissions'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link permissionedABI}__.
+ */
+export function usePermissionedEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof permissionedABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: permissionedABI,
+    ...config,
+  } as UseContractEventConfig<typeof permissionedABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link permissionedABI}__ and `eventName` set to `"PermissionUpdated"`.
+ */
+export function usePermissionedPermissionUpdatedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof permissionedABI, 'PermissionUpdated'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: permissionedABI,
+    eventName: 'PermissionUpdated',
+    ...config,
+  } as UseContractEventConfig<typeof permissionedABI, 'PermissionUpdated'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link sandboxExecutorABI}__.
+ */
+export function useSandboxExecutorRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof sandboxExecutorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof sandboxExecutorABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: sandboxExecutorABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof sandboxExecutorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link sandboxExecutorABI}__ and `functionName` set to `"extsload"`.
+ */
+export function useSandboxExecutorExtsload<
+  TFunctionName extends 'extsload',
+  TSelectData = ReadContractResult<typeof sandboxExecutorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof sandboxExecutorABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: sandboxExecutorABI,
+    functionName: 'extsload',
+    ...config,
+  } as UseContractReadConfig<
+    typeof sandboxExecutorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link sandboxExecutorABI}__.
+ */
+export function useSandboxExecutorWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof sandboxExecutorABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<
+        typeof sandboxExecutorABI,
+        TFunctionName,
+        TMode
+      > & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof sandboxExecutorABI, TFunctionName, TMode>({
+    abi: sandboxExecutorABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link sandboxExecutorABI}__ and `functionName` set to `"extcall"`.
+ */
+export function useSandboxExecutorExtcall<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof sandboxExecutorABI,
+          'extcall'
+        >['request']['abi'],
+        'extcall',
+        TMode
+      > & { functionName?: 'extcall' }
+    : UseContractWriteConfig<typeof sandboxExecutorABI, 'extcall', TMode> & {
+        abi?: never
+        functionName?: 'extcall'
+      } = {} as any,
+) {
+  return useContractWrite<typeof sandboxExecutorABI, 'extcall', TMode>({
+    abi: sandboxExecutorABI,
+    functionName: 'extcall',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link sandboxExecutorABI}__ and `functionName` set to `"extcreate"`.
+ */
+export function useSandboxExecutorExtcreate<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof sandboxExecutorABI,
+          'extcreate'
+        >['request']['abi'],
+        'extcreate',
+        TMode
+      > & { functionName?: 'extcreate' }
+    : UseContractWriteConfig<typeof sandboxExecutorABI, 'extcreate', TMode> & {
+        abi?: never
+        functionName?: 'extcreate'
+      } = {} as any,
+) {
+  return useContractWrite<typeof sandboxExecutorABI, 'extcreate', TMode>({
+    abi: sandboxExecutorABI,
+    functionName: 'extcreate',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link sandboxExecutorABI}__ and `functionName` set to `"extcreate2"`.
+ */
+export function useSandboxExecutorExtcreate2<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof sandboxExecutorABI,
+          'extcreate2'
+        >['request']['abi'],
+        'extcreate2',
+        TMode
+      > & { functionName?: 'extcreate2' }
+    : UseContractWriteConfig<typeof sandboxExecutorABI, 'extcreate2', TMode> & {
+        abi?: never
+        functionName?: 'extcreate2'
+      } = {} as any,
+) {
+  return useContractWrite<typeof sandboxExecutorABI, 'extcreate2', TMode>({
+    abi: sandboxExecutorABI,
+    functionName: 'extcreate2',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link sandboxExecutorABI}__.
+ */
+export function usePrepareSandboxExecutorWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof sandboxExecutorABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: sandboxExecutorABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof sandboxExecutorABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link sandboxExecutorABI}__ and `functionName` set to `"extcall"`.
+ */
+export function usePrepareSandboxExecutorExtcall(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof sandboxExecutorABI, 'extcall'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: sandboxExecutorABI,
+    functionName: 'extcall',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof sandboxExecutorABI, 'extcall'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link sandboxExecutorABI}__ and `functionName` set to `"extcreate"`.
+ */
+export function usePrepareSandboxExecutorExtcreate(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof sandboxExecutorABI, 'extcreate'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: sandboxExecutorABI,
+    functionName: 'extcreate',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof sandboxExecutorABI, 'extcreate'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link sandboxExecutorABI}__ and `functionName` set to `"extcreate2"`.
+ */
+export function usePrepareSandboxExecutorExtcreate2(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof sandboxExecutorABI, 'extcreate2'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: sandboxExecutorABI,
+    functionName: 'extcreate2',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof sandboxExecutorABI, 'extcreate2'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link signatoryABI}__.
+ */
+export function useSignatoryRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof signatoryABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof signatoryABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: signatoryABI,
+    ...config,
+  } as UseContractReadConfig<typeof signatoryABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link signatoryABI}__ and `functionName` set to `"isValidSignature"`.
+ */
+export function useSignatoryIsValidSignature<
+  TFunctionName extends 'isValidSignature',
+  TSelectData = ReadContractResult<typeof signatoryABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof signatoryABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: signatoryABI,
+    functionName: 'isValidSignature',
+    ...config,
+  } as UseContractReadConfig<typeof signatoryABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link signatureValidatorABI}__.
+ */
+export function useSignatureValidatorRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof signatureValidatorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof signatureValidatorABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: signatureValidatorABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof signatureValidatorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link signatureValidatorABI}__ and `functionName` set to `"DOMAIN_SEPARATOR"`.
+ */
+export function useSignatureValidatorDomainSeparator<
+  TFunctionName extends 'DOMAIN_SEPARATOR',
+  TSelectData = ReadContractResult<typeof signatureValidatorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof signatureValidatorABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: signatureValidatorABI,
+    functionName: 'DOMAIN_SEPARATOR',
+    ...config,
+  } as UseContractReadConfig<
+    typeof signatureValidatorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link signatureValidatorABI}__ and `functionName` set to `"STRUCT_TYPEHASH"`.
+ */
+export function useSignatureValidatorStructTypehash<
+  TFunctionName extends 'STRUCT_TYPEHASH',
+  TSelectData = ReadContractResult<typeof signatureValidatorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof signatureValidatorABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: signatureValidatorABI,
+    functionName: 'STRUCT_TYPEHASH',
+    ...config,
+  } as UseContractReadConfig<
+    typeof signatureValidatorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link tokenboundExecutorABI}__.
+ */
+export function useTokenboundExecutorRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof tokenboundExecutorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof tokenboundExecutorABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: tokenboundExecutorABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof tokenboundExecutorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link tokenboundExecutorABI}__ and `functionName` set to `"erc6551Registry"`.
+ */
+export function useTokenboundExecutorErc6551Registry<
+  TFunctionName extends 'erc6551Registry',
+  TSelectData = ReadContractResult<typeof tokenboundExecutorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof tokenboundExecutorABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: tokenboundExecutorABI,
+    functionName: 'erc6551Registry',
+    ...config,
+  } as UseContractReadConfig<
+    typeof tokenboundExecutorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link tokenboundExecutorABI}__ and `functionName` set to `"extsload"`.
+ */
+export function useTokenboundExecutorExtsload<
+  TFunctionName extends 'extsload',
+  TSelectData = ReadContractResult<typeof tokenboundExecutorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof tokenboundExecutorABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: tokenboundExecutorABI,
+    functionName: 'extsload',
+    ...config,
+  } as UseContractReadConfig<
+    typeof tokenboundExecutorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link tokenboundExecutorABI}__ and `functionName` set to `"isTrustedForwarder"`.
+ */
+export function useTokenboundExecutorIsTrustedForwarder<
+  TFunctionName extends 'isTrustedForwarder',
+  TSelectData = ReadContractResult<typeof tokenboundExecutorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof tokenboundExecutorABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: tokenboundExecutorABI,
+    functionName: 'isTrustedForwarder',
+    ...config,
+  } as UseContractReadConfig<
+    typeof tokenboundExecutorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link tokenboundExecutorABI}__ and `functionName` set to `"supportsInterface"`.
+ */
+export function useTokenboundExecutorSupportsInterface<
+  TFunctionName extends 'supportsInterface',
+  TSelectData = ReadContractResult<typeof tokenboundExecutorABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof tokenboundExecutorABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: tokenboundExecutorABI,
+    functionName: 'supportsInterface',
+    ...config,
+  } as UseContractReadConfig<
+    typeof tokenboundExecutorABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link tokenboundExecutorABI}__.
+ */
+export function useTokenboundExecutorWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof tokenboundExecutorABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<
+        typeof tokenboundExecutorABI,
+        TFunctionName,
+        TMode
+      > & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof tokenboundExecutorABI, TFunctionName, TMode>({
+    abi: tokenboundExecutorABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link tokenboundExecutorABI}__ and `functionName` set to `"execute"`.
+ */
+export function useTokenboundExecutorExecute<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof tokenboundExecutorABI,
+          'execute'
+        >['request']['abi'],
+        'execute',
+        TMode
+      > & { functionName?: 'execute' }
+    : UseContractWriteConfig<typeof tokenboundExecutorABI, 'execute', TMode> & {
+        abi?: never
+        functionName?: 'execute'
+      } = {} as any,
+) {
+  return useContractWrite<typeof tokenboundExecutorABI, 'execute', TMode>({
+    abi: tokenboundExecutorABI,
+    functionName: 'execute',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link tokenboundExecutorABI}__ and `functionName` set to `"executeBatch"`.
+ */
+export function useTokenboundExecutorExecuteBatch<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof tokenboundExecutorABI,
+          'executeBatch'
+        >['request']['abi'],
+        'executeBatch',
+        TMode
+      > & { functionName?: 'executeBatch' }
+    : UseContractWriteConfig<
+        typeof tokenboundExecutorABI,
+        'executeBatch',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'executeBatch'
+      } = {} as any,
+) {
+  return useContractWrite<typeof tokenboundExecutorABI, 'executeBatch', TMode>({
+    abi: tokenboundExecutorABI,
+    functionName: 'executeBatch',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link tokenboundExecutorABI}__ and `functionName` set to `"executeNested"`.
+ */
+export function useTokenboundExecutorExecuteNested<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof tokenboundExecutorABI,
+          'executeNested'
+        >['request']['abi'],
+        'executeNested',
+        TMode
+      > & { functionName?: 'executeNested' }
+    : UseContractWriteConfig<
+        typeof tokenboundExecutorABI,
+        'executeNested',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'executeNested'
+      } = {} as any,
+) {
+  return useContractWrite<typeof tokenboundExecutorABI, 'executeNested', TMode>(
+    {
+      abi: tokenboundExecutorABI,
+      functionName: 'executeNested',
+      ...config,
+    } as any,
+  )
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link tokenboundExecutorABI}__ and `functionName` set to `"extcall"`.
+ */
+export function useTokenboundExecutorExtcall<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof tokenboundExecutorABI,
+          'extcall'
+        >['request']['abi'],
+        'extcall',
+        TMode
+      > & { functionName?: 'extcall' }
+    : UseContractWriteConfig<typeof tokenboundExecutorABI, 'extcall', TMode> & {
+        abi?: never
+        functionName?: 'extcall'
+      } = {} as any,
+) {
+  return useContractWrite<typeof tokenboundExecutorABI, 'extcall', TMode>({
+    abi: tokenboundExecutorABI,
+    functionName: 'extcall',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link tokenboundExecutorABI}__ and `functionName` set to `"extcreate"`.
+ */
+export function useTokenboundExecutorExtcreate<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof tokenboundExecutorABI,
+          'extcreate'
+        >['request']['abi'],
+        'extcreate',
+        TMode
+      > & { functionName?: 'extcreate' }
+    : UseContractWriteConfig<
+        typeof tokenboundExecutorABI,
+        'extcreate',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'extcreate'
+      } = {} as any,
+) {
+  return useContractWrite<typeof tokenboundExecutorABI, 'extcreate', TMode>({
+    abi: tokenboundExecutorABI,
+    functionName: 'extcreate',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link tokenboundExecutorABI}__ and `functionName` set to `"extcreate2"`.
+ */
+export function useTokenboundExecutorExtcreate2<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof tokenboundExecutorABI,
+          'extcreate2'
+        >['request']['abi'],
+        'extcreate2',
+        TMode
+      > & { functionName?: 'extcreate2' }
+    : UseContractWriteConfig<
+        typeof tokenboundExecutorABI,
+        'extcreate2',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'extcreate2'
+      } = {} as any,
+) {
+  return useContractWrite<typeof tokenboundExecutorABI, 'extcreate2', TMode>({
+    abi: tokenboundExecutorABI,
+    functionName: 'extcreate2',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link tokenboundExecutorABI}__.
+ */
+export function usePrepareTokenboundExecutorWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof tokenboundExecutorABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: tokenboundExecutorABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof tokenboundExecutorABI,
+    TFunctionName
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link tokenboundExecutorABI}__ and `functionName` set to `"execute"`.
+ */
+export function usePrepareTokenboundExecutorExecute(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof tokenboundExecutorABI, 'execute'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: tokenboundExecutorABI,
+    functionName: 'execute',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof tokenboundExecutorABI, 'execute'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link tokenboundExecutorABI}__ and `functionName` set to `"executeBatch"`.
+ */
+export function usePrepareTokenboundExecutorExecuteBatch(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof tokenboundExecutorABI, 'executeBatch'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: tokenboundExecutorABI,
+    functionName: 'executeBatch',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof tokenboundExecutorABI,
+    'executeBatch'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link tokenboundExecutorABI}__ and `functionName` set to `"executeNested"`.
+ */
+export function usePrepareTokenboundExecutorExecuteNested(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof tokenboundExecutorABI,
+      'executeNested'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: tokenboundExecutorABI,
+    functionName: 'executeNested',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof tokenboundExecutorABI,
+    'executeNested'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link tokenboundExecutorABI}__ and `functionName` set to `"extcall"`.
+ */
+export function usePrepareTokenboundExecutorExtcall(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof tokenboundExecutorABI, 'extcall'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: tokenboundExecutorABI,
+    functionName: 'extcall',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof tokenboundExecutorABI, 'extcall'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link tokenboundExecutorABI}__ and `functionName` set to `"extcreate"`.
+ */
+export function usePrepareTokenboundExecutorExtcreate(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof tokenboundExecutorABI, 'extcreate'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: tokenboundExecutorABI,
+    functionName: 'extcreate',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof tokenboundExecutorABI, 'extcreate'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link tokenboundExecutorABI}__ and `functionName` set to `"extcreate2"`.
+ */
+export function usePrepareTokenboundExecutorExtcreate2(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof tokenboundExecutorABI, 'extcreate2'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: tokenboundExecutorABI,
+    functionName: 'extcreate2',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof tokenboundExecutorABI,
+    'extcreate2'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link uupsUpgradeableABI}__.
+ */
+export function useUupsUpgradeableRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof uupsUpgradeableABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof uupsUpgradeableABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: uupsUpgradeableABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof uupsUpgradeableABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link uupsUpgradeableABI}__ and `functionName` set to `"proxiableUUID"`.
+ */
+export function useUupsUpgradeableProxiableUuid<
+  TFunctionName extends 'proxiableUUID',
+  TSelectData = ReadContractResult<typeof uupsUpgradeableABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof uupsUpgradeableABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: uupsUpgradeableABI,
+    functionName: 'proxiableUUID',
+    ...config,
+  } as UseContractReadConfig<
+    typeof uupsUpgradeableABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link uupsUpgradeableABI}__.
+ */
+export function useUupsUpgradeableWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof uupsUpgradeableABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<
+        typeof uupsUpgradeableABI,
+        TFunctionName,
+        TMode
+      > & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof uupsUpgradeableABI, TFunctionName, TMode>({
+    abi: uupsUpgradeableABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link uupsUpgradeableABI}__ and `functionName` set to `"upgradeTo"`.
+ */
+export function useUupsUpgradeableUpgradeTo<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof uupsUpgradeableABI,
+          'upgradeTo'
+        >['request']['abi'],
+        'upgradeTo',
+        TMode
+      > & { functionName?: 'upgradeTo' }
+    : UseContractWriteConfig<typeof uupsUpgradeableABI, 'upgradeTo', TMode> & {
+        abi?: never
+        functionName?: 'upgradeTo'
+      } = {} as any,
+) {
+  return useContractWrite<typeof uupsUpgradeableABI, 'upgradeTo', TMode>({
+    abi: uupsUpgradeableABI,
+    functionName: 'upgradeTo',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link uupsUpgradeableABI}__ and `functionName` set to `"upgradeToAndCall"`.
+ */
+export function useUupsUpgradeableUpgradeToAndCall<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof uupsUpgradeableABI,
+          'upgradeToAndCall'
+        >['request']['abi'],
+        'upgradeToAndCall',
+        TMode
+      > & { functionName?: 'upgradeToAndCall' }
+    : UseContractWriteConfig<
+        typeof uupsUpgradeableABI,
+        'upgradeToAndCall',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'upgradeToAndCall'
+      } = {} as any,
+) {
+  return useContractWrite<typeof uupsUpgradeableABI, 'upgradeToAndCall', TMode>(
+    {
+      abi: uupsUpgradeableABI,
+      functionName: 'upgradeToAndCall',
+      ...config,
+    } as any,
+  )
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link uupsUpgradeableABI}__.
+ */
+export function usePrepareUupsUpgradeableWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof uupsUpgradeableABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: uupsUpgradeableABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof uupsUpgradeableABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link uupsUpgradeableABI}__ and `functionName` set to `"upgradeTo"`.
+ */
+export function usePrepareUupsUpgradeableUpgradeTo(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof uupsUpgradeableABI, 'upgradeTo'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: uupsUpgradeableABI,
+    functionName: 'upgradeTo',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof uupsUpgradeableABI, 'upgradeTo'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link uupsUpgradeableABI}__ and `functionName` set to `"upgradeToAndCall"`.
+ */
+export function usePrepareUupsUpgradeableUpgradeToAndCall(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof uupsUpgradeableABI,
+      'upgradeToAndCall'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: uupsUpgradeableABI,
+    functionName: 'upgradeToAndCall',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof uupsUpgradeableABI,
+    'upgradeToAndCall'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link uupsUpgradeableABI}__.
+ */
+export function useUupsUpgradeableEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof uupsUpgradeableABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: uupsUpgradeableABI,
+    ...config,
+  } as UseContractEventConfig<typeof uupsUpgradeableABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link uupsUpgradeableABI}__ and `eventName` set to `"AdminChanged"`.
+ */
+export function useUupsUpgradeableAdminChangedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof uupsUpgradeableABI, 'AdminChanged'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: uupsUpgradeableABI,
+    eventName: 'AdminChanged',
+    ...config,
+  } as UseContractEventConfig<typeof uupsUpgradeableABI, 'AdminChanged'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link uupsUpgradeableABI}__ and `eventName` set to `"BeaconUpgraded"`.
+ */
+export function useUupsUpgradeableBeaconUpgradedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof uupsUpgradeableABI, 'BeaconUpgraded'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: uupsUpgradeableABI,
+    eventName: 'BeaconUpgraded',
+    ...config,
+  } as UseContractEventConfig<typeof uupsUpgradeableABI, 'BeaconUpgraded'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link uupsUpgradeableABI}__ and `eventName` set to `"Upgraded"`.
+ */
+export function useUupsUpgradeableUpgradedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof uupsUpgradeableABI, 'Upgraded'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: uupsUpgradeableABI,
+    eventName: 'Upgraded',
+    ...config,
+  } as UseContractEventConfig<typeof uupsUpgradeableABI, 'Upgraded'>)
 }

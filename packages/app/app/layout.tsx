@@ -7,6 +7,7 @@ import {Providers} from "./components/Providers";
 import {Header} from "./components/Header";
 import {ToastContainer} from "react-toastify";
 import clsxm from "@/src/lib/clsxm";
+import {Confetti} from "@/app/components/Confetti";
 
 const manrope = Manrope({subsets: ["latin"]});
 export const metadata: Metadata = {
@@ -25,6 +26,7 @@ export default function RootLayout({
         <body className={clsxm(manrope.className, 'relative')}>
         <div
             className='-z-10 fixed inset-0 bg-gradient-to-b from-[#F15025] via-[#B1C2DA50] to-[#B1C2DA] min-h-screen'></div>
+        <Confetti/>
         <Providers>
             <div data-header-trigger></div>
             <Header/>

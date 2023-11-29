@@ -8,11 +8,12 @@ import {parseEther} from "ethers";
 import clsxm from "@/src/lib/clsxm";
 import {useMintStore} from "@/src/stores/useMintStore";
 import usePackdAddresses from "@/src/hooks/usePackdAddresses";
-import AddTokenModal from "@/app/mint/pack/AddTokenModal";
 import AddNftModal from "@/app/mint/pack/AddNftModal";
 import {usePackState} from "@/app/mint/usePackState";
 import {FiArrowLeft, FiArrowRight} from "react-icons/fi";
-import {Modules} from "@/app/mint/modules/Modules";
+import Erc721Card from "@/app/mint/modules/Erc721Module";
+import {BsX} from "react-icons/bs";
+import TokenInput, {TokenSelectorDialog} from "@/app/components/web3/TokenSelectorDialog";
 
 
 export const AssetsForm = () => {
@@ -20,9 +21,42 @@ export const AssetsForm = () => {
     const mintStore = useMintStore();
     const {ethBalance} = useOwnEthBalance();
     const isEthAmountValid = useMemo(() => ethAmount > 0 && ethAmount < (ethBalance?.value ?? BigInt(0)), [ethAmount, ethBalance])
+    const addresses = usePackdAddresses();
+    const modules = useMintStore(state => state.modules);
+    const isAllModulesValid = useMemo(() => modules.every(m => m.isValid), [modules]);
+    useAssetsControls({isEthAmountValid, isAllModulesValid});
+    const moduleComp = useMemo(() => modules.map((module) => {
+        if (module.moduleAddress === addresses.ERC721Module) {
+            return <Erc721Card key={module.id}
+                               onClick={() => mintStore.removeModule(module)}
+                               module={module}/>
+        }
+        if (module.moduleAddress === addresses.ERC20Module) {
+            return <ContentCard className="self-stretch" key={module.id}>
+                <div className="flex justify-between">
+                    <span className="text-card-title">Token</span>
+                    <button className="hover:text-primary-500 pl-2" onClick={() => mintStore.removeModule(module) }><BsX/></button>
+                </div>
+                <TokenInput
+                    token={module.address}
+                    value={module.value}
+                    onValueChanged={
+                        (value, isValid) => {
+                            mintStore.updateModule({
+                                ...module,
+                                value,
+                                isValid
+                            })
+                        }
+                    }
+                />
+            </ContentCard>
+        }
 
-    useAssetsControls({isEthAmountValid});
-
+        return <ContentCard key={module.id}>
+            <ContentTitle>Unknown module</ContentTitle>
+        </ContentCard>;
+    }), [addresses.ERC20Module, addresses.ERC721Module, mintStore, modules])
     return (
         <>
             <ContentTitle>Contents</ContentTitle>
@@ -43,9 +77,10 @@ export const AssetsForm = () => {
                         }}
                     />
                 </ContentCard>
-                <Modules
-                    modules={mintStore.modules}
-                    onRemoveModule={(module) => mintStore.removeModule(module)}/>
+                {
+                    moduleComp
+                }
+
                 <AddAssetSelector/>
             </div>
         </>);
@@ -58,12 +93,15 @@ const AddAssetSelector = () => {
     const addModule = useMintStore(state => state.addModule);
 
     return <>
-        {isAddTokenModalOpen && <AddTokenModal
-            isOpen={isAddTokenModalOpen}
-            setIsOpen={setIsAddTokenModalOpen}
-            onAdd={(address, amount) => {
-                addModule({address, value: amount, moduleAddress: addresses.ERC20Module, type: 'ERC20'})
-            }}/>}
+        {isAddTokenModalOpen &&  <TokenSelectorDialog isOpen={isAddTokenModalOpen} setIsOpen={setIsAddTokenModalOpen} onAdd={(t) => {
+            setIsAddTokenModalOpen(false);
+            addModule({
+                address: t.address,
+                moduleAddress: addresses.ERC20Module,
+                isValid: false,
+                type: 'ERC20'
+            })
+        }}/>}
         {isAddNftModalOpen && <AddNftModal
             isOpen={isAddNftModalOpen}
             setIsOpen={setIsAddNftModalOpen}
@@ -72,6 +110,7 @@ const AddAssetSelector = () => {
                     address,
                     value: tokenId,
                     moduleAddress: addresses.ERC721Module,
+                    isValid: true,
                     type: 'ERC721'
                 })
             }}/>}
@@ -93,7 +132,7 @@ const AddAssetSelector = () => {
 }
 
 
-const useAssetsControls = ({isEthAmountValid}: { isEthAmountValid: boolean }) => {
+const useAssetsControls = ({isEthAmountValid, isAllModulesValid}: { isEthAmountValid: boolean, isAllModulesValid: boolean}) => {
     const nextStep = usePackState(state => state.nextStep)
     const setControls = usePackState(state => state.setControls)
     useEffect(() => {
@@ -105,13 +144,13 @@ const useAssetsControls = ({isEthAmountValid}: { isEthAmountValid: boolean }) =>
             </Button>
             <Button
                 onClick={nextStep}
-                disabled={!isEthAmountValid}
+                disabled={!isEthAmountValid || !isAllModulesValid}
                 className={clsxm(!isEthAmountValid && 'text-red-600')}
                 variant="navigation" rightIcon={<FiArrowRight className='text-inherit inline'/>}>
                 {'Next'}
             </Button>
         </div>)
-    }, [nextStep, setControls, isEthAmountValid]);
+    }, [nextStep, setControls, isEthAmountValid, isAllModulesValid]);
 
 }
 

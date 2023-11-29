@@ -6,13 +6,13 @@ import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 // tesnets
 import { hardhat, scrollSepolia, polygonZkEvmTestnet, mantleTestnet } from "wagmi/chains";
 // mainnets
-import { polygonZkEvm, mantle } from "wagmi/chains";
+import { base } from "wagmi/chains";
 
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 
 const testnets = [scrollSepolia, polygonZkEvmTestnet, mantleTestnet]
-const mainnets = [polygonZkEvm, mantle] //scroll not yet live
+const mainnets = [base] //scroll not yet live
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [
