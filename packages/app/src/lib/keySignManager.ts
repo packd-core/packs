@@ -18,7 +18,7 @@ export class KeySignManager {
 
   async getTailMessage() {
     return {
-      types: ["uint256", "uint256", "address"],
+      types: ["uint256", "bytes32", "address"],
       values: [this.registryChainId, this.salt, this.packdMainAddress],
     };
   }

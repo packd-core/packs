@@ -1,13 +1,13 @@
+import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
 import hre, { ethers } from "hardhat";
-import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 
-import { KeySignManager } from "../utils/keySignManager";
-import { getSystemConfig } from "../utils/deployConfig";
-import { createPack } from "../utils/testUtils";
-import { deploySystem } from "../scripts/deploy";
+import { deployFullSystem } from "../scripts/deploy";
 import { ClaimData } from "../utils/claimData";
+import { getSystemConfig } from "../utils/deployConfig";
+import { KeySignManager } from "../utils/keySignManager";
 import { getCommonSigners } from "../utils/signers";
+import { createPack } from "../utils/testUtils";
 
 const systemConfig = getSystemConfig(hre);
 
@@ -18,7 +18,7 @@ describe("PackMain", function () {
     const { alice, bob, deployer, relayer } = await getCommonSigners(hre);
 
     // ERC6551 Related contracts
-    const { packMain } = await deploySystem(hre, deployer, systemConfig);
+    const { packMain } = await deployFullSystem(hre, deployer, systemConfig);
 
     // Set PackMain address in KeySignManager
     const keySignManager = new KeySignManager(

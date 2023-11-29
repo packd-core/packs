@@ -8,7 +8,7 @@ import type { PackMain, ERC20Module, ERC20Mock } from "../types";
 import { KeySignManager } from "../utils/keySignManager";
 import { getSystemConfig } from "../utils/deployConfig";
 import { createPack } from "../utils/testUtils";
-import { deploySystem } from "../scripts/deploy";
+import { deployFullSystem } from "../scripts/deploy";
 import {
   generateMintData,
   generateRevokeData,
@@ -27,7 +27,7 @@ describe("PackMain, ERC20Module", function () {
 
     // ERC6551 Related contracts
     const { packMain, erc20MockA, erc20MockB, erc20Module } =
-      await deploySystem(hre, deployer, systemConfig);
+      await deployFullSystem(hre, deployer, systemConfig);
 
     // Set PackMain address in KeySignManager
     const keySignManager = new KeySignManager(

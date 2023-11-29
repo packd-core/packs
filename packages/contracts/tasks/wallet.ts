@@ -16,7 +16,7 @@ subtask("send:eth")
       const balance = await hre.ethers.provider.getBalance(deployer);
 
       const wallet = taskArguments.account;
-
+      
       log("Deployer balance: ", hre.ethers.parseEther(balance.toString()));
       log("Sending to: ", wallet);
 
@@ -45,7 +45,7 @@ subtask("mint:erc20")
   .addOptionalParam("amount", "The amount, default 1000", 1000, types.int)
   .setAction(
     async (taskArguments: TaskArguments, hre: HardhatRuntimeEnvironment) => {
-      info(
+      log(
         `Subtask mint:erc20  Token: ${taskArguments.tokenaddress}  Account: ${taskArguments.account}`,
       );
       const deployer = await getDeployer(hre);
