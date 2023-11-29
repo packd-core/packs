@@ -1,9 +1,10 @@
 import type { Address } from "wagmi";
 import { useEffect, useState } from "react";
 import useKeySignManager from "@/src/hooks/useKeySignManager";
+import {BigNumberish} from "ethers";
 
 export interface ClaimData {
-  tokenId: number | bigint;
+  tokenId:  BigNumberish;
   sigOwner: string; // Signature from the Pack owner
   claimer: string; // Address of the claimer
   sigClaimer: string; // Signature from the claimer
@@ -21,7 +22,7 @@ export const useGenerateClaimData = (
   moduleData: Array<any>
 ) => {
   const [claimData, setClaimData] = useState<ClaimData>({
-    tokenId: 0,
+    tokenId: 0n,
     sigOwner: "",
     claimer: address,
     sigClaimer,
@@ -45,7 +46,7 @@ export const useGenerateClaimData = (
       setClaimData((prev) => {
         return ({
           ...prev,
-          tokenId,
+          tokenId: tokenId.toString(),
           sigOwner: sigOwnerResolved,
           sigClaimer,
         });

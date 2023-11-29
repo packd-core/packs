@@ -71,6 +71,7 @@ export default function ReviewClaimForm() {
             chainId: chain?.id,
             args: claimData
         };
+        body.args.tokenId = body.args.tokenId.toString();
         const res = await fetch("/api/claim", {
             body: JSON.stringify(body),
             method: "POST",
