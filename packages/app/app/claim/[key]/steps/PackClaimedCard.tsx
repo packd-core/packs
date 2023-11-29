@@ -5,11 +5,15 @@ import {BiLogoTwitter} from "react-icons/bi";
 import {CheckMyWalletButton} from "@/app/components/web3/CheckMyWalletButton";
 import {useEffect} from "react";
 import {emitPackClaimed} from "@/src/event/events";
+import {ReviewData} from "@/app/mint/pack/ReviewForm";
+import {useClaimState} from "@/app/claim/[key]/useClaimState";
 
 export function PackClaimedCard() {
     useEffect(() => {
         emitPackClaimed();
     }, []);
+    const packData = useClaimState((state) => state.packData);
+
     return <Card
         className={'mx-auto w-full bg-green-800'}
         controls={
@@ -25,21 +29,10 @@ export function PackClaimedCard() {
             </div>
             <h1 className="text-xl">You have been packed!</h1>
             <p className='my-4 text-gray-400 text-sm'>The contents of the pack are now in your wallet.</p>
-            <p className='my-4 text-sm'>Share this pack with someone on socials:</p>
-            <div className='flex w-full justify-center gap-4'>
-                <button
-                    className='h-16 w-16 bg-black rounded-2xl flex justify-center items-center hover:border-2 border-primary-500 text-4xl'>
-                    <BiLogoTwitter/>
-                </button>
-                <button
-                    className='h-16 w-16 bg-black rounded-2xl flex justify-center items-center hover:border-2 border-primary-500 text-4xl'>
-                    <BiLogoTwitter/>
-                </button>
-                <button
-                    className='h-16 w-16 bg-black rounded-2xl flex justify-center items-center hover:border-2 border-primary-500 text-4xl'>
-                    <BiLogoTwitter/>
-                </button>
-            </div>
+            <ReviewData
+                eth={packData?.ethValue ?? BigInt(0)}
+                modules={packData?.fullModuleData ?? []}
+            />
         </div>
     </Card>
 }
