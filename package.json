@@ -9,7 +9,8 @@
         "node": ">=18.0.0"
     },
     "scripts": {
-        "start:contracts": "yarn workspace packs-contracts run start",
-        "start:app": "yarn workspace packs-app run dev"
+        "start:contracts": "cd packages/contracts &&  yarn start",
+        "start:app": "cd packages/app && yarn dev",
+        "build:app": "cd packages/app && yarn build"
     }
 }
