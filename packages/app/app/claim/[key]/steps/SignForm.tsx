@@ -15,12 +15,13 @@ export const SignForm = () => {
     const tokenId = useClaimState(state => state.mintedTokenId);
     const setSignedMessage = useClaimState(state => state.setSignedMessage);
     const {address} = useAccount();
+    const moduleData = useClaimState(state => state.packData?.moduleData);
     const {
         signData,
         isLoading: isSignLoading,
         isSuccess: isSignSuccess,
         handlePrepareAndSignMessage,
-    } = usePrepareAndSignMessage(Number(tokenId), maxRefundValue);
+    } = usePrepareAndSignMessage(Number(tokenId), maxRefundValue, moduleData!);
 
     useEffect(() => {
         if (isSignSuccess && signData) {
