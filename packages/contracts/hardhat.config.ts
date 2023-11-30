@@ -70,6 +70,11 @@ const config: HardhatUserConfig = {
       accounts: accounts,
       url: process.env.NODE_URL || "",
     },
+    "base-goerli": {
+      chainId: chainIds.baseGoerli,
+      accounts: accounts,
+      url: process.env.NODE_URL || "",
+    },
   },
   etherscan: {
     apiKey: {
@@ -77,6 +82,7 @@ const config: HardhatUserConfig = {
       mantleTest: "abc",
       polygonZkEVMTestnet: process.env.ETHERSCAN_POLYGON_ZKEVM || "",
       "base-mainnet": process.env.ETHERSCAN_BASE_MAINNET || "",
+      "base-goerli": process.env.ETHERSCAN_BASE_GOERLI || "",
     },
     customChains: [
       {
@@ -109,6 +115,14 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL: "https://api.basescan.org/api",
           browserURL: "https://basescan.org/",
+        },
+      },
+      {
+        network: "base-goerli",
+        chainId: chainIds.baseGoerli,
+        urls: {
+          apiURL: "https://api-goerli.basescan.org/api",
+          browserURL: "https://goerli.basescan.org/",
         },
       },
     ],
