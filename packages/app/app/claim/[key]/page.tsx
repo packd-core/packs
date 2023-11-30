@@ -28,6 +28,9 @@ export default function ClaimPage({params: {key}}: any) {
     const setChainId = useClaimState(state => state.setChainId);
     useEffect(() => {
         resetStepper();
+        if (isNaN(tokenId)) {
+            return;
+        }
         setMintedTokenId(BigInt(tokenId))
         setPrivateKey(privateKey)
         setChainId(chainId)
@@ -131,5 +134,6 @@ const ClaimContent = ({step}: { step: number }) => {
 }
 
 function Controls() {
-    return useClaimState(state => state.controls);
+    const item = useClaimState(state => state.controls);
+    return <>{item}</>;
 }
