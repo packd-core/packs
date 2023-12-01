@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/repo/packages/app
     docker:
-      - image: cimg/deploy:2022.11.1-node
+      - image: cimg/deploy:2023.09.1-node
     steps:
       - checkout:
           path: ~/repo
@@ -12,6 +12,9 @@ jobs:
       - run:
           name: Install Dependencies
           command: yarn
+      - run:
+          name: Restore DOTENV
+          command: echo $DOTENV | base64 --decode > .env
       - run:
           name: Build standalone
           command: yarn run build
