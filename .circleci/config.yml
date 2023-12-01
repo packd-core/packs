@@ -40,7 +40,7 @@ jobs:
   deploy:
     machine:
       enabled: true
-    working_directory: ~/repo
+    working_directory: ~/repo/packages/app
     steps:
       - attach_workspace:
           at: ~/repo/packages/app
