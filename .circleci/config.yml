@@ -1,26 +1,64 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/configuration-reference
 version: 2.1
-
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/configuration-reference/#jobs
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/configuration-reference/#executor-job
+  build:
+    working_directory: ~/repo
     docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/configuration-reference/#steps
+      - image: cimg/deploy:2022.11.1-node
     steps:
       - checkout
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+          command: cd ./packages/app
+      - restore_cache:
+          key: dependency-cache-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: yarn
+      - run:
+          name: Build standalone
+          command: yarn run build
+      - save_cache:
+          key: dependency-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
+            - ./.next/cache
+      - run:
+          name: Copying public
+          command: cp -r public .next/standalone
+      - run:
+          name: Copying static
+          command: cp -r .next/static .next/standalone/.next
+      - run:
+          name: Archiving...
+          command: |
+            cd .next/standalone
+            tar -zcvf ../../release.tar.gz .
+            cd ../..
+      - store_artifacts:
+          path: release.tar.gz
+      - persist_to_workspace:
+          root: ~/repo
+          paths: release.tar.gz
+  deploy:
+    machine:
+      enabled: true
+    working_directory: ~/repo
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Deploy Over SSH
+          command: |
+            scp release.tar.gz $SSH_USER@$SSH_HOST:/opt/nodejs/packd/
+            ssh $SSH_USER@$SSH_HOST "tar -xf /opt/nodejs/packd/release.tar.gz -C /opt/nodejs/packd/; pm2 restart Packd"
 
-# Orchestrate jobs using workflows
-# See: https://circleci.com/docs/configuration-reference/#workflows
 workflows:
-  say-hello-workflow:
+  build-and-deploy:
     jobs:
-      - say-hello
+      - build:
+          filters:
+            branches:
+              only: circleci-project-setup
+      - deploy:
+          requires:
+            - build # only deploy once build job has completed
+
