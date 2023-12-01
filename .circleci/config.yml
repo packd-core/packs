@@ -27,6 +27,9 @@ jobs:
           name: Copying static
           command: cp -r .next/static .next/standalone/.next
       - run:
+          name: Copying ecosystem.config.js
+          command: cp -r ecosystem.config.js .next/standalone/
+      - run:
           name: Archiving...
           command: |
             cd .next/standalone
