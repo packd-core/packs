@@ -1,13 +1,12 @@
 version: 2.1
 jobs:
   build:
-    working_directory: ~/repo
+    working_directory: ~/repo/packages/app
     docker:
       - image: cimg/deploy:2022.11.1-node
     steps:
-      - checkout
-      - run:
-          command: cd ./packages/app
+      - checkout:
+          path: ~/repo
       - restore_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
       - run:
