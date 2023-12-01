@@ -35,7 +35,7 @@ jobs:
       - store_artifacts:
           path: release.tar.gz
       - persist_to_workspace:
-          root: ~/repo
+          root: ~/repo/packages/app
           paths: release.tar.gz
   deploy:
     machine:
@@ -43,12 +43,12 @@ jobs:
     working_directory: ~/repo
     steps:
       - attach_workspace:
-          at: ~/repo
+          at: ~/repo/packages/app
       - run:
           name: Deploy Over SSH
           command: |
             scp release.tar.gz $SSH_USER@$SSH_HOST:/opt/nodejs/packd/
-            ssh $SSH_USER@$SSH_HOST "tar -xf /opt/nodejs/packd/release.tar.gz -C /opt/nodejs/packd/; pm2 restart Packd"
+            ssh $SSH_USER@$SSH_HOST "tar -xf /opt/nodejs/packd/release.tar.gz -C /opt/nodejs/packd/; cd /opt/nodejs/packd/; pm2 restart ecosystem.config.js"
 
 workflows:
   build-and-deploy:
