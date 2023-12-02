@@ -1,0 +1,69 @@
+version: 2.1
+jobs:
+  build:
+    working_directory: ~/repo/packages/app
+    docker:
+      - image: cimg/deploy:2023.09.1-node
+    steps:
+      - checkout:
+          path: ~/repo
+      - restore_cache:
+          key: dependency-cache-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: yarn
+      - run:
+          name: Restore DOTENV
+          command: echo $DOTENV | base64 --decode > .env
+      - run:
+          name: Build standalone
+          command: yarn run build
+      - save_cache:
+          key: dependency-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
+            - ./.next/cache
+      - run:
+          name: Copying public
+          command: cp -r public .next/standalone
+      - run:
+          name: Copying static
+          command: cp -r .next/static .next/standalone/.next
+      - run:
+          name: Copying ecosystem.config.js
+          command: cp -r ecosystem.config.js .next/standalone/
+      - run:
+          name: Archiving...
+          command: |
+            cd .next/standalone
+            tar -zcvf ../../release.tar.gz .
+            cd ../..
+      - store_artifacts:
+          path: release.tar.gz
+      - persist_to_workspace:
+          root: ~/repo/packages/app
+          paths: release.tar.gz
+  deploy:
+    machine:
+      enabled: true
+    working_directory: ~/repo/packages/app
+    steps:
+      - attach_workspace:
+          at: ~/repo/packages/app
+      - run:
+          name: Deploy Over SSH
+          command: |
+            scp release.tar.gz $SSH_USER@$SSH_HOST:/opt/nodejs/packd/
+            ssh $SSH_USER@$SSH_HOST "tar -xf /opt/nodejs/packd/release.tar.gz -C /opt/nodejs/packd/; cd /opt/nodejs/packd/; pm2 restart ecosystem.config.js"
+
+workflows:
+  build-and-deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: main
+      - deploy:
+          requires:
+            - build # only deploy once build job has completed
+
