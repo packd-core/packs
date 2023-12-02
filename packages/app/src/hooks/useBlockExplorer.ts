@@ -12,6 +12,8 @@ export function useBlockExplorer() {
             return 'https://explorer.testnet.mantle.xyz'
         } else if (chain?.id === 534351) {
             return 'https://sepolia.scrollscan.dev'
+        } else if (chain?.id === 8453) {
+            return 'https://basescan.org'
         }
     }, [chain?.id])
 }
