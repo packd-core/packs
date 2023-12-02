@@ -62,7 +62,7 @@ workflows:
       - build:
           filters:
             branches:
-              only: circleci-project-setup
+              only: main
       - deploy:
           requires:
             - build # only deploy once build job has completed
