@@ -19,7 +19,7 @@ export const SignForm = () => {
         nonce,
         // isLoading: isBalanceOfLoading,
         // isError: isBalanceOfError,
-    } = useAccountNonce(address!);
+    } = useAccountNonce({address:address!});
     const {
         claimPublicKey,
         claimPrivateKey,
