@@ -24,12 +24,13 @@ function ApproveToken({module}: { module: Module }) {
     const {data: dataAllowance, refetch} = useErc20Allowance({address: module.address, args: [address!, addresses.PackMain], staleTime: 5},)
     const {config} = usePrepareErc20Approve({address: module.address, args: [addresses.PackMain, module.value!]})
     const {data: dataApprove, write, isSuccess} = useErc20Approve(config)
+
+    const {isLoading, isSuccess: isTransactionSuccess} = useWaitForTransaction({hash: dataApprove?.hash})
     useEffect(() => {
-        if (isSuccess){
+        if (isTransactionSuccess){
             refetch()
         }
-    },[isSuccess,refetch]);
-    const {isLoading} = useWaitForTransaction({hash: dataApprove?.hash})
+    },[isTransactionSuccess,refetch]);
     const isApproved = useMemo(() => (dataAllowance ?? 0) >= module.value!, [dataAllowance, module])
     const setApproved = useMintStore(state => state.setApproved)
     useEffect(() => {
