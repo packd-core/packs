@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useState} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {BsChevronDown, BsSearch, BsX} from "react-icons/bs";
 import {Address, useAccount, useBalance, useToken} from "wagmi";
 import Modal from "@/app/components/dialog/Modal";
@@ -6,6 +6,7 @@ import Icon from '~/chain.svg'
 import {formatUnits, parseUnits} from "ethers";
 import clsxm from "@/src/lib/clsxm";
 import {TokenData, useFilteredTokenList} from "@/src/hooks/useTokenList";
+import Button from "@/app/components/button/Button";
 
 export default function TokenInput({token, value, onTokenSelected, onValueChanged, autoOpenModal}: {
     token?: Address,
@@ -28,7 +29,7 @@ export default function TokenInput({token, value, onTokenSelected, onValueChange
         enabled: !!token
     })
 
-    const isValid = useCallback((value: bigint) => !!(value && value > 0 && (value <= (balance?.value ?? BigInt(0)))),[balance?.value])
+    const isValid = useCallback((value: bigint) => !!(value && value > 0 && (value <= (balance?.value ?? BigInt(0)))), [balance?.value])
     const isValidAmount = useMemo(() => {
         if (!onValueChanged) {
             return true;
@@ -36,6 +37,12 @@ export default function TokenInput({token, value, onTokenSelected, onValueChange
         return isValid(value ?? 0n);
     }, [isValid, onValueChanged, value]);
 
+    const isEditable = useMemo(() => onValueChanged, [onValueChanged]);
+    const inputRef = useRef<HTMLInputElement>(null)
+    useEffect(() => {
+        inputRef.current!.value = formatUnits(value ?? 0n, tokenData?.decimals ?? 18);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     return <div>
         <TokenSelectorDialog isOpen={isOpen} setIsOpen={setIsOpen} onAdd={(t) => {
             setIsOpen(false);
@@ -45,6 +52,14 @@ export default function TokenInput({token, value, onTokenSelected, onValueChange
             }
         }}/>
         <div className='relative w-full'>
+            {isEditable && <div className="absolute -top-6 right-6 z-10 text-xs">
+                Balance: {formatUnits(balance?.value ?? 0n, tokenData?.decimals ?? 18)}
+                <button className=" underline px-2 ml-1 rounded bg-gray-200/20" onClick={() => {
+                    inputRef.current!.value = formatUnits(balance?.value ?? 0n, tokenData?.decimals ?? 18);
+                    onValueChanged!(balance?.value ?? 0n, !!balance?.value);
+                }}>Max</button>
+            </div>}
+
             <button onClick={() => onValueChanged && setIsOpen(true)}
                     className='absolute pl-2 left-0 bottom-0 top-0 flex items-center justify-center text-sm font-semibold'>
                 {token ? <><Icon className="mr-1 h-4 shrink-0"/> {tokenData?.name}</> : 'Select token'}
@@ -53,6 +68,7 @@ export default function TokenInput({token, value, onTokenSelected, onValueChange
             </button>
 
             <input
+                ref={inputRef}
                 placeholder="amount"
                 disabled={!token || !onValueChanged}
                 value={onValueChanged == undefined ? formatUnits(value ?? 0n, tokenData?.decimals ?? 18) : undefined}
