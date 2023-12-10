@@ -45,7 +45,8 @@ export const AssetsForm = () => {
                             mintStore.updateModule({
                                 ...module,
                                 value,
-                                isValid
+                                isValid,
+                                isApproved: false
                             })
                         }
                     }
