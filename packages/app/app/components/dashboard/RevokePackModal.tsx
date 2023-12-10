@@ -11,6 +11,7 @@ import {useWaitForTransaction} from "wagmi";
 import {ErrorCard} from "@/app/components/content/ErrorCard";
 import {usePackDataByTokenId} from "@/src/hooks/usePackDataByTokenId";
 import usePackdAddresses from "@/src/hooks/usePackdAddresses";
+import {emitPackRevoked} from "@/src/event/events";
 
 type RevokePackModalProps = {
     tokenId: bigint,
@@ -50,6 +51,12 @@ export default function RevokePackModal({isOpen, setIsOpen, tokenId}: RevokePack
             setStep(2);
         }
     }, [isSuccess]);
+
+    useEffect(() => {
+        if (step == 2) {
+            emitPackRevoked();
+        }
+    }, [step]);
 
     const card = useCallback((closeModal: () => void) => {
         if (isError) {
