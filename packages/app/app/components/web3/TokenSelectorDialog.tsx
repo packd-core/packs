@@ -39,6 +39,10 @@ export default function TokenInput({token, value, onTokenSelected, onValueChange
 
     const isEditable = useMemo(() => onValueChanged, [onValueChanged]);
     const inputRef = useRef<HTMLInputElement>(null)
+    useEffect(() => {
+        inputRef.current!.value = formatUnits(value ?? 0n, tokenData?.decimals ?? 18);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     return <div>
         <TokenSelectorDialog isOpen={isOpen} setIsOpen={setIsOpen} onAdd={(t) => {
             setIsOpen(false);
