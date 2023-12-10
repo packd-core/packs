@@ -17,6 +17,7 @@ import {ContentTitle} from "@/app/components/content/ContentRow";
 import {Module} from "@/src/stores/useMintStore";
 import { GiToken} from "react-icons/gi";
 import {RiNftLine} from "react-icons/ri";
+import {usePackRevokedListener} from "@/src/event/events";
 
 export enum PackState {
     EMPTY = 'Empty',
@@ -51,6 +52,8 @@ export default function Dashboard() {
     const {balance, isLoading, isError, refetch} = useBalanceOf(
         address as Address
     );
+
+    usePackRevokedListener(refetch);
 
     return (
         <div>
