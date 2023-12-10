@@ -14,6 +14,8 @@ export function useBlockExplorer() {
             return 'https://sepolia.scrollscan.dev'
         } else if (chain?.id === 8453) {
             return 'https://basescan.org'
+        } else if (chain?.id === 84531) {
+            return 'https://goerli.basescan.org'
         }
     }, [chain?.id])
 }

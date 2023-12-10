@@ -14,7 +14,7 @@ export function PackActionsMenu({tokenId}: {tokenId:bigint}) {
     return (
         <Menu >
             {isRevokeOpen && <RevokePackModal tokenId={tokenId} isOpen={isRevokeOpen} setIsOpen={setIsRevokeOpen}/>}
-            {isClaimOpen && <ClaimLinkModal isOpen={isClaimOpen} setIsOpen={setIsClaimOpen}/>}
+            {isClaimOpen && <ClaimLinkModal tokenId={tokenId} isOpen={isClaimOpen} setIsOpen={setIsClaimOpen}/>}
             <Menu.Button ><FcSettings/></Menu.Button>
 
             <Transition

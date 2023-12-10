@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { useSignMessage } from "wagmi";
 import useKeySignManager from "@/src/hooks/useKeySignManager";
 
-export function useClaimKeys(nonce: number) {
+export function useClaimKeys(nonce: bigint) {
   const [claimPublicKey, setClaimPublicKey] = useState("");
   const [claimPrivateKey, setClaimPrivateKey] = useState("");
   const [isMessagePrepared, setMessagePrepared] = useState(false);
@@ -73,5 +73,6 @@ export function useClaimKeys(nonce: number) {
     handlePrepareAndSignMessage,
     isSignLoading,
     isSignSuccess,
+    prepareMessage
   };
 }
