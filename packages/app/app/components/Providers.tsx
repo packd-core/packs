@@ -12,7 +12,7 @@ import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 
 const testnets = [baseGoerli]
-const mainnets = [base] //scroll not yet live
+const mainnets = [base, baseGoerli] //scroll not yet live
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [
