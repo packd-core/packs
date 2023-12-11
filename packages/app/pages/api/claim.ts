@@ -149,6 +149,10 @@ function getSigner(chainId: number) {
         return "https://rpc.testnet.mantle.xyz";
       case 534351:
         return "https://sepolia-rpc.scroll.io";
+      case 84531:
+        return "https://goerli.base.org";
+      case 8453:
+        return "https://mainnet.base.org";
       default:
         throw new Error(`Unsupported chainId: ${chainId}`);
     }
