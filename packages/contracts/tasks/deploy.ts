@@ -30,6 +30,9 @@ subtask(
   }
 
   const signer = await hre.ethers.provider.getSigner();
+  const deployer = await signer.getAddress();
+  info(`Deployer: ${deployer}`);
+
   const fullSystemDeployed = await deployFullSystem(
     hre,
     signer,

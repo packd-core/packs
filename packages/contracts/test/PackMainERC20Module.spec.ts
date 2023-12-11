@@ -33,7 +33,7 @@ describe("PackMain, ERC20Module", function () {
     const keySignManager = new KeySignManager(
       systemConfig.packConfig.registryChainId,
       ethers.encodeBytes32String(systemConfig.packConfig.salt.toString()),
-      await packMain.getAddress(),
+      await packMain.getAddress()
     );
 
     return {
@@ -55,7 +55,7 @@ describe("PackMain, ERC20Module", function () {
     packMain: PackMain,
     erc20Module: ERC20Module,
     erc20Mocks: { mock: ERC20Mock; value: bigint }[],
-    keySignManager: KeySignManager,
+    keySignManager: KeySignManager
   ) => {
     const moduleDataArray: [string, bigint][] = [];
     for (const { mock, value } of erc20Mocks) {
@@ -74,7 +74,7 @@ describe("PackMain, ERC20Module", function () {
       keySignManager,
       erc20Mocks.reduce((acc, { value }) => acc + value, 0n),
       modules,
-      [moduleData],
+      [moduleData]
     );
     return { packInstance, erc20Mocks, alice, claimPrivateKey };
   };
@@ -86,7 +86,7 @@ describe("PackMain, ERC20Module", function () {
         await loadFixture(setup);
 
       const aliceBalanceBefore = await ethers.provider.getBalance(
-        alice.address,
+        alice.address
       );
 
       // Mint a new pack using createPack function
@@ -96,7 +96,7 @@ describe("PackMain, ERC20Module", function () {
         packMain,
         erc20Module,
         [{ mock: erc20MockA, value }],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -129,11 +129,11 @@ describe("PackMain, ERC20Module", function () {
         packMain,
         erc20Module,
         [{ mock: erc20MockA, value }],
-        keySignManager,
+        keySignManager
       );
 
       const aliceBalanceBefore = await ethers.provider.getBalance(
-        alice.address,
+        alice.address
       );
 
       // Check correct state
@@ -175,7 +175,7 @@ describe("PackMain, ERC20Module", function () {
         packMain,
         erc20Module,
         [{ mock: erc20MockA, value }],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -188,7 +188,7 @@ describe("PackMain, ERC20Module", function () {
         await ethers.provider.getBalance(accountAddress);
       expect(ethBalanceAccount).to.equal(value);
       const aliceBalanceBefore = await ethers.provider.getBalance(
-        alice.address,
+        alice.address
       );
       // Check that the erc20 tokens are in the pack
       const erc20BalanceAccount = await erc20MockA.balanceOf(accountAddress);
@@ -203,7 +203,7 @@ describe("PackMain, ERC20Module", function () {
         await keySignManager.generateClaimSignature(
           claimPrivateKey,
           ["uint256", "address"],
-          [0, bob.address],
+          [0, bob.address]
         );
 
       const moduleData = await generateClaimData([
@@ -211,13 +211,9 @@ describe("PackMain, ERC20Module", function () {
       ]);
 
       // Create SigClaimer
-      const sigClaimer = await keySignManager.generateSignTypedData(
-        bob,
-        0,
-        0,
-        0,
-        [moduleData],
-      );
+      const sigClaimer = await keySignManager.generateSignTypedData(bob, 0, 0, [
+        moduleData,
+      ]);
 
       const claimData: ClaimData = {
         tokenId: 0,
@@ -275,7 +271,7 @@ describe("PackMain, ERC20Module", function () {
         packMain,
         erc20Module,
         [{ mock: erc20MockA, value }],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -286,20 +282,16 @@ describe("PackMain, ERC20Module", function () {
         await keySignManager.generateClaimSignature(
           claimPrivateKey,
           ["uint256", "address"],
-          [0, bob.address],
+          [0, bob.address]
         );
 
       const moduleData = await generateClaimData([
         await erc20MockA.getAddress(),
       ]);
 
-      const sigClaimer = await keySignManager.generateSignTypedData(
-        bob,
-        0,
-        0,
-        0,
-        [moduleData],
-      );
+      const sigClaimer = await keySignManager.generateSignTypedData(bob, 0, 0, [
+        moduleData,
+      ]);
 
       console.log("sigClaimer", sigClaimer);
 
@@ -341,7 +333,7 @@ describe("PackMain, ERC20Module", function () {
         packMain,
         erc20Module,
         [{ mock: erc20MockA, value }],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -352,7 +344,7 @@ describe("PackMain, ERC20Module", function () {
         await keySignManager.generateClaimSignature(
           claimPrivateKey,
           ["uint256", "address"],
-          [0, bob.address],
+          [0, bob.address]
         );
 
       const moduleData = await generateClaimData([
@@ -362,9 +354,8 @@ describe("PackMain, ERC20Module", function () {
       const sigClaimer = await keySignManager.generateSignTypedData(
         bob,
         0,
-        0,
         maxRefundValue,
-        [moduleData],
+        [moduleData]
       );
       const claimData: ClaimData = {
         tokenId: 0,
@@ -426,7 +417,7 @@ describe("PackMain, ERC20Module", function () {
           { mock: erc20MockA, value: valueA },
           { mock: erc20MockB, value: valueB },
         ],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -467,7 +458,7 @@ describe("PackMain, ERC20Module", function () {
           { mock: erc20MockA, value: valueA },
           { mock: erc20MockB, value: valueB },
         ],
-        keySignManager,
+        keySignManager
       );
 
       const accountAddress = await packInstance.account(0);
@@ -526,7 +517,7 @@ describe("PackMain, ERC20Module", function () {
           { mock: erc20MockA, value: valueA },
           { mock: erc20MockB, value: valueB },
         ],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -554,16 +545,12 @@ describe("PackMain, ERC20Module", function () {
         await keySignManager.generateClaimSignature(
           claimPrivateKey,
           ["uint256", "address"],
-          [0, bob.address],
+          [0, bob.address]
         );
       // Create SigClaimer
-      const sigClaimer = await keySignManager.generateSignTypedData(
-        bob,
-        0,
-        0,
-        0,
-        [moduleData],
-      );
+      const sigClaimer = await keySignManager.generateSignTypedData(bob, 0, 0, [
+        moduleData,
+      ]);
 
       const claimData: ClaimData = {
         tokenId: 0,

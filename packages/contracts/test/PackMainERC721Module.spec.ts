@@ -33,7 +33,7 @@ describe("PackMain, ERC721Module", function () {
     const keySignManager = new KeySignManager(
       systemConfig.packConfig.registryChainId,
       ethers.encodeBytes32String(systemConfig.packConfig.salt.toString()),
-      await packMain.getAddress(),
+      await packMain.getAddress()
     );
 
     return {
@@ -60,7 +60,7 @@ describe("PackMain, ERC721Module", function () {
     packMain: PackMain,
     erc721Module: ERC721Module,
     erc721Mocks: ERC721MockData[],
-    keySignManager: KeySignManager,
+    keySignManager: KeySignManager
   ) => {
     const data: Array<[string, bigint]> = [];
 
@@ -84,7 +84,7 @@ describe("PackMain, ERC721Module", function () {
       keySignManager,
       value,
       modules,
-      [moduleDataParams],
+      [moduleDataParams]
     );
     return { packInstance, alice, claimPrivateKey, erc721Mocks };
   };
@@ -97,7 +97,7 @@ describe("PackMain, ERC721Module", function () {
         await loadFixture(setup);
 
       const aliceBalanceBefore = await ethers.provider.getBalance(
-        alice.address,
+        alice.address
       );
 
       // Mint a new pack using createPack function
@@ -107,7 +107,7 @@ describe("PackMain, ERC721Module", function () {
         packMain,
         erc721Module,
         [{ mock: erc721MockA, quantity: 1 }],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -126,7 +126,7 @@ describe("PackMain, ERC721Module", function () {
       const erc721BalanceAccount = await erc721MockA.balanceOf(accountAddress);
       expect(erc721BalanceAccount).to.equal(1);
       const aliceBalanceERC721After = await erc721MockA.balanceOf(
-        alice.address,
+        alice.address
       );
       expect(aliceBalanceERC721After).to.equal(0);
     });
@@ -143,7 +143,7 @@ describe("PackMain, ERC721Module", function () {
         packMain,
         erc721Module,
         [{ mock: erc721MockA, quantity: 1 }],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -184,7 +184,7 @@ describe("PackMain, ERC721Module", function () {
         packMain,
         erc721Module,
         [{ mock: erc721MockA, quantity: 1 }],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -199,17 +199,13 @@ describe("PackMain, ERC721Module", function () {
         await keySignManager.generateClaimSignature(
           claimPrivateKey,
           ["uint256", "address"],
-          [0, bob.address],
+          [0, bob.address]
         );
 
       // Create SigClaimer
-      const sigClaimer = await keySignManager.generateSignTypedData(
-        bob,
-        0,
-        0,
-        0,
-        [moduleData],
-      );
+      const sigClaimer = await keySignManager.generateSignTypedData(bob, 0, 0, [
+        moduleData,
+      ]);
 
       const claimData: ClaimData = {
         tokenId: 0,
@@ -239,7 +235,7 @@ describe("PackMain, ERC721Module", function () {
       const erc721BalanceAccount = await erc721MockA.balanceOf(accountAddress);
       expect(erc721BalanceAccount).to.equal(0);
       const aliceBalanceERC721After = await erc721MockA.balanceOf(
-        alice.address,
+        alice.address
       );
       expect(aliceBalanceERC721After).to.equal(0);
     });
@@ -265,7 +261,7 @@ describe("PackMain, ERC721Module", function () {
         packMain,
         erc721Module,
         [{ mock: erc721MockA, quantity: 1 }],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -280,14 +276,13 @@ describe("PackMain, ERC721Module", function () {
         await keySignManager.generateClaimSignature(
           claimPrivateKey,
           ["uint256", "address"],
-          [0, bob.address],
+          [0, bob.address]
         );
       const sigClaimer = await keySignManager.generateSignTypedData(
         bob,
         0,
-        0,
         maxRefundValue,
-        [moduleData],
+        [moduleData]
       );
 
       const claimData: ClaimData = {
@@ -349,7 +344,7 @@ describe("PackMain, ERC721Module", function () {
           { mock: erc721MockA, quantity: 1 },
           { mock: erc721MockB, quantity: 1 },
         ],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -389,7 +384,7 @@ describe("PackMain, ERC721Module", function () {
           { mock: erc721MockA, quantity: 1 },
           { mock: erc721MockB, quantity: 1 },
         ],
-        keySignManager,
+        keySignManager
       );
 
       const accountAddress = await packInstance.account(0);
@@ -421,11 +416,11 @@ describe("PackMain, ERC721Module", function () {
 
       // Check that the erc721 tokens are back in the owner's account
       const aliceBalanceERC721AfterA = await erc721MockA.balanceOf(
-        alice.address,
+        alice.address
       );
       expect(aliceBalanceERC721AfterA).to.equal(1);
       const aliceBalanceERC721AfterB = await erc721MockB.balanceOf(
-        alice.address,
+        alice.address
       );
       expect(aliceBalanceERC721AfterB).to.equal(1);
     });
@@ -451,7 +446,7 @@ describe("PackMain, ERC721Module", function () {
           { mock: erc721MockA, quantity: 1 },
           { mock: erc721MockB, quantity: 1 },
         ],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -474,17 +469,13 @@ describe("PackMain, ERC721Module", function () {
         await keySignManager.generateClaimSignature(
           claimPrivateKey,
           ["uint256", "address"],
-          [0, bob.address],
+          [0, bob.address]
         );
 
       // Create SigClaimer
-      const sigClaimer = await keySignManager.generateSignTypedData(
-        bob,
-        0,
-        0,
-        0,
-        [moduleData],
-      );
+      const sigClaimer = await keySignManager.generateSignTypedData(bob, 0, 0, [
+        moduleData,
+      ]);
 
       const claimData: ClaimData = {
         tokenId: 0,
@@ -535,7 +526,7 @@ describe("PackMain, ERC721Module", function () {
         packMain,
         erc721Module,
         [{ mock: erc721MockA, quantity: 2 }],
-        keySignManager,
+        keySignManager
       );
 
       // Check correct state
@@ -556,17 +547,13 @@ describe("PackMain, ERC721Module", function () {
         await keySignManager.generateClaimSignature(
           claimPrivateKey,
           ["uint256", "address"],
-          [0, bob.address],
+          [0, bob.address]
         );
 
       // Create SigClaimer
-      const sigClaimer = await keySignManager.generateSignTypedData(
-        bob,
-        0,
-        0,
-        0,
-        [moduleData],
-      );
+      const sigClaimer = await keySignManager.generateSignTypedData(bob, 0, 0, [
+        moduleData,
+      ]);
 
       const claimData: ClaimData = {
         tokenId: 0,

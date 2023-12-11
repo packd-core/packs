@@ -30,7 +30,7 @@ library SignatureValidator {
     function STRUCT_TYPEHASH() public pure returns (bytes32) {
         return
             keccak256(
-                "Claim(uint256 tokenId,address claimer,uint256 refundValue,uint256 maxRefundValue,bytes32 moduleData)"
+                "Claim(uint256 tokenId,address claimer,uint256 maxRefundValue,bytes32 moduleData)"
             );
     }
 
@@ -70,7 +70,6 @@ library SignatureValidator {
                     STRUCT_TYPEHASH(),
                     data.tokenId,
                     data.claimer,
-                    data.refundValue,
                     data.maxRefundValue,
                     keccak256(abi.encode(data.moduleData))
                 )
