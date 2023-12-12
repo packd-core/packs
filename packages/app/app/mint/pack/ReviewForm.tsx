@@ -22,8 +22,8 @@ export const ReviewForm = () => {
     const modules = useMintStore(state => state.modules)
     const amountEth = useMintStore(state => state.eth)
     const {chain} = useNetwork();
-    const {write, isLoading, error, data, config} = useMintPack();
-    const {estimatedGas, isLoading: isGasLoading, isError: isGasError} = useEstimateGas({config: config.request})
+    const {write, isLoading, error, data, config, isPrepareSuccess} = useMintPack();
+    const {estimatedGas, isLoading: isGasLoading, isError: isGasError} = useEstimateGas({config: config.request, isEnabled: isPrepareSuccess})
     const gasPrice = useMemo(() => estimatedGas ? ((formatUnits(estimatedGas, chain?.nativeCurrency?.decimals ?? 18) || '-') + chain?.nativeCurrency?.symbol) : 'Loading', [chain?.nativeCurrency?.decimals, chain?.nativeCurrency?.symbol, estimatedGas])
 
     useEffect(() => {

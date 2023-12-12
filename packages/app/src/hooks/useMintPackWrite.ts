@@ -21,6 +21,7 @@ export function useMintPackWrite(
         config,
         error: prepareError,
         isError: isPrepareError,
+        isSuccess: isPrepareSuccess,
     } = usePreparePackMainPack({
         address: addresses.PackMain,
         value: ethAmount,
@@ -39,6 +40,7 @@ export function useMintPackWrite(
         error,
         isLoading,
         isError,
-        config
+        config,
+        isPrepareSuccess
     };
 }
