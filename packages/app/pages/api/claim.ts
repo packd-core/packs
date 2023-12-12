@@ -9,7 +9,7 @@ export type ResponseData =
       error:
         | "INVALID_BODY_PARAMETERS"
         | "GAS_ESTIMATATION_FAILED"
-        | "REFUND_VALUE_TOO_LOW"
+        | "MAX_REFUND_VALUE_TOO_LOW"
         | "UNABLE_TO_BROADCAST_TX";
       details?: object;
     }
@@ -29,7 +29,6 @@ const RelayerRequestSchema = z.object({
     sigOwner: z.string(),
     claimer: z.string(),
     sigClaimer: z.string(),
-    refundValue: z.string(),
     maxRefundValue: z.string(),
     moduleData: z.string().array(),
   }),
@@ -73,29 +72,39 @@ export default async function handler(
 
   const feeData = await signer.provider?.getFeeData();
   console.log("Fee data", feeData);
-  let gasEstimate: bigint;
   let gasCostEstimate: bigint;
   try {
-    gasEstimate = await packMain.open.estimateGas({
+    const gasResult = await packMain.open.estimateGas({
       ...tx.args,
+      refundValue: tx.args.maxRefundValue,
+    });
+
+    const margin = 15n;
+
+    gasCostEstimate = (gasResult * margin) / 10n;
+    console.log("Gas estimate", {
+      gasResult,
+      gasCostEstimate,
     });
   } catch (e: any) {
-    console.log("Gas estimation failed", e);
     return res
       .status(400)
       .send({ error: "GAS_ESTIMATATION_FAILED", details: e });
   }
 
+  const weiEstimate = gasCostEstimate * (feeData?.gasPrice ?? 1n); // In mainnet, we cannot do this because it would result in netloss for the relayer.
+
   console.log("Estimates", {
-    gasCostEstimate: gasEstimate,
+    gasCostEstimate,
+    weiEstiamte: weiEstimate,
     maxRefundValue: tx.args.maxRefundValue,
-    refundValue: tx.args.refundValue,
+    refundValue: weiEstimate,
   });
 
-  if (gasEstimate > BigInt(tx.args.refundValue)) {
+  if (weiEstimate > BigInt(tx.args.maxRefundValue)) {
     return res.status(400).send({
-      error: `REFUND_VALUE_TOO_LOW`,
-      details: { gasEstimate, refundValue: tx.args.refundValue },
+      error: `MAX_REFUND_VALUE_TOO_LOW`,
+      details: { weiEstimate, maxRefundValue: tx.args.maxRefundValue },
     });
   }
 
@@ -103,9 +112,10 @@ export default async function handler(
     const openReceipt = await packMain.open(
       {
         ...tx.args,
+        refundValue: weiEstimate,
       },
       {
-        gasLimit: gasEstimate,
+        gasLimit: gasCostEstimate,
       }
     );
 
