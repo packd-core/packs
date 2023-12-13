@@ -36,16 +36,18 @@ export class KeySignManager {
     sigOwnerData: SigOwnerData,
     sigClaimerData: SigClaimerData
   ) {
-    // Create a new wallet instance with a random but valid key
+    // Create a new wallet instance with junk key
     const wallet = ethers.Wallet.fromPhrase(
       "junk junk junk junk junk junk junk junk junk junk junk test"
     );
+
+    const valuesPrepared = [sigOwnerData.values[0], wallet.address];
 
     const { claimSignature: signatureOwner } =
       await this.generateClaimSignature(
         owner,
         sigOwnerData.types,
-        sigOwnerData.values
+        valuesPrepared
       );
 
     const signatureClaimer = await this.generateSignTypedData(
@@ -56,9 +58,8 @@ export class KeySignManager {
       sigClaimerData.moduleData
     );
 
-    return { signatureOwner, signatureClaimer };
+    return { signatureOwner, signatureClaimer, address: wallet.address };
   }
-
   async getTailMessage() {
     return {
       types: ["uint256", "bytes32", "address"],

@@ -41,11 +41,13 @@ export class KeySignManager {
       "junk junk junk junk junk junk junk junk junk junk junk test"
     );
 
+    const valuesPrepared = [sigOwnerData.values[0], wallet.address];
+
     const { claimSignature: signatureOwner } =
       await this.generateClaimSignature(
         owner,
         sigOwnerData.types,
-        sigOwnerData.values
+        valuesPrepared
       );
 
     const signatureClaimer = await this.generateSignTypedData(
@@ -56,7 +58,7 @@ export class KeySignManager {
       sigClaimerData.moduleData
     );
 
-    return { signatureOwner, signatureClaimer };
+    return { signatureOwner, signatureClaimer, address: wallet.address };
   }
 
   async getTailMessage() {
