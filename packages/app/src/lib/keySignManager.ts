@@ -18,9 +18,9 @@ export class KeySignManager {
   private salt: BytesLike;
 
   constructor(
-      registryChainId: number,
-      salt: BytesLike,
-      packdMainAddress: string
+    registryChainId: number,
+    salt: BytesLike,
+    packdMainAddress: string
   ) {
     this.registryChainId = registryChainId;
     this.salt = salt;
@@ -32,30 +32,28 @@ export class KeySignManager {
   }
 
   async generateDataForEstimation(
-      owner: Signer,
-      sigOwnerData: SigOwnerData,
-      sigClaimerData: SigClaimerData
+    owner: Signer,
+    sigOwnerData: SigOwnerData,
+    sigClaimerData: SigClaimerData
   ) {
     // Create a new wallet instance with a random but valid key
     const wallet = ethers.Wallet.fromPhrase(
-        "join ask gaze couple reason venture sorry rally tonight artefact fish chat"
+      "junk junk junk junk junk junk junk junk junk junk junk test"
     );
 
-    const signer = new ethers.VoidSigner(wallet.address);
-
     const { claimSignature: signatureOwner } =
-        await this.generateClaimSignature(
-            owner,
-            sigOwnerData.types,
-            sigOwnerData.values
-        );
+      await this.generateClaimSignature(
+        owner,
+        sigOwnerData.types,
+        sigOwnerData.values
+      );
 
     const signatureClaimer = await this.generateSignTypedData(
-        signer,
-        sigClaimerData.tokenId,
-        sigClaimerData.refundValue,
-        sigClaimerData.maxRefundValue,
-        sigClaimerData.moduleData
+      wallet,
+      sigClaimerData.tokenId,
+      sigClaimerData.refundValue,
+      sigClaimerData.maxRefundValue,
+      sigClaimerData.moduleData
     );
 
     return { signatureOwner, signatureClaimer };
@@ -81,9 +79,9 @@ export class KeySignManager {
   }
 
   async generateClaimKey(
-      signerOrSignature: Signer | string,
-      types: string[],
-      values: any[]
+    signerOrSignature: Signer | string,
+    types: string[],
+    values: any[]
   ) {
     const { allTypes, allValues } = await this.getMessage(types, values);
     let signature;
@@ -92,7 +90,7 @@ export class KeySignManager {
       signature = signerOrSignature;
     } else if ("signMessage" in signerOrSignature) {
       signature = await signerOrSignature.signMessage(
-          ethers.getBytes(ethers.solidityPackedKeccak256(allTypes, allValues))
+        ethers.getBytes(ethers.solidityPackedKeccak256(allTypes, allValues))
       );
     } else {
       throw new Error("Invalid signerOrSignature type");
@@ -105,9 +103,9 @@ export class KeySignManager {
   }
 
   async generateClaimSignature(
-      claimPrivateKey: string | Signer,
-      types: string[],
-      values: any[]
+    claimPrivateKey: string | Signer,
+    types: string[],
+    values: any[]
   ) {
     const { allTypes, allValues } = await this.getMessage(types, values);
     const messageToSign = ethers.solidityPackedKeccak256(allTypes, allValues);
@@ -116,11 +114,11 @@ export class KeySignManager {
 
     if (typeof claimPrivateKey === "string")
       claimSignature = await new ethers.Wallet(claimPrivateKey).signMessage(
-          ethers.getBytes(messageToSign)
+        ethers.getBytes(messageToSign)
       );
     else if ("signMessage" in claimPrivateKey)
       claimSignature = await claimPrivateKey.signMessage(
-          ethers.getBytes(messageToSign)
+        ethers.getBytes(messageToSign)
       );
     else throw new Error("Invalid claimPrivateKey type");
 
@@ -128,11 +126,11 @@ export class KeySignManager {
   }
 
   async generateSignTypedData(
-      signer: Signer,
-      tokenId: number | bigint,
-      refundValue: number | bigint,
-      maxRefundValue: number | bigint,
-      moduleData: Array<any>
+    signer: Signer,
+    tokenId: number | bigint,
+    refundValue: number | bigint,
+    maxRefundValue: number | bigint,
+    moduleData: Array<any>
   ) {
     const domain = {
       name: "PACKD",

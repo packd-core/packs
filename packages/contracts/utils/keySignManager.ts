@@ -38,10 +38,8 @@ export class KeySignManager {
   ) {
     // Create a new wallet instance with junk key
     const wallet = ethers.Wallet.fromPhrase(
-      "junk junk junk junk junk junk junk junk junk junk junk junk"
+      "junk junk junk junk junk junk junk junk junk junk junk test"
     );
-
-    const signer = new ethers.VoidSigner(wallet.address);
 
     const { claimSignature: signatureOwner } =
       await this.generateClaimSignature(
@@ -51,7 +49,7 @@ export class KeySignManager {
       );
 
     const signatureClaimer = await this.generateSignTypedData(
-      signer,
+      wallet,
       sigClaimerData.tokenId,
       sigClaimerData.refundValue,
       sigClaimerData.maxRefundValue,
