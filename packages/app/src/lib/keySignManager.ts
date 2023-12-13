@@ -1,5 +1,16 @@
 import type { BytesLike, Signer } from "ethers";
 import { ethers } from "ethers";
+export interface SigOwnerData {
+  types: string[];
+  values: any[];
+}
+
+export interface SigClaimerData {
+  tokenId: bigint;
+  refundValue: bigint;
+  maxRefundValue: bigint;
+  moduleData: Array<any>;
+}
 
 export class KeySignManager {
   private packdMainAddress: string;
@@ -18,6 +29,36 @@ export class KeySignManager {
 
   setPackdMainAddress(address: string) {
     this.packdMainAddress = address;
+  }
+
+  async generateDataForEstimation(
+      owner: Signer,
+      sigOwnerData: SigOwnerData,
+      sigClaimerData: SigClaimerData
+  ) {
+    // Create a new wallet instance with a random but valid key
+    const wallet = ethers.Wallet.fromPhrase(
+        "join ask gaze couple reason venture sorry rally tonight artefact fish chat"
+    );
+
+    const signer = new ethers.VoidSigner(wallet.address);
+
+    const { claimSignature: signatureOwner } =
+        await this.generateClaimSignature(
+            owner,
+            sigOwnerData.types,
+            sigOwnerData.values
+        );
+
+    const signatureClaimer = await this.generateSignTypedData(
+        signer,
+        sigClaimerData.tokenId,
+        sigClaimerData.refundValue,
+        sigClaimerData.maxRefundValue,
+        sigClaimerData.moduleData
+    );
+
+    return { signatureOwner, signatureClaimer };
   }
 
   async getTailMessage() {

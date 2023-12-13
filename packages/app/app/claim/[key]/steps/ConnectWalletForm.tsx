@@ -9,6 +9,7 @@ import {useAccount, useEnsAvatar} from "wagmi";
 import StepperIndicator from "@/app/claim/[key]/steps/components/StepperIndicator";
 import Receiver from "~/receiver.svg";
 import formatAddress from "@/src/lib/addressFormatter";
+import {useEstimateRefundValue} from "@/src/hooks/useEstimateRefundValue";
 
 export default function ConnectWalletForm() {
     const nextStep = useClaimState(state => state.nextStep)
@@ -16,6 +17,14 @@ export default function ConnectWalletForm() {
     const setControls = useClaimState(state => state.setControls)
     const {openConnectModal} = useConnectModal()
     const {address} = useAccount()
+
+    const {value: maxRefundValue, isLoading: isEstimateRefundValueLoading} = useEstimateRefundValue();
+    const setMaxRefundValue = useClaimState(state => state.setMaxRefundValue);
+    useEffect(() => {
+        console.log({maxRefundValue});
+        setMaxRefundValue(maxRefundValue)
+    }, [maxRefundValue, setMaxRefundValue]);
+
 
     useEffect(() => {
         setControls(<div className='w-full flex justify-between py-1 items-center'>

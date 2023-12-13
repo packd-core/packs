@@ -80,7 +80,7 @@ export const usePrepareAndSignMessage = (
   }, [keySignManager, tokenId, maxRefundValue, signer?.signer, moduleData]);
 
   return {
-    signData,
+    signData : signData as `0x${string}`,
     // isSignError,
     isLoading,
     isSuccess,
