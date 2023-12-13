@@ -32,7 +32,7 @@ export class KeySignManager {
   }
 
   async generateDataForEstimation(
-    owner: Signer,
+    owner: string | Signer,
     sigOwnerData: SigOwnerData,
     sigClaimerData: SigClaimerData
   ) {
