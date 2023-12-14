@@ -32,6 +32,7 @@ export default function ConnectWalletForm() {
 
             {address ? <Button
                 onClick={nextStep}
+                isLoading={!maxRefundValue }
                 variant="navigation" rightIcon={<FiArrowRight className='text-inherit inline'/>}>
                 {'Next'}
             </Button> :
@@ -43,7 +44,7 @@ export default function ConnectWalletForm() {
             }
 
         </div>)
-    }, [nextStep, setControls, previousStep, address, openConnectModal]);
+    }, [nextStep, setControls, previousStep, address, openConnectModal, maxRefundValue]);
     if (address) return <div className="flex flex-col w-full gap-2 items-center">
         <Receiver className='h-28 w-28'/>
         <h2 className='text-lg font-bold text-center'>
