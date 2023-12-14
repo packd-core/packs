@@ -1,7 +1,7 @@
 import usePackdAddresses from "@/src/hooks/usePackdAddresses";
 import { useMemo } from "react";
-import { KeySignManager } from "@contracts/utils/keySignManager";
 import { useNetwork } from "wagmi";
+import {KeySignManager} from "@/src/lib/keySignManager";
 
 export default function useKeySignManager() {
   const addresses = usePackdAddresses();

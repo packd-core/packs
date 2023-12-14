@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useClaimState } from "@/app/claim/[key]/useClaimState";
-import { useAccount } from "wagmi";
 import { useEthersSigner } from "@/src/hooks/useEthersSigner";
 import type {
   SigClaimerData,
   SigOwnerData,
   EstimateRefundPreparedData,
-} from "@contracts/utils/keySignManager";
+} from "@/src/lib/keySignManager";
 import { parseEther } from "ethers";
 import { usePreparePackMainOpen } from "@/app/abi/generated";
 import { ClaimData } from "@/src/hooks/useGenerateClaimData";

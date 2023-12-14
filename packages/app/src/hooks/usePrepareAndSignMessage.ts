@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 
 import { useEthersSigner } from "./useEthersSigner";
 import useKeySignManager from "@/src/hooks/useKeySignManager";
-import { KeySignManager } from "@contracts/utils/keySignManager";
+import { KeySignManager } from "@/src/lib/keySignManager";
 
 export const usePrepareAndSignMessage = (
   tokenId: number | null,
