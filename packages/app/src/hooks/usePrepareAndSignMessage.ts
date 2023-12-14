@@ -4,12 +4,12 @@ import { ethers } from "ethers";
 
 import { useEthersSigner } from "./useEthersSigner";
 import useKeySignManager from "@/src/hooks/useKeySignManager";
-import {KeySignManager} from "@/src/lib/keySignManager";
+import { KeySignManager } from "@contracts/utils/keySignManager";
 
 export const usePrepareAndSignMessage = (
-    tokenId: number | null,
-    maxRefundValue: bigint,
-    moduleData: Array<any>,
+  tokenId: number | null,
+  maxRefundValue: bigint,
+  moduleData: Array<any>
 ) => {
   const [message, setMessage] = useState<Uint8Array | undefined>(undefined);
   const [signData, setSignData] = useState<string | undefined>(undefined);
@@ -36,12 +36,12 @@ export const usePrepareAndSignMessage = (
       //   [Number(tokenId), maxRefundValue, address]
       // );
       const sigClaimer = await keySignManager.generateSignTypedData(
-          signer!.signer,
-          tokenId!,
-          0n,
+        signer!.signer,
+        tokenId!,
           maxRefundValue,
-          moduleData
-      )
+        maxRefundValue,
+        moduleData
+      );
       // const encodedModuleData = KeySignManager.getModuleDataBytes([]);
       // const { allTypes, allValues } = await keySignManager.getMessage(
       //     ["uint256", "uint256"],
@@ -69,18 +69,18 @@ export const usePrepareAndSignMessage = (
       // // }
       // setIsLoading(true);
       // signer?.signer?.signMessage(messageToSign).then((signature) => {
-        setSignData(sigClaimer);
-        setIsLoading(false);
-        setIsSuccess(true);
+      setSignData(sigClaimer);
+      setIsLoading(false);
+      setIsSuccess(true);
       // });
     } catch (error) {
       console.error("Error preparing message:", error);
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }, [keySignManager, tokenId, maxRefundValue, signer?.signer, moduleData]);
 
   return {
-    signData,
+    signData: signData as `0x${string}`,
     // isSignError,
     isLoading,
     isSuccess,

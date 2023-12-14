@@ -9,6 +9,7 @@ import {useAccount, useEnsAvatar} from "wagmi";
 import StepperIndicator from "@/app/claim/[key]/steps/components/StepperIndicator";
 import Receiver from "~/receiver.svg";
 import formatAddress from "@/src/lib/addressFormatter";
+import {useEstimateRefundValue} from "@/src/hooks/useEstimateRefundValue";
 
 export default function ConnectWalletForm() {
     const nextStep = useClaimState(state => state.nextStep)
@@ -17,12 +18,21 @@ export default function ConnectWalletForm() {
     const {openConnectModal} = useConnectModal()
     const {address} = useAccount()
 
+    const {value: maxRefundValue, isLoading: isEstimateRefundValueLoading} = useEstimateRefundValue();
+    const setMaxRefundValue = useClaimState(state => state.setMaxRefundValue);
+    useEffect(() => {
+        console.log({maxRefundValue});
+        setMaxRefundValue(maxRefundValue)
+    }, [maxRefundValue, setMaxRefundValue]);
+
+
     useEffect(() => {
         setControls(<div className='w-full flex justify-between py-1 items-center'>
             <StepperIndicator step={0}/>
 
             {address ? <Button
                 onClick={nextStep}
+                isLoading={!maxRefundValue }
                 variant="navigation" rightIcon={<FiArrowRight className='text-inherit inline'/>}>
                 {'Next'}
             </Button> :
@@ -34,7 +44,7 @@ export default function ConnectWalletForm() {
             }
 
         </div>)
-    }, [nextStep, setControls, previousStep, address, openConnectModal]);
+    }, [nextStep, setControls, previousStep, address, openConnectModal, maxRefundValue]);
     if (address) return <div className="flex flex-col w-full gap-2 items-center">
         <Receiver className='h-28 w-28'/>
         <h2 className='text-lg font-bold text-center'>

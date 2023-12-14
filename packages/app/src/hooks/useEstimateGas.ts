@@ -9,7 +9,6 @@ export const useEstimateGas = ({config, isEnabled = true}:{config: any, isEnable
     const pc = useMemo(() => getPublicClient(), [])
     const ethersSigner = useEthersSigner();
     useEffect(() => {
-        console.log(config, isEnabled)
         if (!config || !config.abi || !isEnabled) return;
         setIsLoading(true)
         setIsError(false)
@@ -23,7 +22,7 @@ export const useEstimateGas = ({config, isEnabled = true}:{config: any, isEnable
         }).finally(() => {
             setIsLoading(false)
         })
-    }, [pc, config, isEnabled])
+    }, [pc, config, isEnabled, ethersSigner?.provider])
 
     return {estimatedGas, isLoading, isError};
 }

@@ -4,10 +4,10 @@ import useKeySignManager from "@/src/hooks/useKeySignManager";
 import {BigNumberish} from "ethers";
 
 export interface ClaimData {
-  tokenId:  BigNumberish;
-  sigOwner: string; // Signature from the Pack owner
-  claimer: string; // Address of the claimer
-  sigClaimer: string; // Signature from the claimer
+  tokenId:  bigint;
+  sigOwner: `0x${string}`; // Signature from the Pack owner
+  claimer: `0x${string}`; // Address of the claimer
+  sigClaimer: `0x${string}`; // Signature from the claimer
   refundValue: bigint; // Value to refund to the relayer
   maxRefundValue: bigint; // Maximum refundable value (to prevent over-refund)
   moduleData: Array<any>; // Data for the module
@@ -16,17 +16,17 @@ export interface ClaimData {
 export const useGenerateClaimData = (
   address: Address,
   maxRefundValue: bigint,
-  sigClaimer: string,
+  sigClaimer: `0x${string}`,
   tokenId: bigint,
   privateKeyDecoded: string,
   moduleData: Array<any>
 ) => {
   const [claimData, setClaimData] = useState<ClaimData>({
     tokenId: 0n,
-    sigOwner: "",
+    sigOwner: "" as `0x${string}`,
     claimer: address,
     sigClaimer,
-    refundValue: BigInt(0),
+    refundValue: maxRefundValue,
     maxRefundValue,
     moduleData,
   });
@@ -42,11 +42,11 @@ export const useGenerateClaimData = (
         ["uint256", "address"],
         [Number(tokenId), address]
       );
-      const sigOwnerResolved = await sigOwner.claimSignature;
+      const sigOwnerResolved = await sigOwner.claimSignature as `0x${string}`;
       setClaimData((prev) => {
         return ({
           ...prev,
-          tokenId: tokenId.toString(),
+          tokenId: tokenId,
           sigOwner: sigOwnerResolved,
           sigClaimer,
         });

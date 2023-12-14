@@ -42,11 +42,11 @@ export default function ReviewClaimForm() {
   const { openConnectModal } = useConnectModal();
   const { address } = useAccount();
   const { chain } = useNetwork();
-  const tokenId = useClaimState((state) => state.mintedTokenId);
   const setLoading = useClaimState((state) => state.setLoading);
   const setSendingToRelayer = useClaimState(
     (state) => state.setSendingToRelayer
   );
+  const tokenId = useClaimState((state) => state.mintedTokenId);
   const packData = useClaimState((state) => state.packData);
   const maxRefundValue = useClaimState((state) => state.maxRefundValue);
   const signedData = useClaimState((state) => state.signedMessage);
@@ -57,7 +57,7 @@ export default function ReviewClaimForm() {
     signedData!,
     tokenId!,
     privateKey!,
-    packData?.moduleData ?? []
+    packData?.moduleData ?? [],
   );
 
   const { write, data, isLoading } = useClaim(claimData);
@@ -69,7 +69,7 @@ export default function ReviewClaimForm() {
       chainId: chain?.id,
       args: claimData,
     };
-    body.args.tokenId = body.args.tokenId.toString();
+    // body.args.tokenId = body.args.tokenId.toString();
     const res = await fetch("/api/claim", {
       body: JSON.stringify(body),
       method: "POST",
