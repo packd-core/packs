@@ -9,8 +9,10 @@
         "node": ">=18.0.0"
     },
     "scripts": {
+        "install:contracts": "cd packages/contracts && yarn install",
         "start:contracts": "cd packages/contracts && yarn install &&  yarn start",
         "start:app": "cd packages/app && yarn dev",
-        "build:app": "cd packages/app && yarn install && yarn build"
+        "build:app": "cd packages/app && yarn install && yarn build",
+        "start": "yarn install:contracts && yarn start:app"
     }
 }
