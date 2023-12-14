@@ -2,7 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { useClaimState } from "@/app/claim/[key]/useClaimState";
 import { useAccount } from "wagmi";
 import { useEthersSigner } from "@/src/hooks/useEthersSigner";
-import { SigClaimerData, SigOwnerData } from "@/src/lib/keySignManager";
+import type {
+  SigClaimerData,
+  SigOwnerData,
+  EstimateRefundPreparedData,
+} from "@contracts/utils/keySignManager";
 import { parseEther } from "ethers";
 import { usePreparePackMainOpen } from "@/app/abi/generated";
 import { ClaimData } from "@/src/hooks/useGenerateClaimData";
@@ -47,7 +51,7 @@ export function useEstimateRefundValue() {
         sigOwnerData,
         sigClaimerData
       )
-      .then((data) => {
+      .then((data: EstimateRefundPreparedData) => {
         setSigData(data);
       });
   }, [

@@ -1,15 +1,21 @@
 import type { BytesLike, Signer } from "ethers";
 import { ethers } from "ethers";
-interface SigOwnerData {
+export interface SigOwnerData {
   types: string[];
   values: any[];
 }
 
-interface SigClaimerData {
-  tokenId: number;
-  refundValue: number;
-  maxRefundValue: number;
+export interface SigClaimerData {
+  tokenId: bigint;
+  refundValue: bigint;
+  maxRefundValue: bigint;
   moduleData: Array<any>;
+}
+
+export interface EstimateRefundPreparedData {
+  signatureOwner: string;
+  signatureClaimer: string;
+  address: string;
 }
 
 export class KeySignManager {
@@ -35,7 +41,7 @@ export class KeySignManager {
     owner: string | Signer,
     sigOwnerData: SigOwnerData,
     sigClaimerData: SigClaimerData
-  ) {
+  ): Promise<EstimateRefundPreparedData> {
     // Create a new wallet instance with junk key
     const wallet = ethers.Wallet.fromPhrase(
       "junk junk junk junk junk junk junk junk junk junk junk test"
