@@ -69,15 +69,15 @@ export function useEstimateRefundValue() {
     sigClaimer: (sigData?.signatureClaimer ?? "") as `0x${string}`,
     claimer: (sigData?.address ?? "") as `0x${string}`,
   };
-  const { config } = usePreparePackMainOpen({
+  const { config, isLoading:isPreparing } = usePreparePackMainOpen({
     address: addresses.PackMain,
     args: [claimData],
     enabled: !!claimData.sigOwner,
   });
 
   const { estimatedGas, isError, isLoading } = useEstimateGas({
-    config,
-    isEnabled: !!claimData.sigOwner,
+    config: config.request,
+    isEnabled: !!claimData.sigOwner && !isPreparing,
   });
 
   return {

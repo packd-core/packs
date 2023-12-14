@@ -38,7 +38,7 @@ export const usePrepareAndSignMessage = (
       const sigClaimer = await keySignManager.generateSignTypedData(
         signer!.signer,
         tokenId!,
-        0n,
+          maxRefundValue,
         maxRefundValue,
         moduleData
       );

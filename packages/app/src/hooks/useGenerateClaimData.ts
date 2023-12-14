@@ -26,7 +26,7 @@ export const useGenerateClaimData = (
     sigOwner: "" as `0x${string}`,
     claimer: address,
     sigClaimer,
-    refundValue: BigInt(0),
+    refundValue: maxRefundValue,
     maxRefundValue,
     moduleData,
   });
