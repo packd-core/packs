@@ -92,6 +92,7 @@ export default async function handler(
     refundValue: tx.args.refundValue,
   });
 
+  //TODO gasEstimate should be multiplied by gasPrice I think
   if (gasEstimate > BigInt(tx.args.refundValue)) {
     return res.status(400).send({
       error: `REFUND_VALUE_TOO_LOW`,
