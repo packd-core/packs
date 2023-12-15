@@ -60,7 +60,7 @@ export default function ClaimPage({params: {key}}: any) {
         }
     }, [isSuccess]);
 
-    const ownerName = useEnsOrFormattedAddress(owner as Address, chainId);
+    const ownerName = useEnsOrFormattedAddress(owner as Address);
 
     if (isConnecting || !isLoaded || mintedTokenId == undefined) {
         return <LoadingCard
