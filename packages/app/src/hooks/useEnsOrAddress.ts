@@ -15,7 +15,13 @@ export default function useEnsOrFormattedAddress(address?: Address) {
         }
         client.getEnsName({
             address: address!,
-        }).then(setEnsName);
+        }).then(name => {
+            if (name) {
+                setEnsName(name);
+            } else {
+                setEnsName(formatAddress(address!));
+            }
+        }).catch(() => setEnsName(formatAddress(address!)));
     }, [address])
 
   return ensName
