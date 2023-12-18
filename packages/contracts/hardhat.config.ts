@@ -2,6 +2,7 @@ import "@nomicfoundation/hardhat-toolbox";
 import { config as dotenvConfig } from "dotenv";
 import type { HardhatUserConfig } from "hardhat/config";
 import "hardhat-tracer";
+import "hardhat-gas-reporter";
 
 dotenvConfig({ path: __dirname + "/.env" });
 
@@ -129,6 +130,9 @@ const config: HardhatUserConfig = {
   },
   sourcify: {
     enabled: false,
+  },
+  gasReporter: {
+    enabled: true,
   },
 };
 
