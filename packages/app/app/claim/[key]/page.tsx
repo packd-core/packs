@@ -4,7 +4,6 @@ import {Address, useAccount, useNetwork, useSwitchNetwork, useWaitForTransaction
 import {useHydrated} from "@/src/hooks/useHydrated";
 import CurrentChain from "@/app/components/web3/CurrentChain";
 import {Card} from "@/app/components/Card";
-import SenderToUser from '~/claimprogress.svg'
 import {useClaimState} from "@/app/claim/[key]/useClaimState";
 import InitialForm from "@/app/claim/[key]/steps/InitialForm";
 import ConnectWalletForm from "@/app/claim/[key]/steps/ConnectWalletForm";
@@ -15,6 +14,10 @@ import {useDecodeUrl} from "@/src/hooks/useUrlEncodeDecode";
 import {useEffect, useMemo} from "react";
 import useEnsOrFormattedAddress from "@/src/hooks/useEnsOrAddress";
 import Button from "@/app/components/button/Button";
+import Blockies from 'react-blockies';
+import Present from "~/present.svg";
+
+
 
 
 export default function ClaimPage({params: {key}}: any) {
@@ -57,7 +60,7 @@ export default function ClaimPage({params: {key}}: any) {
         }
     }, [isSuccess]);
 
-    const ownerName = useEnsOrFormattedAddress(owner as Address, chainId);
+    const ownerName = useEnsOrFormattedAddress(owner as Address);
 
     if (isConnecting || !isLoaded || mintedTokenId == undefined) {
         return <LoadingCard
@@ -85,8 +88,20 @@ export default function ClaimPage({params: {key}}: any) {
         containerClassName=' overflow-y-auto'
         controls={<Controls/>}>
         <div className="flex flex-col items-center gap-2">
-            <div className="p-2 rounded-full bg-gray-800 flex justify-center items-center">
-                <SenderToUser className='w-20 h-10'/>
+            <div className="p-3 gap-1.5 rounded-full bg-gray-800 flex justify-center items-center">
+                <Blockies
+                    seed="Jeremya"
+                    size={8}
+                    scale={3}
+                    color="#F15025"
+                    bgColor="#fbc7ad"
+                    spotColor="#202020"
+                    className="rounded-full h-6 w-6"
+                />
+                <p className='text-xl leading-none before:content-["»"] before:absolute before:inset-0 before:pl-0.5 h-6 w-4 relative before:text-center'>
+
+                </p>
+                <Present className='w-6 h-6'/>
             </div>
             <h1 className="text-lg sm:text-xl md:text-2xl"><span
                 className="text-red-500">{ownerName ?? 'Someone'}</span> sent you a
