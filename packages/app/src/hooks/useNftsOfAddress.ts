@@ -7,6 +7,7 @@ export type NftListItem = {
     contract_type: 'ERC1155' | 'ERC721';
     media?: {
         original_media_url?: string;
+        mimetype?: string;
     };
     name?: string;
 }
