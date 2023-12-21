@@ -2,9 +2,9 @@ import {ContentCard} from "@/app/components/content/ContentCard";
 import Button from "@/app/components/button/Button";
 import {AiOutlinePlus} from "react-icons/ai";
 import {ContentTitle} from "@/app/components/content/ContentRow";
-import {useAccount, useBalance} from "wagmi";
+import {useAccount, useBalance, useNetwork} from "wagmi";
 import {useEffect, useMemo, useState} from "react";
-import {parseEther} from "ethers";
+import {formatEther, formatUnits, parseEther} from "ethers";
 import clsxm from "@/src/lib/clsxm";
 import {useMintStore} from "@/src/stores/useMintStore";
 import usePackdAddresses from "@/src/hooks/usePackdAddresses";
@@ -14,6 +14,7 @@ import {FiArrowLeft, FiArrowRight} from "react-icons/fi";
 import Erc721Card from "@/app/mint/modules/Erc721Module";
 import {BsX} from "react-icons/bs";
 import TokenInput, {TokenSelectorDialog} from "@/app/components/web3/TokenSelectorDialog";
+import {useEstimateMinGasFee} from "@/src/hooks/useMinGasCost";
 
 
 export const AssetsForm = () => {
@@ -24,6 +25,9 @@ export const AssetsForm = () => {
     const addresses = usePackdAddresses();
     const modules = useMintStore(state => state.modules);
     const isAllModulesValid = useMemo(() => modules.every(m => m.isValid), [modules]);
+
+    const minGasCost = useEstimateMinGasFee(modules);
+    const {chain} = useNetwork();
     useAssetsControls({isEthAmountValid, isAllModulesValid});
     const moduleComp = useMemo(() => modules.map((module) => {
         if (module.moduleAddress === addresses.ERC721Module) {
@@ -77,6 +81,9 @@ export const AssetsForm = () => {
                             }
                         }}
                     />
+                    {
+                        !!minGasCost && ethAmount > 0 && minGasCost > ethAmount && <span className='text-red-500 font-bold text-sm'>Not enough {chain?.nativeCurrency?.symbol} to cover opening cost. Please include at least {formatUnits(minGasCost, chain?.nativeCurrency?.decimals ?? 18)} {chain?.nativeCurrency?.symbol}  </span>
+                    }
                 </ContentCard>
                 {
                     moduleComp
@@ -160,3 +167,4 @@ const useOwnEthBalance = () => {
     const {data: ethBalance, fetchStatus} = useBalance({address});
     return {ethBalance, fetchStatus}
 }
+

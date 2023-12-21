@@ -1,12 +1,12 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {BsChevronDown, BsSearch, BsX} from "react-icons/bs";
-import {Address, useAccount, useBalance, useToken} from "wagmi";
+import {Address, useAccount, useBalance, useNetwork, useToken} from "wagmi";
 import Modal from "@/app/components/dialog/Modal";
-import Icon from '~/chain.svg'
 import {formatUnits, parseUnits} from "ethers";
 import clsxm from "@/src/lib/clsxm";
-import {TokenData, useFilteredTokenList} from "@/src/hooks/useTokenList";
-import Button from "@/app/components/button/Button";
+import {TokenData, useFilteredTokenList, useTokenList} from "@/src/hooks/useTokenList";
+import {isAddress} from "viem";
+import Image from "next/image";
 
 export default function TokenInput({token, value, onTokenSelected, onValueChanged, autoOpenModal}: {
     token?: Address,
@@ -39,6 +39,19 @@ export default function TokenInput({token, value, onTokenSelected, onValueChange
 
     const isEditable = useMemo(() => onValueChanged, [onValueChanged]);
     const inputRef = useRef<HTMLInputElement>(null)
+    const {chain} = useNetwork();
+    const {tokenList: availableTokens} = useTokenList({chainId:chain?.id ?? 1})
+    const icon = useMemo(() => {
+        if (!token || !availableTokens || !isAddress(token)) {
+            return <Image width={24} height={24} src='/p.png' alt="Unknown token icon" className=' mr-1 h-4 w-4 shrink-0'/>
+        }
+        const tokenData = availableTokens.find(t => t.address == token);
+        if (!tokenData) {
+            return <Image width={24} height={24} src='/p.png' alt="Unknown token icon" className=' mr-1 h-4 w-4 shrink-0'/>
+        }
+        // eslint-disable-next-line @next/next/no-img-element
+        return <img src={tokenData.logoURI} alt={tokenData.name} className='h-4 mr-1 shrink-0'/>
+    }, [availableTokens, token]);
     useEffect(() => {
         inputRef.current!.value = formatUnits(value ?? 0n, tokenData?.decimals ?? 18);
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,7 +75,7 @@ export default function TokenInput({token, value, onTokenSelected, onValueChange
 
             <button onClick={() => onValueChanged && setIsOpen(true)}
                     className='absolute pl-2 left-0 bottom-0 top-0 flex items-center justify-center text-sm font-semibold'>
-                {token ? <><Icon className="mr-1 h-4 shrink-0"/> {tokenData?.name}</> : 'Select token'}
+                {token ? <>{icon} {tokenData?.name}</> : 'Select token'}
                 {onTokenSelected && <BsChevronDown
                     className='text-base ml-1 shrink-0'/>}
             </button>
@@ -154,7 +167,7 @@ function TokenSearchItem({token, onClick}: {
         onClick={onClick}
         disabled={isLoading || isError}
         className=" text-left flex items-center p-1 hover:border-gray-500 p rounded-lg border border-transparent">
-        {token.logoURI ? <img src={token.logoURI} alt={name} className='h-6 mr-2'/> : <Icon className='h-6 mr-2'/>}
+        {token.logoURI ? <img src={token.logoURI} alt={name} className='h-6 mr-2'/> : <Image width={24} height={24} src='/p.png' alt="Unknown token icon" className='h-6 mr-2'/>}
 
         <>
             <div className='flex flex-col grow'>

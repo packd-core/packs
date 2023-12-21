@@ -73,7 +73,6 @@ export default function AddNftModal({isOpen, setIsOpen, onAdd}: {
                     functionName: 'tokenURI',
                     args: [tokenId!]
                 }).then((tokenURI) => {
-                    console.log({tokenId, tokenURI})
                     if (!tokenURI) return {
                         name,
                         token_address: contractAddress,
@@ -81,7 +80,6 @@ export default function AddNftModal({isOpen, setIsOpen, onAdd}: {
                         contract_type: 'ERC721',
                     } as NftListItem;
                     return fetch(tokenURI).then((res) => res.json()).then((res) => {
-                        console.log(res)
                         return {
                             name,
                             token_address: contractAddress,
@@ -95,7 +93,6 @@ export default function AddNftModal({isOpen, setIsOpen, onAdd}: {
 
             }));
         })
-        console.log({name, items})
         return items;
 
 
