@@ -119,13 +119,14 @@ const MintPageControls = () => {
 const MintPageContent = () => {
     const step = usePackState(state => state.step);
     const modules = useMintStore(state => state.modules);
+    const manualApprove = useMintStore(state => state.manualApprove);
     const nextStep = usePackState(state => state.nextStep)
     const isAllApproved = useMemo(() => modules.every(m => m.isApproved), [modules]);
     useEffect(() => {
-        if (isAllApproved && step === 1) {
+        if (isAllApproved && step === 1 && !manualApprove) {
             nextStep();
         }
-    }, [isAllApproved, step, nextStep]);
+    }, [isAllApproved, step, nextStep, manualApprove]);
     return useMemo(() => {
         switch (step) {
             case 0:

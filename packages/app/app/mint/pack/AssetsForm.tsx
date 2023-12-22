@@ -26,6 +26,10 @@ export const AssetsForm = () => {
     const modules = useMintStore(state => state.modules);
     const isAllModulesValid = useMemo(() => modules.every(m => m.isValid), [modules]);
 
+    useEffect(() => {
+        mintStore.setManualApprove(false);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const minGasCost = useEstimateMinGasFee(modules);
     const {chain} = useNetwork();
     useAssetsControls({isEthAmountValid, isAllModulesValid});

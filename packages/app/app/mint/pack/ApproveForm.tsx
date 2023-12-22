@@ -3,7 +3,7 @@ import Button from "@/app/components/button/Button";
 import {HelpItem} from "@/app/components/content/HelpItem";
 import {ContentTitle} from "@/app/components/content/ContentRow";
 import {usePackState} from "@/app/mint/usePackState";
-import {useEffect, useMemo} from "react";
+import {useEffect, useMemo, useRef} from "react";
 import {FiArrowLeft, FiArrowRight} from "react-icons/fi";
 import clsxm from "@/src/lib/clsxm";
 import {Module, useMintStore} from "@/src/stores/useMintStore";
@@ -17,13 +17,13 @@ import {
 } from "@/app/abi/generated";
 import usePackdAddresses from "@/src/hooks/usePackdAddresses";
 
-function ApproveToken({module}: { module: Module }) {
+function ApproveToken({module, onStarted}: { module: Module, onStarted: () => void }) {
     const addresses = usePackdAddresses();
     const {address} = useAccount()
     const {data: tokenData} = useToken({address: module.address})
     const {data: dataAllowance, refetch} = useErc20Allowance({address: module.address, args: [address!, addresses.PackMain], staleTime: 5},)
     const {config} = usePrepareErc20Approve({address: module.address, args: [addresses.PackMain, module.value!]})
-    const {data: dataApprove, write, isSuccess} = useErc20Approve(config)
+    const {data: dataApprove, write, isSuccess,  isLoading: isConfirmLoading} = useErc20Approve(config)
 
     const {isLoading, isSuccess: isTransactionSuccess} = useWaitForTransaction({hash: dataApprove?.hash})
     useEffect(() => {
@@ -34,23 +34,28 @@ function ApproveToken({module}: { module: Module }) {
     const isApproved = useMemo(() => (dataAllowance ?? 0) >= module.value!, [dataAllowance, module])
     const setApproved = useMintStore(state => state.setApproved)
     useEffect(() => {
+        if (isLoading) {
+            onStarted();
+        }
+    }, [isLoading, onStarted]);
+    useEffect(() => {
         if (isApproved) {
             setApproved(module)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isApproved, setApproved]);
-    return <ApproveItem name={tokenData?.name ?? 'Loading...'} address={module.address!} isLoading={isLoading}
-                        isApproved={isApproved} onClick={() => write && write()}/>;
+    return <ApproveItem name={tokenData?.name ?? 'Loading...'} address={module.address!} isLoading={isLoading || isConfirmLoading}
+                        isApproved={isApproved} onClick={() => write &&  write()}/>;
 
 }
 
-function ApproveNft({module}: { module: Module }) {
+function ApproveNft({module, onStarted}: { module: Module, onStarted: () => void }) {
     const addresses = usePackdAddresses();
     const {data: name} = useErc721Name({address: module.address})
     const {data: dataApprovedFor} = useErc721GetApproved({address: module.address, args: [module.value!], watch: true})
     const isApproved = useMemo(() => dataApprovedFor === addresses.PackMain, [dataApprovedFor, addresses.PackMain]);
     const {config} = usePrepareErc721Approve({address: module.address, args: [addresses.PackMain, module.value!]})
-    const {data, write} = useErc721Approve(config);
+    const {data, write, isLoading: isConfirmLoading} = useErc721Approve(config);
     const {isLoading} = useWaitForTransaction({hash: data?.hash})
     const setApproved = useMintStore(state => state.setApproved)
     useEffect(() => {
@@ -59,7 +64,12 @@ function ApproveNft({module}: { module: Module }) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isApproved, setApproved]);
-    return <ApproveItem name={`${name} ${module.value}`} address={module.moduleAddress} isLoading={isLoading}
+    useEffect(() => {
+        if (isLoading) {
+            onStarted();
+        }
+    }, [isLoading, onStarted]);
+    return <ApproveItem name={`${name} ${module.value}`} address={module.moduleAddress} isLoading={isConfirmLoading || isLoading}
                         isApproved={isApproved} onClick={() => write && write()}/>;
 }
 
@@ -79,6 +89,7 @@ export const ApproveForm = () => {
     const modules = useMintStore(state => state.modules);
     const addresses = usePackdAddresses();
     const isAllApproved = useMemo(() => modules.every(m => m.isApproved), [modules]);
+    const setManualApproval = useMintStore(state => state.setManualApprove)
     useEffect(() => {
         setControls(<div className='w-full flex justify-between py-1'>
             <Button
@@ -105,8 +116,8 @@ export const ApproveForm = () => {
             </HelpItem>
             <ContentTitle>Approve tokens</ContentTitle>
             {modules.map((value, index) => {
-                if (value.moduleAddress === addresses.ERC20Module) return (<ApproveToken key={index} module={value}/>)
-                if (value.moduleAddress === addresses.ERC721Module) return (<ApproveNft key={index} module={value}/>)
+                if (value.moduleAddress === addresses.ERC20Module) return (<ApproveToken key={index} module={value} onStarted={() => setManualApproval(true)}/>)
+                if (value.moduleAddress === addresses.ERC721Module) return (<ApproveNft key={index} module={value} onStarted={() => setManualApproval(true)}/>)
                 return <ContentCard key={index} className="self-stretch"> Unknown module</ContentCard>
             })}
 

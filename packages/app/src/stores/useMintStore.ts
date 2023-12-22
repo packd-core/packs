@@ -25,7 +25,9 @@ type MintState = {
     removeModule: (module: Module) => void
     setApproved: (module: Module) => void
     setClaimKey: (claimKey: ClaimKey) => void
-    reset: () => void
+    reset: () => void,
+    manualApprove: boolean,
+    setManualApprove: (manualApprove: boolean) => void
 }
 
 export const useMintStore = create<MintState>()((set, get) => ({
@@ -48,5 +50,7 @@ export const useMintStore = create<MintState>()((set, get) => ({
     removeModule: (module) => set((state) => ({modules: state.modules.filter(m => m.id !== module.id)})),
     setApproved: (module) => set((state) => ({modules: state.modules.map(m => m === module ? {...m, isApproved: true} : m)})),
     setClaimKey: (claimKey) => set((state) => ({claimKey})),
-    reset: () => set((state) => ({eth: BigInt(0), modules: [], claimKey: null}))
+    reset: () => set((state) => ({eth: BigInt(0), modules: [], claimKey: null, manualApprove: false})),
+    manualApprove: false,
+    setManualApprove: (manualApprove) => set((state) => ({manualApprove})),
 }))
