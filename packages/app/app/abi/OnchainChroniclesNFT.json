@@ -361,6 +361,27 @@
   },
   {
     "type": "function",
+    "name": "safeMintBatch",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "to_"
+      },
+      {
+        "type": "uint256",
+        "name": "collectionId_"
+      },
+      {
+        "type": "uint256",
+        "name": "batchSize_"
+      }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
     "name": "safeTransferFrom",
     "constant": false,
     "payable": false,

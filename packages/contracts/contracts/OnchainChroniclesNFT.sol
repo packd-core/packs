@@ -107,6 +107,27 @@ contract OnchainChroniclesNFT is
         _nextTokenId++;
     }
 
+    function safeMintBatch(
+        address to_,
+        uint256 collectionId_,
+        uint256 batchSize_
+    ) external onlyOwner {
+        // Check that the collection exists
+        if (collectionId_ >= nextCollectionId)
+            revert InvalidCollectionId(collectionId_, nextCollectionId);
+
+        // Mint the new tokens
+        for (uint256 i = 0; i < batchSize_; i++) {
+            _safeMint(to_, _nextTokenId);
+
+            // Associate the newly minted token with the collection
+            tokenToCollectionId[_nextTokenId] = collectionId_;
+
+            // Increment the next token id
+            _nextTokenId++;
+        }
+    }
+
     // ---------- Views ----------------------
 
     /**
@@ -118,10 +139,8 @@ contract OnchainChroniclesNFT is
     function tokenURI(
         uint256 tokenId
     ) public view override(ERC721, ERC721URIStorage) returns (string memory) {
-        // Retrieve the collection id associated with the token
-        uint256 collectionId = tokenToCollectionId[tokenId];
         // Fetch the token URI from the collection and return it
-        return collections[collectionId].tokenURI;
+        return collections[tokenToCollectionId[tokenId]].tokenURI;
     }
 
     /**

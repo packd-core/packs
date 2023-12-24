@@ -1,0 +1,40 @@
+{
+  "name": "Onchain World Manual: The Lost Edition",
+  "description": "This should not exist. Someone forgot that there is a collection 0",
+  "external_url": "https://app.packd.io",
+  "attributes": [
+    {
+      "trait_type": "Edition",
+      "value": "The Lost Edition"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Artifact"
+    },
+    {
+      "trait_type": "Volume",
+      "value": "0"
+    },
+    {
+      "trait_type": "Set",
+      "value": "Pre Genesis Edition"
+    },
+    {
+      "trait_type": "Author",
+      "value": "PACKD"
+    },
+    {
+      "trait_type": "Year",
+      "value": "20XX"
+    },
+    {
+      "trait_type": "Month",
+      "value": "Janbruary"
+    },
+    {
+      "trait_type": "Number of Pages",
+      "value": "69"
+    }
+  ],
+  "image": "ipfs://QmNWZA37keCe98HNCrhZZaLV1Mdc3e9ep1sLqFEWBryGXV"
+}

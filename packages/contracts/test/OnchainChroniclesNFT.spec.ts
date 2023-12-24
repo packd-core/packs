@@ -144,5 +144,41 @@ describe.only("OnchainChroniclesNFT", function () {
       );
       expect(await onchainChroniclesNFT.tokenURI(1)).to.equal("Second");
     });
+    it("Should mint batch new tokens", async function () {
+      // CollectionId 0
+      // Batch of 3
+      await onchainChroniclesNFT
+        .connect(alice)
+        .safeMintBatch(await alice.getAddress(), 0, 3);
+      expect(
+        await onchainChroniclesNFT.balanceOf(await alice.getAddress())
+      ).to.gte(3);
+      expect(await onchainChroniclesNFT.ownerOf(2)).to.equal(
+        await alice.getAddress()
+      );
+      expect(await onchainChroniclesNFT.ownerOf(3)).to.equal(
+        await alice.getAddress()
+      );
+      expect(await onchainChroniclesNFT.ownerOf(4)).to.equal(
+        await alice.getAddress()
+      );
+      expect(await onchainChroniclesNFT.tokenURI(2)).to.equal("First");
+      expect(await onchainChroniclesNFT.tokenURI(3)).to.equal("First");
+      expect(await onchainChroniclesNFT.tokenURI(4)).to.equal("First");
+    });
+    it("Should not mint batch new tokens if collection does not exist", async function () {
+      await expect(
+        onchainChroniclesNFT
+          .connect(alice)
+          .safeMintBatch(await alice.getAddress(), 2, 3)
+      ).to.revertedWithCustomError(onchainChroniclesNFT, "InvalidCollectionId");
+    });
+    it("Should not mint batch new tokens if not owner", async function () {
+      await expect(
+        onchainChroniclesNFT
+          .connect(deployer)
+          .safeMintBatch(await alice.getAddress(), 0, 3)
+      ).to.revertedWith("Ownable: caller is not the owner");
+    });
   });
 });
