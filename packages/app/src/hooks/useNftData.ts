@@ -1,7 +1,7 @@
 import { Address, useContractRead, useNetwork } from "wagmi";
 import { erc1155HolderABI, useErc721TokenUri } from "@/app/abi/generated";
 import { useEffect, useMemo, useState } from "react";
-import { erc1155 } from "@contracts/types/generated/@openzeppelin/contracts/token";
+// import { erc1155 } from "@contracts/types/generated/@openzeppelin/contracts/token";
 
 export type NftData = {
   description?: string;
