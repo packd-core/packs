@@ -1,40 +1,40 @@
 {
-    "name": "Onchain World Manual: Christmas Edition",
-    "description": "Christmas is onchain and we're celebrating with a special edition of the Onchain World Manual.",
-    "external_url": "https://app.packd.io",
-    "attributes": [
-        {
-            "trait_type": "Edition",
-            "value": "Christmas Edition"
-        },
-        {
-            "trait_type": "Rarity",
-            "value": "Legendary"
-        },
-        {
-            "trait_type": "Volume",
-            "value": "1"
-        },
-        {
-            "trait_type": "Set",
-            "value": "Genesis Collection"
-        },
-        {
-            "trait_type": "Author",
-            "value": "PACKD"
-        },
-        {
-            "trait_type": "Year",
-            "value": "2023"
-        },
-        {
-            "trait_type": "Month",
-            "value": "December"
-        },
-        {
-            "trait_type": "Number of Pages",
-            "value": "188"
-        }
-    ],
-    "image": "ipfs://QmNWZA37keCe98HNCrhZZaLV1Mdc3e9ep1sLqFEWBryGXV"
+  "name": "Onchain Chronicles: Christmas Edition",
+  "description": "Christmas is onchain and we're celebrating with a special edition of Onchain Chronicles.",
+  "external_url": "https://app.packd.io",
+  "attributes": [
+    {
+      "trait_type": "Edition",
+      "value": "Christmas Edition"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Legendary"
+    },
+    {
+      "trait_type": "Volume",
+      "value": 1
+    },
+    {
+      "trait_type": "Collection",
+      "value": "Genesis Collection"
+    },
+    {
+      "trait_type": "Author",
+      "value": "PACKD"
+    },
+    {
+      "trait_type": "Year",
+      "value": 2023
+    },
+    {
+      "trait_type": "Month",
+      "value": "December"
+    },
+    {
+      "trait_type": "Number of Pages",
+      "value": 188
+    }
+  ],
+  "image": "ipfs://QmUJnstvPXbzu2oUpLsp7D5X9XkARPN9EjLt2iRuGLyyGt"
 }
