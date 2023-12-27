@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useAccount, useEnsAvatar } from "wagmi";
 import { useClaimState } from "@/app/claim/[key]/useClaimState";
 import { useEthersSigner } from "@/src/hooks/useEthersSigner";
 import type {
@@ -20,6 +21,7 @@ export function useEstimateRefundValue() {
   const keySignManager = useKeySignManager();
   const signer = useEthersSigner();
   const addresses = usePackdAddresses();
+  const { address } = useAccount();
 
   const [sigData, setSigData] = useState<{
     signatureOwner: string;
@@ -44,6 +46,10 @@ export function useEstimateRefundValue() {
     [packData?.moduleData, tokenId]
   );
   useEffect(() => {
+    if (!address) {
+      return;
+    }
+
     keySignManager
       .generateDataForEstimation(
         claimPrivateKey ?? "",
@@ -60,6 +66,7 @@ export function useEstimateRefundValue() {
     sigOwnerData,
     claimPrivateKey,
     tokenId,
+    address,
   ]);
 
   let claimData: ClaimData = {
@@ -68,7 +75,7 @@ export function useEstimateRefundValue() {
     sigClaimer: (sigData?.signatureClaimer ?? "") as `0x${string}`,
     claimer: (sigData?.address ?? "") as `0x${string}`,
   };
-  const { config, isLoading:isPreparing } = usePreparePackMainOpen({
+  const { config, isLoading: isPreparing } = usePreparePackMainOpen({
     address: addresses.PackMain,
     args: [claimData],
     enabled: !!claimData.sigOwner,
