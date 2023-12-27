@@ -117,17 +117,29 @@ export default function ClaimPage({ params: { key } }: any) {
           <span className="text-red-500">{ownerName ?? "Someone"}</span> sent
           you a pack
         </h1>
-        <CurrentChain className="my-4" />
+        {isConnected && <CurrentChain className="my-4" />}
 
-        {chainId !== chain?.id ? (
-          <WrongChain chainId={chainId} />
+        {isConnected ? (
+          chainId !== chain?.id ? (
+            <WrongChain chainId={chainId} />
+          ) : (
+            <ClaimContent step={step} />
+          )
         ) : (
-          <ClaimContent step={step} />
+          <ConnectWallet />
         )}
       </div>
     </Card>
   );
 }
+
+const ConnectWallet = () => {
+  return (
+    <div className="flex flex-col items-center">
+      <ConnectWalletForm />
+    </div>
+  );
+};
 
 const WrongChain = ({ chainId }: { chainId: number }) => {
   const { chains = [] } = useNetwork();
