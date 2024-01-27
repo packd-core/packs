@@ -1,7 +1,7 @@
 import {create} from 'zustand'
-import {Address} from "wagmi";
 import {ReactNode} from "react";
-import {RawCreationData} from "@/src/hooks/usePackCreatedByTokenId";
+import {FullPackDetail} from "@/src/lib/fetchFullPackDetail";
+import {RawCreationData} from "@/src/lib/fetchPackCreatedByTokenId";
 
 
 type ClaimState = {
@@ -24,11 +24,14 @@ type ClaimState = {
     packData?:RawCreationData,
     setPackData: (packData: RawCreationData) => void,
     nextStep: () => void,
+    initialStep: () => void,
     previousStep: () => void,
     controls: ReactNode,
     setControls: (controls: ReactNode) => void,
     setChainId: (chainId: number) => void,
     chainId?: number,
+    tokenState?: bigint,
+    setFullPackDetails: (details: FullPackDetail) => void,
     reset: () => void
 
 }
@@ -46,6 +49,7 @@ export const useClaimState = create<ClaimState>()((set) => ({
     sendingToRelayer: false,
     packData: undefined,
     chainId: undefined,
+    tokenState: undefined,
     setChainId: (chainId) => set((state) => ({chainId})),
     setPackData: (packData) => set((state) => ({packData})),
     setSendingToRelayer: (sendingToRelayer) => set((state) => ({sendingToRelayer})),
@@ -58,5 +62,18 @@ export const useClaimState = create<ClaimState>()((set) => ({
     nextStep: () => set((state) => ({step: state.step + 1})),
     previousStep: () => set((state) => ({step: state.step - 1})),
     setControls: (controls) => set((state) => ({controls})),
+    setFullPackDetails: (details) => set((state) => {
+        if (!details) return {}
+        return ({
+            mintedTokenId: BigInt(details.tokenId),
+            chainId: details.chainId,
+            packData: details.content,
+            owner: details.content?.owner,
+            privateKey: details.privateKey,
+            maxRefundValue: details.content?.ethValue,
+            tokenState: details.stateBlock
+        });
+    }),
+    initialStep: () => set((state) => ({step: 0})),
     reset: () => set((state) => ({step: 0, error: false, hash: undefined, controls: null, mintedTokenId: undefined, signedMessage: undefined, maxRefundValue: BigInt(0)}))
 }))

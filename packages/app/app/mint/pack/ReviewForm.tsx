@@ -70,7 +70,7 @@ export const ReviewForm = () => {
         </div>);
 };
 
-export function ReviewData({eth, modules}: { eth: bigint, modules: Module[] }) {
+export function ReviewData({eth, modules, chainId}: { eth: bigint, modules: Module[], chainId?: number }) {
     return <>
         <ContentCard className="self-stretch">
             <div className="flex justify-between">
@@ -79,6 +79,6 @@ export function ReviewData({eth, modules}: { eth: bigint, modules: Module[] }) {
             <input className="text-right w-full " disabled={true}
                    value={formatEther(eth ?? 0)}/>
         </ContentCard>
-        <Modules modules={modules}  />
+        <Modules modules={modules} chainId={chainId}  />
     </>
 }

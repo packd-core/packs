@@ -22,33 +22,34 @@ import useEnsOrFormattedAddress from "@/src/hooks/useEnsOrAddress";
 import Button from "@/app/components/button/Button";
 import Blockies from "react-blockies";
 import Present from "~/present.svg";
+import {useFullPackDetail} from "@/src/lib/useFullPackDetail";
 
 export default function ClaimPage({ params: { key } }: any) {
   const { isConnected, isConnecting, address } = useAccount();
   const { chain } = useNetwork();
-  const { tokenId, version, chainId, privateKey } = useDecodeUrl(key);
-  const setMintedTokenId = useClaimState((state) => state.setMintedTokenId);
   const mintedTokenId = useClaimState((state) => state.mintedTokenId);
   const resetStepper = useClaimState((state) => state.reset);
-  const setPrivateKey = useClaimState((state) => state.setPrivateKey);
-  const setChainId = useClaimState((state) => state.setChainId);
+  const setFullPackDetails = useClaimState((state) => state.setFullPackDetails);
+  const goToInitialStep = useClaimState((state) => state.initialStep);
+  const {data: tokenData, isLoading: isTokenDataLoading, isError: isTokenDataError} = useFullPackDetail({key});
   useEffect(() => {
     resetStepper();
-    if (isNaN(tokenId)) {
-      return;
-    }
-    setMintedTokenId(BigInt(tokenId));
-    setPrivateKey(privateKey);
-    setChainId(chainId);
+    if (tokenData == undefined) return;
+    setFullPackDetails(tokenData);
   }, [
-    chainId,
-    privateKey,
+    tokenData,
     resetStepper,
-    setChainId,
-    setMintedTokenId,
-    setPrivateKey,
-    tokenId,
+    setFullPackDetails,
   ]);
+
+  useEffect(() => {
+    if (chain?.id !== tokenData?.chainId) {
+      goToInitialStep();
+    }
+  }, [chain?.id, goToInitialStep, tokenData?.chainId]);
+  useEffect(() => {
+      goToInitialStep();
+  }, [address, goToInitialStep]);
 
   const isLoaded = useHydrated();
 
@@ -105,7 +106,7 @@ export default function ClaimPage({ params: { key } }: any) {
       <div className="flex flex-col items-center gap-2">
         <div className="p-3 gap-1.5 rounded-full bg-gray-800 flex justify-center items-center">
           <Blockies
-            seed={owner as string}
+            seed={(owner??'') as string}
             size={8}
             scale={3}
             className="rounded-full h-6 w-6"
@@ -120,14 +121,13 @@ export default function ClaimPage({ params: { key } }: any) {
         {isConnected && <CurrentChain className="my-4" />}
 
         {isConnected ? (
-          chainId !== chain?.id ? (
-            <WrongChain chainId={chainId} />
-          ) : (
-            <ClaimContent step={step} />
-          )
+          tokenData?.chainId !== chain?.id ? (
+            <WrongChain chainId={tokenData?.chainId ?? 1} />
+          ) : null
         ) : (
           <ConnectWallet />
         )}
+        <ClaimContent step={step} />
       </div>
     </Card>
   );

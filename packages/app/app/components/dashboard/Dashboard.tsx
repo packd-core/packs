@@ -8,16 +8,17 @@ import {PackActionsMenu} from "@/app/components/dashboard/PackActionsMenu";
 import {Address, useAccount, useToken} from "wagmi";
 import {useBalanceOf} from "@/src/hooks/useBalanceOf";
 import {useTokenOfOwnerByIndex} from "@/src/hooks/useTokenOfOwnerByIndex";
-import {useErc721Name, usePackMainAccount, usePackMainPackState} from "@/app/abi/generated";
+import {useErc721Name, usePackMainPackState} from "@/app/abi/generated";
 import usePackdAddresses from "@/src/hooks/usePackdAddresses";
-import {RawCreationData, usePackCreatedByTokenId} from "@/src/hooks/usePackCreatedByTokenId";
+import {usePackCreatedByTokenId} from "@/src/hooks/usePackCreatedByTokenId";
 import {formatEther, formatUnits} from "ethers";
 import {ContentCard} from "@/app/components/content/ContentCard";
 import {ContentTitle} from "@/app/components/content/ContentRow";
 import {Module} from "@/src/stores/useMintStore";
-import { GiToken} from "react-icons/gi";
+import {GiToken} from "react-icons/gi";
 import {RiNftLine} from "react-icons/ri";
 import {usePackRevokedListener} from "@/src/event/events";
+import {RawCreationData} from "@/src/lib/fetchPackCreatedByTokenId";
 
 export enum PackState {
     EMPTY = 'Empty',
@@ -49,7 +50,7 @@ export default function Dashboard() {
     const [selectedTypes, setSelectedTypes] = useState<PackState[]>([PackState.CREATED])
     const {address} = useAccount();
 
-    const {balance, isLoading, isError, refetch} = useBalanceOf(
+    const {balance, refetch} = useBalanceOf(
         address as Address
     );
 
@@ -70,35 +71,30 @@ export default function Dashboard() {
     )
 }
 
-function PackList({count,selectedTypes}: { count: number, selectedTypes: PackState[] }) {
+function PackList({count, selectedTypes}: { count: number, selectedTypes: PackState[] }) {
     return <div className='flex flex-col gap-4'>
-        {[...Array(count)].map((_, id) => <PackItem key={id} index={id} selectedTypes={selectedTypes} />)}
+        {[...Array(count)].map((_, id) => <PackItem key={id} index={id} selectedTypes={selectedTypes}/>)}
     </div>
 }
 
 function PackItem({index, selectedTypes}: { index: number, selectedTypes: PackState[] }) {
     const {address: owner} = useAccount();
     const addresses = usePackdAddresses();
-    const {tokenId, isLoading, isError, refetch} = useTokenOfOwnerByIndex(
+    const {tokenId} = useTokenOfOwnerByIndex(
         owner!,
         BigInt(index)
     );
 
-    const {data: rawState, isLoading: isStateLoading} = usePackMainPackState({
+    const {data: rawState} = usePackMainPackState({
         enabled: tokenId !== undefined,
         args: [tokenId!],
         address: addresses.PackMain
     });
-    const {data: account, isLoading: isAccountLoading} = usePackMainAccount({
-        enabled: tokenId !== undefined,
-        args: [tokenId!],
-        address: addresses.PackMain
-    })
     const state = useMemo(() => Object.values(PackState)[rawState ?? 0], [rawState]);
-    const visibility = selectedTypes.length ===0 || selectedTypes.includes(state);
-    return visibility? (<div className={clsxm('rounded-xl p-4 bg-[#F1F1F1]',
-        state == PackState.OPENED  && 'bg-[#DAE9E4] border border-[rgba(9,146,118,0.25)]'
-    )} >
+    const visibility = selectedTypes.length === 0 || selectedTypes.includes(state);
+    return visibility ? (<div className={clsxm('rounded-xl p-4 bg-[#F1F1F1]',
+        state == PackState.OPENED && 'bg-[#DAE9E4] border border-[rgba(9,146,118,0.25)]'
+    )}>
         <div className='flex items-center'>
             <PackStateBadge packState={state}/>
             <div className='grow text-xs'></div>
@@ -124,14 +120,14 @@ function Modules({data, isError, isLoading}: { data?: RawCreationData, isLoading
     const addresses = usePackdAddresses();
     const modules = data?.fullModuleData ?? [];
     if (isLoading) return <PackModuleItem
-        icon={<AiOutlineLoading3Quarters  className='animate-spin'/>}
+        icon={<AiOutlineLoading3Quarters className='animate-spin'/>}
         value={''}
         name={'Loading...'}/>
     if (isError) return <PackModuleItem
         icon={<AiOutlineWarning/>}
         value={''}
         name={'Error...'}/>
-    return <> {modules.map((module, index) => {
+    return <> {modules?.map((module: Module) => {
         if (module.moduleAddress === addresses.ERC721Module) {
             return <PackModuleErc721 key={'' + module.address + module.value}
                                      module={module}/>
@@ -151,7 +147,7 @@ function PackModuleErc20({module}: { module: Module }) {
     const {data: tokenData} = useToken({address: module.address})
     return <PackModuleItem
         icon={<GiToken/>}
-        value={module.value ? formatUnits(module.value?.toString(), tokenData?.decimals ?? 18):''}
+        value={module.value ? formatUnits(module.value?.toString(), tokenData?.decimals ?? 18) : ''}
         name={tokenData?.symbol ?? 'Loading...'}/>
 }
 

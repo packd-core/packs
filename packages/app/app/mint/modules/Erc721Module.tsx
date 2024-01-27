@@ -12,18 +12,22 @@ import clsxm from "@/src/lib/clsxm";
 export default function Erc721Card({
   onClick,
   module,
+    chainId
 }: {
   onClick?: () => void;
   module: Module;
+  chainId?: number;
 }) {
   const { data: tokenName } = useErc721Name({ address: module.address });
   const { nftData, isLoading } = useNftData({
     address: module.address!,
     tokenId: module.value!,
+    chainId: chainId
   });
   const openSeaLink = useOpenSeaLink({
     address: module.address!,
     tokenId: module.value!,
+    chainId: chainId
   });
   // const {nftData, isLoading} = useNftData({tokenId: 5n, address: '0x5b90d70e55c6c2e45d969bacf0335916df7a2009', chainId: 1})
   const isVideo = nftData?.contentType?.includes("video") ?? false;
