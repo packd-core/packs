@@ -30,6 +30,7 @@ export default function ClaimPage({ params: { key } }: any) {
   const mintedTokenId = useClaimState((state) => state.mintedTokenId);
   const resetStepper = useClaimState((state) => state.reset);
   const setFullPackDetails = useClaimState((state) => state.setFullPackDetails);
+  const goToInitialStep = useClaimState((state) => state.initialStep);
   const {data: tokenData, isLoading: isTokenDataLoading, isError: isTokenDataError} = useFullPackDetail({key});
   useEffect(() => {
     resetStepper();
@@ -40,6 +41,12 @@ export default function ClaimPage({ params: { key } }: any) {
     resetStepper,
     setFullPackDetails,
   ]);
+
+  useEffect(() => {
+    if (chain?.id !== tokenData?.chainId) {
+      goToInitialStep();
+    }
+  }, [chain?.id, goToInitialStep, tokenData?.chainId]);
 
   const isLoaded = useHydrated();
 
@@ -113,9 +120,7 @@ export default function ClaimPage({ params: { key } }: any) {
         {isConnected ? (
           tokenData?.chainId !== chain?.id ? (
             <WrongChain chainId={tokenData?.chainId ?? 1} />
-          ) : (
-            <ClaimContent step={step} />
-          )
+          ) : null
         ) : (
           <ConnectWallet />
         )}
@@ -177,5 +182,8 @@ const ClaimContent = ({ step }: { step: number }) => {
 
 function Controls() {
   const item = useClaimState((state) => state.controls);
+  const chainId = useClaimState((state) => state.chainId);
+  const { chain } = useNetwork();
+  if (chainId !== chain?.id) return null;
   return <>{item}</>;
 }
