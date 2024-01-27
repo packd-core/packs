@@ -106,7 +106,6 @@ export default function AddNftModal({isOpen, setIsOpen, onAdd}: {
         if (filter && isAddress(filter)) {
             // if (!list.length && filter && isAddress(filter)) {
             queryNftAddress(filter).then(value => {
-                console.log({value})
                 setNftList(value);
             })
         }
