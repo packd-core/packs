@@ -8,12 +8,13 @@ import {TokenData, useFilteredTokenList, useTokenList} from "@/src/hooks/useToke
 import {isAddress} from "viem";
 import Image from "next/image";
 
-export default function TokenInput({token, value, onTokenSelected, onValueChanged, autoOpenModal}: {
+export default function TokenInput({token, value, onTokenSelected, onValueChanged, autoOpenModal, chainId}: {
     token?: Address,
     value?: bigint,
     onTokenSelected?: (address: Address) => void,
     onValueChanged?: (value: bigint, valid: boolean) => void,
-    autoOpenModal?: boolean
+    autoOpenModal?: boolean,
+    chainId?: number
 }) {
     const {address} = useAccount()
     const [isOpen, setIsOpen] = useState(false);
@@ -22,10 +23,11 @@ export default function TokenInput({token, value, onTokenSelected, onValueChange
             setIsOpen(true);
         }
     }, [autoOpenModal, token]);
-    const {data: tokenData} = useToken({address: token, enabled: !!token})
+    const {data: tokenData} = useToken({address: token, enabled: !!token, chainId: chainId})
     const {data: balance} = useBalance({
         address: address as Address,
         token: token as Address,
+        chainId: chainId,
         enabled: !!token
     })
 
@@ -40,7 +42,7 @@ export default function TokenInput({token, value, onTokenSelected, onValueChange
     const isEditable = useMemo(() => onValueChanged, [onValueChanged]);
     const inputRef = useRef<HTMLInputElement>(null)
     const {chain} = useNetwork();
-    const {tokenList: availableTokens} = useTokenList({chainId:chain?.id ?? 1})
+    const {tokenList: availableTokens} = useTokenList({chainId:chainId ?? chain?.id ?? 1})
     const icon = useMemo(() => {
         if (!token || !availableTokens || !isAddress(token)) {
             return <Image width={24} height={24} src='/p.png' alt="Unknown token icon" className=' mr-1 h-4 w-4 shrink-0'/>

@@ -126,29 +126,31 @@ export default async function handler(
 }
 
 function getSigner(chainId: number) {
-  function getRpcUrl() {
-    switch (chainId) {
-      case 1337:
-      case 31337:
-        return "http://localhost:8545";
-      case 1442:
-        return "https://rpc.public.zkevm-test.net";
-      case 5001:
-        return "https://rpc.testnet.mantle.xyz";
-      case 534351:
-        return "https://sepolia-rpc.scroll.io";
-      case 84531:
-        return "https://goerli.base.org";
-      case 8453:
-        return "https://mainnet.base.org";
-      default:
-        throw new Error(`Unsupported chainId: ${chainId}`);
-    }
-  }
+
 
   const pk = getRelayerAccount();
-  const provider = new JsonRpcProvider(getRpcUrl());
+  const provider = new JsonRpcProvider(getRpcUrl({chainId}));
   const signer = new Wallet(pk, provider);
   //const signer = new JsonRpcSigner(provider, account);
   return { account: signer.address, signer };
+}
+
+export function getRpcUrl({chainId}:{chainId: number}) {
+  switch (chainId) {
+    case 1337:
+    case 31337:
+      return "http://localhost:8545";
+    case 1442:
+      return "https://rpc.public.zkevm-test.net";
+    case 5001:
+      return "https://rpc.testnet.mantle.xyz";
+    case 534351:
+      return "https://sepolia-rpc.scroll.io";
+    case 84531:
+      return "https://goerli.base.org";
+    case 8453:
+      return "https://mainnet.base.org";
+    default:
+      throw new Error(`Unsupported chainId: ${chainId}`);
+  }
 }

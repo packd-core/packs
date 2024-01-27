@@ -13,34 +13,18 @@ export default function InitialForm() {
   const previousStep = useClaimState((state) => state.previousStep);
   const setControls = useClaimState((state) => state.setControls);
   const tokenId = useClaimState((state) => state.mintedTokenId);
-  const { packData, rawEth, isLoading } = usePackDataByTokenId(tokenId!);
-  const setMaxRefundValue = useClaimState((state) => state.setMaxRefundValue);
-  const setOwner = useClaimState((state) => state.setOwner);
-  const setPackData = useClaimState((state) => state.setPackData);
-  const addresses = usePackdAddresses();
-  const { data: rawState, isLoading: isStateLoading } = usePackMainPackState({
-    enabled: tokenId !== undefined && addresses.PackMain !== undefined,
-    args: [tokenId!],
-    address: addresses.PackMain,
-  });
+  const rawState = useClaimState((state) => state.tokenState);
+  const packData = useClaimState((state) => state.packData);
+  const chainId = useClaimState((state) => state.chainId);
   useEffect(() => {
-    setMaxRefundValue(rawEth ?? BigInt(0));
-  }, [rawEth, setMaxRefundValue]);
-  useEffect(() => {
-    if (packData) {
-      setOwner(packData.owner ?? "");
-      setPackData(packData);
-    }
-  }, [packData, setOwner]);
-  useEffect(() => {
-    const isClaimed = rawState === 2;
+    const isClaimed = rawState == BigInt(2);
     setControls(
       <div className={clsxm("w-full flex justify-end py-1", isClaimed && 'justify-center')}>
         {isClaimed && (
           <div className="text-center">This pack has already been claimed!</div>
         )}
 
-        {rawState === 1 && packData && (
+        {rawState === BigInt(1) && packData && (
           <Button
             onClick={nextStep}
             variant="navigation"
@@ -56,8 +40,9 @@ export default function InitialForm() {
     <div className="flex flex-col w-full gap-2">
       {
         <ReviewData
-          eth={rawEth ?? BigInt(0)}
+          eth={packData?.ethValue ?? BigInt(0)}
           modules={packData?.fullModuleData ?? []}
+          chainId={chainId}
         />
       }
     </div>

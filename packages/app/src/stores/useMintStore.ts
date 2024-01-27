@@ -10,6 +10,13 @@ export type Module = {
     id?: number,
     isValid?: boolean,
 }
+export type OfflineModule = {
+    symbol: string,
+    decimals: number,
+    icon?: string,
+    name: string,
+} & Module
+
 type ClaimKey = {
     private: string,
     public: string,
