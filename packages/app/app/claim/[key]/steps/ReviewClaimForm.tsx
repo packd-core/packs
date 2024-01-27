@@ -13,6 +13,7 @@ import { useGenerateClaimData } from "@/src/hooks/useGenerateClaimData";
 import usePackdAddresses from "@/src/hooks/usePackdAddresses";
 import useEnsOrFormattedAddress from "@/src/hooks/useEnsOrAddress";
 import { toast } from "react-toastify";
+import Blockies from "react-blockies";
 
 // @ts-ignore
 BigInt.prototype.toJSON = function () {
@@ -133,14 +134,31 @@ export default function ReviewClaimForm() {
   return (
     <div className="flex flex-col w-full gap-2 items-stretch">
       <div className="flex p-2 rounded-full bg-gray-800 items-center justify-around gap-4">
-        <div className="p-2 text-sm">
-          <div className="text-gray-400">From</div>
-          {ownerName}
+        <div className="p-2 text-sm flex items-center gap-2">
+          <Blockies
+              seed={(owner??'') as string}
+              size={8}
+              scale={3}
+              className="rounded-full h-6 w-6"
+          />
+          <div>
+            <div className="text-gray-400">From</div>
+            {ownerName}
+          </div>
         </div>
         <Arrow className="h-12 w-8" />
-        <div className="p-2 text-sm">
-          <div className="text-right text-gray-400">To</div>
-          {claimerName}
+        <div className="p-2 text-sm flex items-center  gap-2">
+
+          <div>
+            <div className="text-right text-gray-400">To</div>
+            {claimerName}
+          </div>
+          <Blockies
+              seed={(address??'') as string}
+              size={8}
+              scale={3}
+              className="rounded-full h-6 w-6"
+          />
         </div>
       </div>
       <ContentTitle>Contents</ContentTitle>
