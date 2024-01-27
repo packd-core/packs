@@ -1,10 +1,4 @@
 import {type NextRequest} from 'next/server'
-import {decodeUrl} from "@/src/lib/encodeUrl";
-import {PackMain__factory, PackNFT__factory} from "@/app/abi/types/factories/contracts";
-import {JsonRpcProvider} from "ethers";
-import {getRpcUrl} from "@/pages/api/claim";
-import {getAddressesByChainId} from "@/src/hooks/usePackdAddresses";
-import {fetchPackCreatedByTokenId} from "@/src/lib/fetchPackCreatedByTokenId";
 import {fetchFullPackDetail} from "@/src/lib/fetchFullPackDetail";
 
 // @ts-ignore
