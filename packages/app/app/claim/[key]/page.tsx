@@ -185,8 +185,5 @@ const ClaimContent = ({ step }: { step: number }) => {
 
 function Controls() {
   const item = useClaimState((state) => state.controls);
-  const chainId = useClaimState((state) => state.chainId);
-  const { chain } = useNetwork();
-  if (chainId !== chain?.id) return null;
   return <>{item}</>;
 }
