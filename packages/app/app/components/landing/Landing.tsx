@@ -50,7 +50,7 @@ function HowItWorksItem({ number, title, description }: HowItWorksItemProps) {
   return (
     <div className="max-w-[280px] w-full">
       <div className="flex justify-center items-center font-semibold">
-        <span className="text-7xl text-gray-300 font-extrabold mr-4">
+        <span className="text-7xl text-gray-300 font-extrabold mr-4 drop-shadow-[0_0px_2px_rgba(255,255,255,0.8)]">
           {number}.
         </span>
         <h3 className="text-3xl font-extrabold text-center text-gray-900">

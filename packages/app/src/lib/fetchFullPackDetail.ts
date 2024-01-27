@@ -1,10 +1,9 @@
 import {decodeUrl} from "@/src/lib/encodeUrl";
 import {JsonRpcProvider} from "ethers";
 import {getRpcUrl} from "@/pages/api/claim";
-import {getAddressesByChainId} from "@/src/hooks/usePackdAddresses";
 import {PackMain__factory, PackNFT__factory} from "@/app/abi/types/factories/contracts";
 import {fetchPackCreatedByTokenId} from "@/src/lib/fetchPackCreatedByTokenId";
-import {Module, OfflineModule} from "@/src/stores/useMintStore";
+import {getAddressesByChainId} from "@/src/lib/getAddressesByChainId";
 
 export type FullPackDetail = Awaited<ReturnType<typeof fetchFullPackDetail>>;
 export async function fetchFullPackDetail({key}:{key: string}) {

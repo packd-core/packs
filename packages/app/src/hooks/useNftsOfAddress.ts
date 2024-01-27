@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import {Address, useAccount, useNetwork} from "wagmi";
+import usePackdAddresses from "@/src/hooks/usePackdAddresses";
 
 export type NftListItem = {
     token_address: Address;
@@ -14,6 +15,7 @@ export type NftListItem = {
 export const useNftsOfAddress = () => {
     const {address} = useAccount();
     const {chain} = useNetwork()
+    const mainAddress = usePackdAddresses(chain?.id).PackMain.toLowerCase();
 
     const [nftList, setNftList] = useState<NftListItem[] | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +31,7 @@ export const useNftsOfAddress = () => {
                     throw new Error("Request failed");
                 }
                 return r.json();
-            })
+            }).then((r: NftListItem[]) => r.filter(nft => nft.token_address?.toLowerCase() !== mainAddress))
             .then(setNftList)
             .catch(() => {
                 setNftList([])

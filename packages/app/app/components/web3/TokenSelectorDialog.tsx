@@ -42,14 +42,16 @@ export default function TokenInput({token, value, onTokenSelected, onValueChange
     const isEditable = useMemo(() => onValueChanged, [onValueChanged]);
     const inputRef = useRef<HTMLInputElement>(null)
     const {chain} = useNetwork();
-    const {tokenList: availableTokens} = useTokenList({chainId:chainId ?? chain?.id ?? 1})
+    const {tokenList: availableTokens} = useTokenList({chainId: chainId ?? chain?.id ?? 1})
     const icon = useMemo(() => {
         if (!token || !availableTokens || !isAddress(token)) {
-            return <Image width={24} height={24} src='/p.png' alt="Unknown token icon" className=' mr-1 h-4 w-4 shrink-0'/>
+            return <Image width={24} height={24} src='/p.png' alt="Unknown token icon"
+                          className=' mr-1 h-4 w-4 shrink-0'/>
         }
         const tokenData = availableTokens.find(t => t.address == token);
         if (!tokenData) {
-            return <Image width={24} height={24} src='/p.png' alt="Unknown token icon" className=' mr-1 h-4 w-4 shrink-0'/>
+            return <Image width={24} height={24} src='/p.png' alt="Unknown token icon"
+                          className=' mr-1 h-4 w-4 shrink-0'/>
         }
         // eslint-disable-next-line @next/next/no-img-element
         return <img src={tokenData.logoURI} alt={tokenData.name} className='h-4 mr-1 shrink-0'/>
@@ -72,7 +74,8 @@ export default function TokenInput({token, value, onTokenSelected, onValueChange
                 <button className=" underline px-2 ml-1 rounded bg-gray-200/20" onClick={() => {
                     inputRef.current!.value = formatUnits(balance?.value ?? 0n, tokenData?.decimals ?? 18);
                     onValueChanged!(balance?.value ?? 0n, !!balance?.value);
-                }}>Max</button>
+                }}>Max
+                </button>
             </div>}
 
             <button onClick={() => onValueChanged && setIsOpen(true)}
@@ -120,6 +123,12 @@ export function TokenSelectorFrom({closeModal, onAdd}: {
 
     const {filteredTokens, setQuery} = useFilteredTokenList();
 
+    const [tokensWithoutBalance, setTokensWithoutBalance] = useState<TokenData[]>(filteredTokens);
+    const [tokensWithBalance, setTokensWithBalance] = useState<TokenData[]>([]);
+    useEffect(() => {
+        setTokensWithoutBalance(filteredTokens);
+        setTokensWithBalance([]);
+    }, [filteredTokens])
     return (
         <div className='flex flex-col bg-[#202020] rounded-3xl gap-2 text-white p-4'>
             <div className="flex justify-between">
@@ -137,10 +146,24 @@ export function TokenSelectorFrom({closeModal, onAdd}: {
             </div>
             <div className="border-gray-500 border-b-[1px]">{''}</div>
             <div className="flex flex-col gap-2 h-60 overflow-y-auto">
-                {filteredTokens.map((item) => (
+                {tokensWithBalance.map((item) => (
                     <TokenSearchItem onClick={() => onAdd(item)}
                                      key={item.address}
                                      token={item}
+                    />
+                ))}
+                {tokensWithoutBalance.map((item) => (
+                    <TokenSearchItem onClick={() => onAdd(item)}
+                                     key={item.address}
+                                     token={item}
+                                     onBalanceLoaded={(balance) => {
+                                         if (tokensWithBalance.includes(item) || balance === 0n) {
+                                             return;
+                                         }
+                                         setTokensWithBalance([...tokensWithBalance, item])
+                                         setTokensWithoutBalance(tokensWithoutBalance.filter(t => t.address != item.address));
+                                     }
+                                     }
                     />
                 ))}
             </div>
@@ -149,17 +172,24 @@ export function TokenSelectorFrom({closeModal, onAdd}: {
     )
 }
 
-function TokenSearchItem({token, onClick}: {
+function TokenSearchItem({token, onClick, onBalanceLoaded}: {
     token: TokenData
     onClick: () => void
+    onBalanceLoaded?: (balance: bigint) => void
 }) {
     const {address} = useAccount()
-    const {data: balance} = useBalance({
+    const {data: balance, isLoading: isBalanceLoading} = useBalance({
         address: address,
         token: token.address,
         cacheTime: 20000,
         enabled: !!address
     })
+    useEffect(() => {
+        if (balance && !isBalanceLoading) {
+            onBalanceLoaded?.(balance.value);
+        }
+    }, [balance, isBalanceLoading, onBalanceLoaded]);
+
 
     const {data, isLoading, isError} = useToken({address: token.address, cacheTime: 20000})
     const name = useMemo(() => {
@@ -169,7 +199,8 @@ function TokenSearchItem({token, onClick}: {
         onClick={onClick}
         disabled={isLoading || isError}
         className=" text-left flex items-center p-1 hover:border-gray-500 p rounded-lg border border-transparent">
-        {token.logoURI ? <img src={token.logoURI} alt={name} className='h-6 mr-2'/> : <Image width={24} height={24} src='/p.png' alt="Unknown token icon" className='h-6 mr-2'/>}
+        {token.logoURI ? <img src={token.logoURI} alt={name} className='h-6 mr-2'/> :
+            <Image width={24} height={24} src='/p.png' alt="Unknown token icon" className='h-6 mr-2'/>}
 
         <>
             <div className='flex flex-col grow'>
