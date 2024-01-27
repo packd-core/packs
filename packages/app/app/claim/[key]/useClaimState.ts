@@ -24,6 +24,7 @@ type ClaimState = {
     packData?:RawCreationData,
     setPackData: (packData: RawCreationData) => void,
     nextStep: () => void,
+    initialStep: () => void,
     previousStep: () => void,
     controls: ReactNode,
     setControls: (controls: ReactNode) => void,
@@ -73,5 +74,6 @@ export const useClaimState = create<ClaimState>()((set) => ({
             tokenState: details.stateBlock
         });
     }),
+    initialStep: () => set((state) => ({step: 0})),
     reset: () => set((state) => ({step: 0, error: false, hash: undefined, controls: null, mintedTokenId: undefined, signedMessage: undefined, maxRefundValue: BigInt(0)}))
 }))
