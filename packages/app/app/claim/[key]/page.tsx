@@ -47,6 +47,9 @@ export default function ClaimPage({ params: { key } }: any) {
       goToInitialStep();
     }
   }, [chain?.id, goToInitialStep, tokenData?.chainId]);
+  useEffect(() => {
+      goToInitialStep();
+  }, [address, goToInitialStep]);
 
   const isLoaded = useHydrated();
 
