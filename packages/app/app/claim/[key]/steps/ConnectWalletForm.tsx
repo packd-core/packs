@@ -23,7 +23,6 @@ export default function ConnectWalletForm() {
     useEstimateRefundValue();
   const setMaxRefundValue = useClaimState((state) => state.setMaxRefundValue);
   useEffect(() => {
-    console.log({ maxRefundValue });
     setMaxRefundValue(maxRefundValue);
   }, [maxRefundValue, setMaxRefundValue]);
 

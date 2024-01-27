@@ -46,7 +46,6 @@ export function useNftData({
     const [nftData, setNftData] = useState<NftData>();
     const [isNftDataLoading, setIsNftDataLoading] = useState(false);
     const data = tokenUri || (uri as string);
-    console.log({tokenUri, uri});
     useEffect(() => {
         if (data) {
             const url = data

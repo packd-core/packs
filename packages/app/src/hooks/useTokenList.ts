@@ -20,7 +20,6 @@ export function useFullTokenList() {
         setIsLoading(true)
         fetch(tokenListUrl)
             .then(response => response.json()).then(data => {
-            console.log(data);
             setTokenList(data.tokens)
         }).catch((e) => {
             console.error(e);
