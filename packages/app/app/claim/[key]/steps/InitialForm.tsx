@@ -7,7 +7,7 @@ import {ReviewData} from "@/app/mint/pack/ReviewForm";
 import {usePackMainPackState} from "@/app/abi/generated";
 import usePackdAddresses from "@/src/hooks/usePackdAddresses";
 import clsxm from "@/src/lib/clsxm";
-import {useNetwork} from "wagmi";
+import {useAccount, useNetwork, useSwitchNetwork} from "wagmi";
 
 export default function InitialForm() {
     const nextStep = useClaimState((state) => state.nextStep);
@@ -17,7 +17,9 @@ export default function InitialForm() {
     const rawState = useClaimState((state) => state.tokenState);
     const packData = useClaimState((state) => state.packData);
     const chainId = useClaimState((state) => state.chainId);
-    const {chain} = useNetwork();
+    const {chain, chains} = useNetwork();
+    const { isConnected } = useAccount()
+    const {switchNetwork} = useSwitchNetwork({chainId})
     const isCorrectChain = useMemo(() => chain?.id === chainId, [chain?.id, chainId]);
     useEffect(() => {
         const isClaimed = rawState == BigInt(2);
@@ -28,14 +30,23 @@ export default function InitialForm() {
                 )}
 
                 {rawState === BigInt(1) && packData && (
-                    isCorrectChain ? <Button
+                    (isConnected && isCorrectChain) || !isConnected ?
+                        <Button
                             onClick={nextStep}
                             variant="navigation"
                             rightIcon={<FiArrowRight className="text-inherit inline"/>}
                         >
                             Claim
                         </Button> :
-                        <div className="w-full flex-1 text-center"> The pack is available</div>
+                        <Button
+                            onClick={() =>switchNetwork && switchNetwork()}
+                            variant="navigation"
+                            rightIcon={<FiArrowRight className="text-inherit inline"/>}
+                        >
+                            Switch to {chains.find(value => value.id ==  chainId)?.name}
+                        </Button>
+                    // :
+                    //     <div className="w-full flex-1 text-center"> The pack is available</div>
                 )}
             </div>,
         );
