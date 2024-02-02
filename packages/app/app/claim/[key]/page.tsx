@@ -74,9 +74,9 @@ export default function ClaimPage({ params: { key } }: any) {
 
   const ownerName = useEnsOrFormattedAddress(owner as Address);
 
-  if (isConnecting || !isLoaded || mintedTokenId == undefined) {
-    return <LoadingCard title="Connecting" text="Waiting for network..." />;
-  }
+  // if (isConnecting || !isLoaded || mintedTokenId == undefined) {
+  //   return <LoadingCard title="Connecting" text="Waiting for network..." />;
+  // }
 
   if (isLoading && hash)
     return (
@@ -120,13 +120,13 @@ export default function ClaimPage({ params: { key } }: any) {
         </h1>
         {isConnected && <CurrentChain className="my-4" />}
 
-        {isConnected ? (
-          tokenData?.chainId !== chain?.id ? (
-            <WrongChain chainId={tokenData?.chainId ?? 1} />
-          ) : null
-        ) : (
-          <ConnectWallet />
-        )}
+        {/*{isConnected ? (*/}
+        {/*    tokenData?.chainId !== chain?.id ? (*/}
+        {/*        <WrongChain chainId={tokenData?.chainId ?? 1} />*/}
+        {/*    ) : null*/}
+        {/*) : (*/}
+        {/*    <ConnectWallet />*/}
+        {/*)}*/}
         <ClaimContent step={step} />
       </div>
     </Card>
