@@ -11,6 +11,7 @@ import { polygonZkEvm, mantle } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 
+// TODO - BLAST - WAGMI
 const testnets = [scrollSepolia, polygonZkEvmTestnet, mantleTestnet]
 const mainnets = [polygonZkEvm, mantle] //scroll not yet live
 

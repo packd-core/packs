@@ -1,5 +1,6 @@
 import { subtask, task, types } from "hardhat/config";
 import { config as baseConfig } from "../scripts/base-config";
+import { config as blastTestnetConfig } from "../scripts/blastTestnet-config";
 import { deployFullSystem } from "../scripts/deploy";
 import { chainIds } from "../utils/constants";
 import { getSystemConfig } from "../utils/deployConfig";
@@ -16,6 +17,7 @@ subtask(
   const configs = {
     // HERE ADD EACH DIFFERENT CHAIN ID
     [chainIds.base]: baseConfig,
+    [chainIds.blastTestnet]: blastTestnetConfig,
     [chainIds.hardhat]: { externalConfig: undefined },
     [-1]: undefined,
   };

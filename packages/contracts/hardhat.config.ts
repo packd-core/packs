@@ -70,6 +70,16 @@ const config: HardhatUserConfig = {
       accounts: accounts,
       url: process.env.NODE_URL || "",
     },
+    blastTestnet: {
+      chainId: chainIds.blastTestnet,
+      accounts: accounts,
+      url: process.env.NODE_URL || "https://sepolia.blast.io",
+    },
+    blast: {
+      chainId: chainIds.blast,
+      accounts: accounts,
+      url: process.env.NODE_URL || "https://blast.io",
+    },
   },
   etherscan: {
     apiKey: {
@@ -77,6 +87,7 @@ const config: HardhatUserConfig = {
       mantleTest: "abc",
       polygonZkEVMTestnet: process.env.ETHERSCAN_POLYGON_ZKEVM || "",
       "base-mainnet": process.env.ETHERSCAN_BASE_MAINNET || "",
+      "blastTestnet": process.env.ETHERSCAN_API_KEY || "",
     },
     customChains: [
       {
@@ -109,6 +120,14 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL: "https://api.basescan.org/api",
           browserURL: "https://basescan.org/",
+        },
+      },
+      {
+        network: "blastTestnet",
+        chainId: chainIds.blastTestnet,
+        urls: {
+          apiURL: "https://api.routescan.io/v2/network/testnet/evm/168587773/etherscan",
+          browserURL: "https://testnet.blastscan.io"
         },
       },
     ],

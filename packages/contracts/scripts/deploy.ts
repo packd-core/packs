@@ -14,7 +14,7 @@ import {
   Multicall3,
   PackAccount,
   PackMain,
-  PackRegistry,
+  PackRegistry
 } from "../types";
 
 import { SystemConfig } from "../utils/deployConfig";
@@ -139,28 +139,28 @@ export async function deployMocks(
     erc20MockA = await deployContract<ERC20Mock>(
       hre,
       signer,
-      "ERC20Mock",
+      "ERC20MockA",
       [],
       deploymentOverrides,
     );
     erc20MockB = await deployContract<ERC20Mock>(
       hre,
       signer,
-      "ERC20Mock",
+      "ERC20MockB",
       [],
       deploymentOverrides,
     );
     erc721MockA = await deployContract<ERC721Mock>(
       hre,
       signer,
-      "ERC721Mock",
+      "ERC721MockA",
       [],
       deploymentOverrides,
     );
     erc721MockB = await deployContract<ERC721Mock>(
       hre,
       signer,
-      "ERC721Mock",
+      "ERC721MockB",
       [],
       deploymentOverrides,
     );
@@ -300,16 +300,17 @@ export async function deployFullSystem(
   externalConfig?: ExternalConfig,
 ): Promise<FullSystemDeployed> {
   const { create2Factory } = await deployFactory(hre, signer);
-  const mocks = await deployMocks(hre, signer, create2Factory);
+  // const mocks = await deployMocks(hre, signer, create2Factory);
   let extConfig = externalConfig;
-  if (externalConfig === undefined && mocks.registry && mocks.multicall3) {
-    // Generate external config from mocks
-    extConfig = {
-      registry: await mocks.registry.getAddress(),
-      multicall3: await mocks.multicall3.getAddress(),
-      entryPoint: "0x0000000000000000000000000000000000000001",
-    };
-  }
+  // if (externalConfig === undefined && mocks.registry && mocks.multicall3) {
+  //   console.log("extConfig to be mocked")
+  //   // Generate external config from mocks
+  //   extConfig = {
+  //     registry: await mocks.registry.getAddress(),
+  //     multicall3: await mocks.multicall3.getAddress(),
+  //     entryPoint: "0x0000000000000000000000000000000000000001",
+  //   };
+  // }
   const system = await deploySystem(
     hre,
     signer,
@@ -318,7 +319,7 @@ export async function deployFullSystem(
   );
   return {
     create2Factory,
-    ...mocks,
+    // ...mocks,
     ...system,
   };
 }
