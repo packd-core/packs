@@ -18,5 +18,5 @@ export const chainIds = {
   polygonZkEVMTestnet: 1442,
   mantleTestnet: 5001,
   blastTestnet: 168587773,
-  blast: 168587773,
+  blast: 238,
 };

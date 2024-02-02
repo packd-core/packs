@@ -300,17 +300,17 @@ export async function deployFullSystem(
   externalConfig?: ExternalConfig,
 ): Promise<FullSystemDeployed> {
   const { create2Factory } = await deployFactory(hre, signer);
-  // const mocks = await deployMocks(hre, signer, create2Factory);
+  const mocks = await deployMocks(hre, signer, create2Factory);
   let extConfig = externalConfig;
-  // if (externalConfig === undefined && mocks.registry && mocks.multicall3) {
-  //   console.log("extConfig to be mocked")
-  //   // Generate external config from mocks
-  //   extConfig = {
-  //     registry: await mocks.registry.getAddress(),
-  //     multicall3: await mocks.multicall3.getAddress(),
-  //     entryPoint: "0x0000000000000000000000000000000000000001",
-  //   };
-  // }
+  if (externalConfig === undefined && mocks.registry && mocks.multicall3) {
+    console.log("extConfig to be mocked")
+    // Generate external config from mocks
+    extConfig = {
+      registry: await mocks.registry.getAddress(),
+      multicall3: await mocks.multicall3.getAddress(),
+      entryPoint: "0x0000000000000000000000000000000000000001",
+    };
+  }
   const system = await deploySystem(
     hre,
     signer,
@@ -319,7 +319,7 @@ export async function deployFullSystem(
   );
   return {
     create2Factory,
-    // ...mocks,
+    ...mocks,
     ...system,
   };
 }
