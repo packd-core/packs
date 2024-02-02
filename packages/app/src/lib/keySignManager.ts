@@ -1,12 +1,33 @@
 import type { BytesLike, Signer } from "ethers";
 import { ethers } from "ethers";
+export interface SigOwnerData {
+  types: string[];
+  values: any[];
+}
+
+export interface SigClaimerData {
+  tokenId: bigint;
+  refundValue: bigint;
+  maxRefundValue: bigint;
+  moduleData: Array<any>;
+}
+
+export interface EstimateRefundPreparedData {
+  signatureOwner: string;
+  signatureClaimer: string;
+  address: string;
+}
 
 export class KeySignManager {
   private packdMainAddress: string;
   private registryChainId: any;
   private salt: BytesLike;
 
-  constructor(registryChainId: number, salt: BytesLike, packdMainAddress: string) {
+  constructor(
+    registryChainId: number,
+    salt: BytesLike,
+    packdMainAddress: string
+  ) {
     this.registryChainId = registryChainId;
     this.salt = salt;
     this.packdMainAddress = packdMainAddress;
@@ -14,6 +35,36 @@ export class KeySignManager {
 
   setPackdMainAddress(address: string) {
     this.packdMainAddress = address;
+  }
+
+  async generateDataForEstimation(
+    owner: string | Signer,
+    sigOwnerData: SigOwnerData,
+    sigClaimerData: SigClaimerData
+  ): Promise<EstimateRefundPreparedData> {
+    // Create a new wallet instance with junk key
+    const wallet = ethers.Wallet.fromPhrase(
+      "junk junk junk junk junk junk junk junk junk junk junk test"
+    );
+
+    const valuesPrepared = [sigOwnerData.values[0], wallet.address];
+
+    const { claimSignature: signatureOwner } =
+      await this.generateClaimSignature(
+        owner,
+        sigOwnerData.types,
+        valuesPrepared
+      );
+
+    const signatureClaimer = await this.generateSignTypedData(
+      wallet,
+      sigClaimerData.tokenId,
+      sigClaimerData.refundValue,
+      sigClaimerData.maxRefundValue,
+      sigClaimerData.moduleData
+    );
+
+    return { signatureOwner, signatureClaimer, address: wallet.address };
   }
 
   async getTailMessage() {
@@ -80,5 +131,51 @@ export class KeySignManager {
     else throw new Error("Invalid claimPrivateKey type");
 
     return { claimSignature };
+  }
+
+  async generateSignTypedData(
+    signer: Signer,
+    tokenId: number | bigint,
+    refundValue: number | bigint,
+    maxRefundValue: number | bigint,
+    moduleData: Array<any>
+  ) {
+    const domain = {
+      name: "PACKD",
+      version: "1",
+      chainId: this.registryChainId,
+      verifyingContract: this.packdMainAddress,
+    };
+
+    const types = {
+      Claim: [
+        { name: "tokenId", type: "uint256" },
+        { name: "claimer", type: "address" },
+        { name: "refundValue", type: "uint256" },
+        { name: "maxRefundValue", type: "uint256" },
+        { name: "moduleData", type: "bytes32" },
+      ],
+    };
+
+    const encodedModuleData = KeySignManager.getModuleDataBytes(moduleData);
+
+    const message = {
+      tokenId: tokenId,
+      claimer: await signer.getAddress(),
+      refundValue: refundValue,
+      maxRefundValue: maxRefundValue,
+      moduleData: encodedModuleData,
+    };
+
+    return signer.signTypedData(domain, types, message);
+  }
+
+  static getModuleDataBytes(moduleData: Array<any>) {
+    const bytesArray = moduleData.map((data) => ethers.getBytes(data));
+
+    const coder = ethers.AbiCoder.defaultAbiCoder();
+    const encoded = coder.encode(["bytes[]"], [bytesArray]);
+
+    return ethers.keccak256(encoded);
   }
 }

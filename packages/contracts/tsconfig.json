@@ -25,6 +25,7 @@
     "tasks/**/*",
     "test/**/*",
     "utils/**/*",
-    "types/generated/"
+    "types/generated/",
+    "../contracts/utils/*"
   ]
 }

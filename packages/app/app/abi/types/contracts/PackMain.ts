@@ -30,6 +30,7 @@ export type ClaimDataStruct = {
   sigClaimer: BytesLike;
   refundValue: BigNumberish;
   maxRefundValue: BigNumberish;
+  moduleData: BytesLike[];
 };
 
 export type ClaimDataStructOutput = [
@@ -38,7 +39,8 @@ export type ClaimDataStructOutput = [
   claimer: string,
   sigClaimer: string,
   refundValue: bigint,
-  maxRefundValue: bigint
+  maxRefundValue: bigint,
+  moduleData: string[]
 ] & {
   tokenId: bigint;
   sigOwner: string;
@@ -46,6 +48,7 @@ export type ClaimDataStructOutput = [
   sigClaimer: string;
   refundValue: bigint;
   maxRefundValue: bigint;
+  moduleData: string[];
 };
 
 export interface PackMainInterface extends Interface {
@@ -54,12 +57,15 @@ export interface PackMainInterface extends Interface {
       | "CALL_OPERATION"
       | "VERSION"
       | "account"
+      | "accountNonce"
       | "approve"
       | "balanceOf"
       | "claimPublicKey"
+      | "creationBlock"
       | "getApproved"
       | "implementation"
       | "isApprovedForAll"
+      | "modulesWhitelist"
       | "name"
       | "open"
       | "owner"
@@ -76,6 +82,7 @@ export interface PackMainInterface extends Interface {
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "salt"
       | "setApprovalForAll"
+      | "setModulesWhitelist"
       | "supportsInterface"
       | "symbol"
       | "tokenByIndex"
@@ -107,6 +114,10 @@ export interface PackMainInterface extends Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "accountNonce",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "approve",
     values: [AddressLike, BigNumberish]
   ): string;
@@ -116,6 +127,10 @@ export interface PackMainInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "claimPublicKey",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "creationBlock",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
@@ -130,10 +145,14 @@ export interface PackMainInterface extends Interface {
     functionFragment: "isApprovedForAll",
     values: [AddressLike, AddressLike]
   ): string;
+  encodeFunctionData(
+    functionFragment: "modulesWhitelist",
+    values: [AddressLike]
+  ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "open",
-    values: [ClaimDataStruct, BytesLike[]]
+    values: [ClaimDataStruct]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -183,6 +202,10 @@ export interface PackMainInterface extends Interface {
     values: [AddressLike, boolean]
   ): string;
   encodeFunctionData(
+    functionFragment: "setModulesWhitelist",
+    values: [AddressLike[], boolean]
+  ): string;
+  encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [BytesLike]
   ): string;
@@ -218,10 +241,18 @@ export interface PackMainInterface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "VERSION", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "account", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "accountNonce",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "claimPublicKey",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "creationBlock",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -234,6 +265,10 @@ export interface PackMainInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "modulesWhitelist",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
@@ -271,6 +306,10 @@ export interface PackMainInterface extends Interface {
   decodeFunctionResult(functionFragment: "salt", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setApprovalForAll",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setModulesWhitelist",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -358,13 +397,20 @@ export namespace PackCreatedEvent {
   export type InputTuple = [
     tokenId: BigNumberish,
     owner: AddressLike,
-    modules: AddressLike[]
+    modules: AddressLike[],
+    moduleData: BytesLike[]
   ];
-  export type OutputTuple = [tokenId: bigint, owner: string, modules: string[]];
+  export type OutputTuple = [
+    tokenId: bigint,
+    owner: string,
+    modules: string[],
+    moduleData: string[]
+  ];
   export interface OutputObject {
     tokenId: bigint;
     owner: string;
     modules: string[];
+    moduleData: string[];
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -465,6 +511,8 @@ export interface PackMain extends BaseContract {
 
   account: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
 
+  accountNonce: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
+
   approve: TypedContractMethod<
     [to: AddressLike, tokenId: BigNumberish],
     [void],
@@ -474,6 +522,8 @@ export interface PackMain extends BaseContract {
   balanceOf: TypedContractMethod<[owner: AddressLike], [bigint], "view">;
 
   claimPublicKey: TypedContractMethod<[arg0: BigNumberish], [string], "view">;
+
+  creationBlock: TypedContractMethod<[arg0: BigNumberish], [bigint], "view">;
 
   getApproved: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
 
@@ -485,13 +535,11 @@ export interface PackMain extends BaseContract {
     "view"
   >;
 
+  modulesWhitelist: TypedContractMethod<[arg0: AddressLike], [boolean], "view">;
+
   name: TypedContractMethod<[], [string], "view">;
 
-  open: TypedContractMethod<
-    [data: ClaimDataStruct, moduleData: BytesLike[]],
-    [void],
-    "nonpayable"
-  >;
+  open: TypedContractMethod<[data: ClaimDataStruct], [void], "nonpayable">;
 
   owner: TypedContractMethod<[], [string], "view">;
 
@@ -547,10 +595,16 @@ export interface PackMain extends BaseContract {
     "nonpayable"
   >;
 
-  salt: TypedContractMethod<[], [bigint], "view">;
+  salt: TypedContractMethod<[], [string], "view">;
 
   setApprovalForAll: TypedContractMethod<
     [operator: AddressLike, approved: boolean],
+    [void],
+    "nonpayable"
+  >;
+
+  setModulesWhitelist: TypedContractMethod<
+    [modules: AddressLike[], value: boolean],
     [void],
     "nonpayable"
   >;
@@ -601,6 +655,9 @@ export interface PackMain extends BaseContract {
     nameOrSignature: "account"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
   getFunction(
+    nameOrSignature: "accountNonce"
+  ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
+  getFunction(
     nameOrSignature: "approve"
   ): TypedContractMethod<
     [to: AddressLike, tokenId: BigNumberish],
@@ -613,6 +670,9 @@ export interface PackMain extends BaseContract {
   getFunction(
     nameOrSignature: "claimPublicKey"
   ): TypedContractMethod<[arg0: BigNumberish], [string], "view">;
+  getFunction(
+    nameOrSignature: "creationBlock"
+  ): TypedContractMethod<[arg0: BigNumberish], [bigint], "view">;
   getFunction(
     nameOrSignature: "getApproved"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
@@ -627,15 +687,14 @@ export interface PackMain extends BaseContract {
     "view"
   >;
   getFunction(
+    nameOrSignature: "modulesWhitelist"
+  ): TypedContractMethod<[arg0: AddressLike], [boolean], "view">;
+  getFunction(
     nameOrSignature: "name"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "open"
-  ): TypedContractMethod<
-    [data: ClaimDataStruct, moduleData: BytesLike[]],
-    [void],
-    "nonpayable"
-  >;
+  ): TypedContractMethod<[data: ClaimDataStruct], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "owner"
   ): TypedContractMethod<[], [string], "view">;
@@ -704,11 +763,18 @@ export interface PackMain extends BaseContract {
   >;
   getFunction(
     nameOrSignature: "salt"
-  ): TypedContractMethod<[], [bigint], "view">;
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "setApprovalForAll"
   ): TypedContractMethod<
     [operator: AddressLike, approved: boolean],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "setModulesWhitelist"
+  ): TypedContractMethod<
+    [modules: AddressLike[], value: boolean],
     [void],
     "nonpayable"
   >;
@@ -829,7 +895,7 @@ export interface PackMain extends BaseContract {
       OwnershipTransferredEvent.OutputObject
     >;
 
-    "PackCreated(uint256,address,address[])": TypedContractEvent<
+    "PackCreated(uint256,address,address[],bytes[])": TypedContractEvent<
       PackCreatedEvent.InputTuple,
       PackCreatedEvent.OutputTuple,
       PackCreatedEvent.OutputObject

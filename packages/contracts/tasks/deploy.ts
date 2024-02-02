@@ -1,5 +1,6 @@
 import { subtask, task, types } from "hardhat/config";
 import { config as baseConfig } from "../scripts/base-config";
+import { config as baseGoerliConfig } from "../scripts/base-goerli-config";
 import { config as blastTestnetConfig } from "../scripts/blastTestnet-config";
 import { deployFullSystem } from "../scripts/deploy";
 import { chainIds } from "../utils/constants";
@@ -10,21 +11,23 @@ const info = logger("info", "task");
 
 subtask(
   "deploy",
-  "Deploy the contracts to the selected chain (defaults to localhost)",
+  "Deploy the contracts to the selected chain (defaults to localhost)"
 ).setAction(async (args, hre) => {
   info("Subtask deploy");
   const systemConfig = getSystemConfig(hre);
   const configs = {
     // HERE ADD EACH DIFFERENT CHAIN ID
     [chainIds.base]: baseConfig,
+    [chainIds.baseGoerli]: baseGoerliConfig,
     [chainIds.blastTestnet]: blastTestnetConfig,
     [chainIds.hardhat]: { externalConfig: undefined },
     [-1]: undefined,
   };
-  let config = configs[hre.network.config.chainId ?? -1];
+
+  const config = configs[hre.network.config.chainId ?? -1];
   if (!config) {
     throw new Error(
-      `Config for chain ID ${hre.network.config.chainId} not found`,
+      `Config for chain ID ${hre.network.config.chainId} not found`
     );
   }
 
@@ -33,7 +36,7 @@ subtask(
     hre,
     signer,
     systemConfig,
-    config.externalConfig,
+    config.externalConfig
   );
   return {
     ...fullSystemDeployed,
@@ -46,7 +49,7 @@ task("deploy").setAction(async (_, __, runSuper) => {
 
 task(
   "deploy-dev-env",
-  "Deploy all contracts, send ETH  and mint ERC20 to test accounts",
+  "Deploy all contracts, send ETH  and mint ERC20 to test accounts"
 ).setAction(async (args, hre) => {
   info("deploy-dev-env");
   await hre.run("deploy", args);

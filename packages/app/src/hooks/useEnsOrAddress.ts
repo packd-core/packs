@@ -1,13 +1,28 @@
-import {Address} from "wagmi";
+import {Address, useEnsName} from "wagmi";
 import formatAddress from "@/src/lib/addressFormatter";
-import {useMemo} from "react";
+import {useEffect, useMemo, useState} from "react";
 
-export default function useEnsOrFormattedAddress(address?: Address){
-    //TODO use ens if available
-    return useMemo(() => {
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
+
+const client = createPublicClient({ chain: mainnet, transport: http() });
+export default function useEnsOrFormattedAddress(address?: Address) {
+    const [ensName, setEnsName] = useState<string | null | undefined>(undefined);
+    useEffect(() => {
         if (!address) {
-            return undefined;
+            setEnsName(null);
+            return;
         }
-        return formatAddress(address);
-    }, [address]);
+        client.getEnsName({
+            address: address!,
+        }).then(name => {
+            if (name) {
+                setEnsName(name);
+            } else {
+                setEnsName(formatAddress(address!));
+            }
+        }).catch(() => setEnsName(formatAddress(address!)));
+    }, [address])
+
+  return ensName
 }

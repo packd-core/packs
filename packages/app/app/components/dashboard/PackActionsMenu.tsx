@@ -14,7 +14,7 @@ export function PackActionsMenu({tokenId}: {tokenId:bigint}) {
     return (
         <Menu >
             {isRevokeOpen && <RevokePackModal tokenId={tokenId} isOpen={isRevokeOpen} setIsOpen={setIsRevokeOpen}/>}
-            {isClaimOpen && <ClaimLinkModal isOpen={isClaimOpen} setIsOpen={setIsClaimOpen}/>}
+            {isClaimOpen && <ClaimLinkModal tokenId={tokenId} isOpen={isClaimOpen} setIsOpen={setIsClaimOpen}/>}
             <Menu.Button ><FcSettings/></Menu.Button>
 
             <Transition
@@ -36,7 +36,7 @@ export function PackActionsMenu({tokenId}: {tokenId:bigint}) {
                             <HelpItem title={'Regenerate Claim Link'}>
                                 <p>Lost your claim link? Regenerate it here by signing a message with the address that
                                     created the Pack.</p>
-                                <div className='flex justify-end'>
+                                <div className='flex justify-end mt-2'>
                                     <Button
                                         onClick={() => setIsClaimOpen(true)}
                                         leftIcon={<BsLink45Deg className="text-xl"/>}
@@ -51,7 +51,7 @@ export function PackActionsMenu({tokenId}: {tokenId:bigint}) {
                             <HelpItem title={'Revoke Pack'}>
                                 <p>If a Pack hasn&apos;t been claimed, you can revoke it to retrieve your assets. This is
                                     often preferable to self-claiming the Pack.</p>
-                                <div className='flex justify-end'>
+                                <div className='flex justify-end mt-2'>
                                     <Button
                                         onClick={() => setIsRevokeOpen(true)}
                                         leftIcon={<BsX className="text-xl"/>}>Revoke Pack </Button>

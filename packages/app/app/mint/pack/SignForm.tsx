@@ -7,6 +7,7 @@ import {useClaimKeys} from "@/src/hooks/useClaimKeys";
 import {useBalanceOf} from "@/src/hooks/useBalanceOf";
 import {useAccount} from "wagmi";
 import {useMintStore} from "@/src/stores/useMintStore";
+import {useAccountNonce} from "@/src/hooks/useAccountNonce";
 
 export const SignForm = () => {
     const nextStep = usePackState(state => state.nextStep)
@@ -15,17 +16,17 @@ export const SignForm = () => {
     const setClaimKey = useMintStore(state => state.setClaimKey)
     const {address} = useAccount();
     const {
-        balance: balanceOf,
+        nonce,
         // isLoading: isBalanceOfLoading,
         // isError: isBalanceOfError,
-    } = useBalanceOf(address!);
+    } = useAccountNonce({address:address!});
     const {
         claimPublicKey,
         claimPrivateKey,
         handlePrepareAndSignMessage,
         isSignLoading,
         isSignSuccess,
-    } = useClaimKeys(balanceOf);
+    } = useClaimKeys(nonce);
 
     useEffect(() => {
         if (isSignSuccess && claimPrivateKey && claimPublicKey) {

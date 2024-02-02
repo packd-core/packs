@@ -2,6 +2,7 @@ import "@nomicfoundation/hardhat-toolbox";
 import { config as dotenvConfig } from "dotenv";
 import type { HardhatUserConfig } from "hardhat/config";
 import "hardhat-tracer";
+import "hardhat-gas-reporter";
 
 dotenvConfig({ path: __dirname + "/.env" });
 
@@ -70,6 +71,11 @@ const config: HardhatUserConfig = {
       accounts: accounts,
       url: process.env.NODE_URL || "",
     },
+    "base-goerli": {
+      chainId: chainIds.baseGoerli,
+      accounts: accounts,
+      url: process.env.NODE_URL || "",
+    },
     blastTestnet: {
       chainId: chainIds.blastTestnet,
       accounts: accounts,
@@ -87,6 +93,7 @@ const config: HardhatUserConfig = {
       mantleTest: "abc",
       polygonZkEVMTestnet: process.env.ETHERSCAN_POLYGON_ZKEVM || "",
       "base-mainnet": process.env.ETHERSCAN_BASE_MAINNET || "",
+      "base-goerli": process.env.ETHERSCAN_BASE_GOERLI || "",
       "blastTestnet": process.env.ETHERSCAN_API_KEY || "",
     },
     customChains: [
@@ -123,6 +130,14 @@ const config: HardhatUserConfig = {
         },
       },
       {
+        network: "base-goerli",
+        chainId: chainIds.baseGoerli,
+        urls: {
+          apiURL: "https://api-goerli.basescan.org/api",
+          browserURL: "https://goerli.basescan.org/",
+        },
+      },
+      {
         network: "blastTestnet",
         chainId: chainIds.blastTestnet,
         urls: {
@@ -134,6 +149,9 @@ const config: HardhatUserConfig = {
   },
   sourcify: {
     enabled: false,
+  },
+  gasReporter: {
+    enabled: true,
   },
 };
 

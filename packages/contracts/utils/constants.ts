@@ -1,5 +1,6 @@
 export const chainIds = {
   base: 8453,
+  baseGoerli: 84531,
   avalanche: 43114,
   polygonZkEVM: 1101,
   optimism: 10,

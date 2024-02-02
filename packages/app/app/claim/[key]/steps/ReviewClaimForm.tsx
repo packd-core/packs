@@ -13,6 +13,7 @@ import { useGenerateClaimData } from "@/src/hooks/useGenerateClaimData";
 import usePackdAddresses from "@/src/hooks/usePackdAddresses";
 import useEnsOrFormattedAddress from "@/src/hooks/useEnsOrAddress";
 import { toast } from "react-toastify";
+import Blockies from "react-blockies";
 
 // @ts-ignore
 BigInt.prototype.toJSON = function () {
@@ -25,8 +26,8 @@ function getErrorMessage(error: string) {
       return "Invalid body parameters";
     case "GAS_ESTIMATATION_FAILED":
       return "Gas estimation failed";
-    case "MAX_REFUND_VALUE_TOO_LOW":
-      return "Max refund value too low";
+    case "REFUND_VALUE_TOO_LOW":
+      return "Relayer refund value too low";
     case "UNABLE_TO_BROADCAST_TX":
       return "Unable to broadcast transaction";
   }
@@ -42,11 +43,11 @@ export default function ReviewClaimForm() {
   const { openConnectModal } = useConnectModal();
   const { address } = useAccount();
   const { chain } = useNetwork();
-  const tokenId = useClaimState((state) => state.mintedTokenId);
   const setLoading = useClaimState((state) => state.setLoading);
   const setSendingToRelayer = useClaimState(
-    (state) => state.setSendingToRelayer,
+    (state) => state.setSendingToRelayer
   );
+  const tokenId = useClaimState((state) => state.mintedTokenId);
   const packData = useClaimState((state) => state.packData);
   const maxRefundValue = useClaimState((state) => state.maxRefundValue);
   const signedData = useClaimState((state) => state.signedMessage);
@@ -57,12 +58,10 @@ export default function ReviewClaimForm() {
     signedData!,
     tokenId!,
     privateKey!,
-  );
-
-  const { write, data, isLoading } = useClaim(
-    claimData,
     packData?.moduleData ?? [],
   );
+
+  const { write, data, isLoading } = useClaim(claimData);
 
   const writeToRelayer = useCallback(async () => {
     setSendingToRelayer(true);
@@ -70,8 +69,8 @@ export default function ReviewClaimForm() {
       mainContractAddress: addresses.PackMain,
       chainId: chain?.id,
       args: claimData,
-      moduleData: packData?.moduleData ?? [],
     };
+    // body.args.tokenId = body.args.tokenId.toString();
     const res = await fetch("/api/claim", {
       body: JSON.stringify(body),
       method: "POST",
@@ -84,7 +83,13 @@ export default function ReviewClaimForm() {
       toast.error(getErrorMessage(data.error), { autoClose: 2000 });
     }
     setSendingToRelayer(false);
-  }, [addresses.PackMain, claimData, setLoading]);
+  }, [
+    addresses.PackMain,
+    chain?.id,
+    claimData,
+    setLoading,
+    setSendingToRelayer,
+  ]);
 
   useEffect(() => {
     if (data?.hash) {
@@ -96,6 +101,14 @@ export default function ReviewClaimForm() {
     setControls(
       <div className="w-full flex justify-between py-1 items-center">
         <StepperIndicator step={2} />
+        {/*<Button*/}
+        {/*    isLoading={isLoading}*/}
+        {/*    onClick={() => write && write()}*/}
+        {/*    variant="navigation"*/}
+        {/*    rightIcon={<FiArrowRight className="text-inherit inline"/>}*/}
+        {/*>*/}
+        {/*    Confirm Claim direct*/}
+        {/*</Button>*/}
         <Button
           isLoading={isLoading}
           onClick={() => writeToRelayer()}
@@ -104,7 +117,7 @@ export default function ReviewClaimForm() {
         >
           Confirm Claim
         </Button>
-      </div>,
+      </div>
     );
   }, [
     writeToRelayer,
@@ -121,14 +134,31 @@ export default function ReviewClaimForm() {
   return (
     <div className="flex flex-col w-full gap-2 items-stretch">
       <div className="flex p-2 rounded-full bg-gray-800 items-center justify-around gap-4">
-        <div className="p-2 text-sm">
-          <div className="text-gray-400">From</div>
-          {ownerName}
+        <div className="p-2 text-sm flex items-center gap-2">
+          <Blockies
+              seed={(owner??'') as string}
+              size={8}
+              scale={3}
+              className="rounded-full h-6 w-6"
+          />
+          <div>
+            <div className="text-gray-400">From</div>
+            {ownerName}
+          </div>
         </div>
         <Arrow className="h-12 w-8" />
-        <div className="p-2 text-sm">
-          <div className="text-right text-gray-400">To</div>
-          {claimerName}
+        <div className="p-2 text-sm flex items-center  gap-2">
+
+          <div>
+            <div className="text-right text-gray-400">To</div>
+            {claimerName}
+          </div>
+          <Blockies
+              seed={(address??'') as string}
+              size={8}
+              scale={3}
+              className="rounded-full h-6 w-6"
+          />
         </div>
       </div>
       <ContentTitle>Contents</ContentTitle>

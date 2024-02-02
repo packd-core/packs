@@ -9,7 +9,7 @@ export type ResponseData =
       error:
         | "INVALID_BODY_PARAMETERS"
         | "GAS_ESTIMATATION_FAILED"
-        | "MAX_REFUND_VALUE_TOO_LOW"
+        | "REFUND_VALUE_TOO_LOW"
         | "UNABLE_TO_BROADCAST_TX";
       details?: object;
     }
@@ -29,9 +29,10 @@ const RelayerRequestSchema = z.object({
     sigOwner: z.string(),
     claimer: z.string(),
     sigClaimer: z.string(),
+    refundValue: z.string(),
     maxRefundValue: z.string(),
+    moduleData: z.string().array(),
   }),
-  moduleData: z.array(z.string()),
 });
 
 export type RelayerRequest = z.infer<typeof RelayerRequestSchema>;
@@ -72,56 +73,40 @@ export default async function handler(
 
   const feeData = await signer.provider?.getFeeData();
   console.log("Fee data", feeData);
+  let gasEstimate: bigint;
   let gasCostEstimate: bigint;
   try {
-    const gasResult = await packMain.open.estimateGas(
-      {
-        ...tx.args,
-        refundValue: tx.args.maxRefundValue,
-      },
-      tx.moduleData
-    );
-
-    const margin = 15n;
-
-    gasCostEstimate = (gasResult * margin) / 10n;
-    console.log("Gas estimate", {
-      gasResult,
-      gasCostEstimate,
+    gasEstimate = await packMain.open.estimateGas({
+      ...tx.args,
     });
   } catch (e: any) {
+    console.log("Gas estimation failed", e);
     return res
       .status(400)
       .send({ error: "GAS_ESTIMATATION_FAILED", details: e });
   }
 
-  const weiEstimate = gasCostEstimate * (feeData?.gasPrice ?? 1n); // In mainnet, we cannot do this because it would result in netloss for the relayer.
-
   console.log("Estimates", {
-    gasCostEstimate,
-    weiEstiamte: weiEstimate,
+    gasCostEstimate: gasEstimate,
     maxRefundValue: tx.args.maxRefundValue,
-    refundValue: weiEstimate,
+    refundValue: tx.args.refundValue,
   });
 
-  if (weiEstimate > BigInt(tx.args.maxRefundValue)) {
-    return res
-      .status(400)
-      .send({
-        error: `MAX_REFUND_VALUE_TOO_LOW`,
-        details: { weiEstimate, maxRefundValue: tx.args.maxRefundValue },
-      });
+  //TODO gasEstimate should be multiplied by gasPrice I think
+  if (gasEstimate > BigInt(tx.args.refundValue)) {
+    return res.status(400).send({
+      error: `REFUND_VALUE_TOO_LOW`,
+      details: { gasEstimate, refundValue: tx.args.refundValue },
+    });
   }
 
   try {
     const openReceipt = await packMain.open(
       {
         ...tx.args,
-        refundValue: weiEstimate,
       },
-      tx.moduleData,
       {
-        gasLimit: gasCostEstimate,
+        gasLimit: gasEstimate,
       }
     );
 
@@ -141,25 +126,31 @@ export default async function handler(
 }
 
 function getSigner(chainId: number) {
-  function getRpcUrl() {
-    switch (chainId) {
-      case 1337:
-      case 31337:
-        return "http://localhost:8545";
-      case 1442:
-        return "https://rpc.public.zkevm-test.net";
-      case 5001:
-        return "https://rpc.testnet.mantle.xyz";
-      case 534351:
-        return "https://sepolia-rpc.scroll.io";
-      default:
-        throw new Error(`Unsupported chainId: ${chainId}`);
-    }
-  }
+
 
   const pk = getRelayerAccount();
-  const provider = new JsonRpcProvider(getRpcUrl());
+  const provider = new JsonRpcProvider(getRpcUrl({chainId}));
   const signer = new Wallet(pk, provider);
   //const signer = new JsonRpcSigner(provider, account);
   return { account: signer.address, signer };
+}
+
+export function getRpcUrl({chainId}:{chainId: number}) {
+  switch (chainId) {
+    case 1337:
+    case 31337:
+      return "http://localhost:8545";
+    case 1442:
+      return "https://rpc.public.zkevm-test.net";
+    case 5001:
+      return "https://rpc.testnet.mantle.xyz";
+    case 534351:
+      return "https://sepolia-rpc.scroll.io";
+    case 84531:
+      return "https://goerli.base.org";
+    case 8453:
+      return "https://mainnet.base.org";
+    default:
+      throw new Error(`Unsupported chainId: ${chainId}`);
+  }
 }

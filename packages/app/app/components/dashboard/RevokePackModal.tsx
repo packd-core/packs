@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {Card} from "@/app/components/Card";
 import {LoadingCard} from "@/app/components/content/LoadingCard";
 import {ReviewData, ReviewForm} from "@/app/mint/pack/ReviewForm";
@@ -7,10 +7,13 @@ import Modal from "@/app/components/dialog/Modal";
 import Button from "@/app/components/button/Button";
 import {IoIosCheckmark} from "react-icons/io";
 import {usePackMainRevoke, usePreparePackMainRevoke} from "@/app/abi/generated";
-import {useWaitForTransaction} from "wagmi";
+import {useNetwork, useWaitForTransaction} from "wagmi";
 import {ErrorCard} from "@/app/components/content/ErrorCard";
 import {usePackDataByTokenId} from "@/src/hooks/usePackDataByTokenId";
 import usePackdAddresses from "@/src/hooks/usePackdAddresses";
+import {emitPackRevoked} from "@/src/event/events";
+import {useEstimateGas} from "@/src/hooks/useEstimateGas";
+import {formatUnits} from "ethers";
 
 type RevokePackModalProps = {
     tokenId: bigint,
@@ -21,6 +24,8 @@ export default function RevokePackModal({isOpen, setIsOpen, tokenId}: RevokePack
     const [step, setStep] = useState(0)
     const {packData,rawEth} = usePackDataByTokenId(tokenId);
     const addresses = usePackdAddresses();
+    const {chain} = useNetwork()
+
 
     const {
         config: config,
@@ -28,13 +33,14 @@ export default function RevokePackModal({isOpen, setIsOpen, tokenId}: RevokePack
         isError: isPrepareError,
     } = usePreparePackMainRevoke({address: addresses.PackMain, args: [tokenId, (packData?.moduleData  ?? []) as `0x${string}`[]], enabled: !!packData})
     const { write, data, error, isLoading, isError } = usePackMainRevoke(config);
-
     const {
         data: receipt,
         isLoading: isPending,
         isSuccess: isSuccess,
     } = useWaitForTransaction({ hash: data?.hash });
 
+    const {estimatedGas} = useEstimateGas({config: config.request})
+    const gasPrice = useMemo(() => estimatedGas ? ((formatUnits(estimatedGas, chain?.nativeCurrency?.decimals ?? 18) || '-') + chain?.nativeCurrency?.symbol) : 'Loading', [chain?.nativeCurrency?.decimals, chain?.nativeCurrency?.symbol, estimatedGas])
 
 
     const revokePack = useCallback(() => {
@@ -50,6 +56,12 @@ export default function RevokePackModal({isOpen, setIsOpen, tokenId}: RevokePack
             setStep(2);
         }
     }, [isSuccess]);
+
+    useEffect(() => {
+        if (step == 2) {
+            emitPackRevoked();
+        }
+    }, [step]);
 
     const card = useCallback((closeModal: () => void) => {
         if (isError) {
@@ -83,6 +95,18 @@ export default function RevokePackModal({isOpen, setIsOpen, tokenId}: RevokePack
                     {packData && <ReviewData
                         eth={rawEth ?? BigInt(1)}
                         modules={packData.fullModuleData ?? []}/>}
+                    <table className="font-semibold mt-4">
+                        <tbody>
+                        <tr>
+                            <td className='text-gray-500'>Chain</td>
+                            <td className='text-right'>{chain?.name}</td>
+                        </tr>
+                        <tr>
+                            <td className='text-gray-500'>Gas fees</td>
+                            <td className="text-right">~ {gasPrice}</td>
+                        </tr>
+                        </tbody>
+                    </table>
 
                 </div>
             </Card>
@@ -119,7 +143,7 @@ export default function RevokePackModal({isOpen, setIsOpen, tokenId}: RevokePack
                 <p className="text-sm mt-10">The contents of the pack are back in your wallet!</p>
             </div>
         </Card>
-    }, [revokePack, step, isError, data?.hash]);
+    }, [revokePack, step, isError, data?.hash, gasPrice]);
 
     return (
         <Modal render={closeModal => card(closeModal)} isOpen={isOpen} setIsOpen={setIsOpen}/>

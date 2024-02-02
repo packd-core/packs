@@ -4,10 +4,12 @@ import { ethers } from "ethers";
 
 import { useEthersSigner } from "./useEthersSigner";
 import useKeySignManager from "@/src/hooks/useKeySignManager";
+import { KeySignManager } from "@/src/lib/keySignManager";
 
 export const usePrepareAndSignMessage = (
-    tokenId: number | null,
-    maxRefundValue: bigint
+  tokenId: number | null,
+  maxRefundValue: bigint,
+  moduleData: Array<any>
 ) => {
   const [message, setMessage] = useState<Uint8Array | undefined>(undefined);
   const [signData, setSignData] = useState<string | undefined>(undefined);
@@ -33,44 +35,52 @@ export const usePrepareAndSignMessage = (
       //   ["uint256", "uint256", "address"],
       //   [Number(tokenId), maxRefundValue, address]
       // );
-      const { allTypes, allValues } = await keySignManager.getMessage(
-          ["uint256", "uint256"],
-          [Number(tokenId), maxRefundValue]
+      const sigClaimer = await keySignManager.generateSignTypedData(
+        signer!.signer,
+        tokenId!,
+          maxRefundValue,
+        maxRefundValue,
+        moduleData
       );
-
-      const message = ethers.solidityPackedKeccak256(allTypes, allValues);
-      const messageToSign = ethers.getBytes(message);
-      // const msgH = ethers.getBytes(msg);
-      // console.log("Message:", msgH);
-
-      setMessage(messageToSign);
-      // const prefixedMsg = toEthSignedMessageHash(msg);
-      // console.log("Prefixed message:", prefixedMsg);
-
-      // if (isError) {
-      //   console.error("Error signing message:", isError);
-      //   return;
-      // }
+      // const encodedModuleData = KeySignManager.getModuleDataBytes([]);
+      // const { allTypes, allValues } = await keySignManager.getMessage(
+      //     ["uint256", "uint256"],
+      //     [Number(tokenId), maxRefundValue]
+      // );
       //
-      // // signMessage({ message: msg });
-      // if (isLoading || !signer) {
-      //   console.log("Signer is loading");
-      //   return;
-      // }
-      setIsLoading(true);
-      signer?.signer?.signMessage(messageToSign).then((signature) => {
-        setSignData(signature);
-        setIsLoading(false);
-        setIsSuccess(true);
-      });
+      // const message = ethers.solidityPackedKeccak256(allTypes, allValues);
+      // const messageToSign = ethers.getBytes(message);
+      // // const msgH = ethers.getBytes(msg);
+      // // console.log("Message:", msgH);
+      //
+      // setMessage(messageToSign);
+      // // const prefixedMsg = toEthSignedMessageHash(msg);
+      // // console.log("Prefixed message:", prefixedMsg);
+      //
+      // // if (isError) {
+      // //   console.error("Error signing message:", isError);
+      // //   return;
+      // // }
+      // //
+      // // // signMessage({ message: msg });
+      // // if (isLoading || !signer) {
+      // //   console.log("Signer is loading");
+      // //   return;
+      // // }
+      // setIsLoading(true);
+      // signer?.signer?.signMessage(messageToSign).then((signature) => {
+      setSignData(sigClaimer);
+      setIsLoading(false);
+      setIsSuccess(true);
+      // });
     } catch (error) {
       console.error("Error preparing message:", error);
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }, [keySignManager, tokenId, maxRefundValue, signer?.signer]);
+  }, [keySignManager, tokenId, maxRefundValue, signer?.signer, moduleData]);
 
   return {
-    signData,
+    signData: signData as `0x${string}`,
     // isSignError,
     isLoading,
     isSuccess,

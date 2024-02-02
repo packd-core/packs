@@ -22,8 +22,8 @@ export const ReviewForm = () => {
     const modules = useMintStore(state => state.modules)
     const amountEth = useMintStore(state => state.eth)
     const {chain} = useNetwork();
-    const {write, isLoading, error, data, config} = useMintPack();
-    const {estimatedGas, isLoading: isGasLoading, isError: isGasError} = useEstimateGas({config: config.request})
+    const {write, isLoading, error, data, config, isPrepareSuccess} = useMintPack();
+    const {estimatedGas, isLoading: isGasLoading, isError: isGasError} = useEstimateGas({config: config.request, isEnabled: isPrepareSuccess})
     const gasPrice = useMemo(() => estimatedGas ? ((formatUnits(estimatedGas, chain?.nativeCurrency?.decimals ?? 18) || '-') + chain?.nativeCurrency?.symbol) : 'Loading', [chain?.nativeCurrency?.decimals, chain?.nativeCurrency?.symbol, estimatedGas])
 
     useEffect(() => {
@@ -70,7 +70,7 @@ export const ReviewForm = () => {
         </div>);
 };
 
-export function ReviewData({eth, modules}: { eth: bigint, modules: Module[] }) {
+export function ReviewData({eth, modules, chainId}: { eth: bigint, modules: Module[], chainId?: number }) {
     return <>
         <ContentCard className="self-stretch">
             <div className="flex justify-between">
@@ -79,6 +79,6 @@ export function ReviewData({eth, modules}: { eth: bigint, modules: Module[] }) {
             <input className="text-right w-full " disabled={true}
                    value={formatEther(eth ?? 0)}/>
         </ContentCard>
-        <Modules modules={modules}  />
+        <Modules modules={modules} chainId={chainId}  />
     </>
 }
