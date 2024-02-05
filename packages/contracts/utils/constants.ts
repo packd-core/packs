@@ -17,4 +17,6 @@ export const chainIds = {
   scrollSepolia: 534351,
   polygonZkEVMTestnet: 1442,
   mantleTestnet: 5001,
+  blastTestnet: 168587773,
+  blast: 238,
 };

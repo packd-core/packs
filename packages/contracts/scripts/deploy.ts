@@ -14,7 +14,7 @@ import {
   Multicall3,
   PackAccount,
   PackMain,
-  PackRegistry,
+  PackRegistry
 } from "../types";
 
 import { SystemConfig } from "../utils/deployConfig";
@@ -139,28 +139,28 @@ export async function deployMocks(
     erc20MockA = await deployContract<ERC20Mock>(
       hre,
       signer,
-      "ERC20Mock",
+      "ERC20MockA",
       [],
       deploymentOverrides,
     );
     erc20MockB = await deployContract<ERC20Mock>(
       hre,
       signer,
-      "ERC20Mock",
+      "ERC20MockB",
       [],
       deploymentOverrides,
     );
     erc721MockA = await deployContract<ERC721Mock>(
       hre,
       signer,
-      "ERC721Mock",
+      "ERC721MockA",
       [],
       deploymentOverrides,
     );
     erc721MockB = await deployContract<ERC721Mock>(
       hre,
       signer,
-      "ERC721Mock",
+      "ERC721MockB",
       [],
       deploymentOverrides,
     );
@@ -303,6 +303,7 @@ export async function deployFullSystem(
   const mocks = await deployMocks(hre, signer, create2Factory);
   let extConfig = externalConfig;
   if (externalConfig === undefined && mocks.registry && mocks.multicall3) {
+    console.log("extConfig to be mocked")
     // Generate external config from mocks
     extConfig = {
       registry: await mocks.registry.getAddress(),
