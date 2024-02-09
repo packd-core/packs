@@ -69,12 +69,12 @@ const config: HardhatUserConfig = {
     "base-mainnet": {
       chainId: chainIds.base,
       accounts: accounts,
-      url: process.env.NODE_URL || "",
+      url: process.env.BASE_MAINNET_NODE_URL || "",
     },
     "base-goerli": {
       chainId: chainIds.baseGoerli,
       accounts: accounts,
-      url: process.env.NODE_URL || "",
+      url: process.env.BASE_GOERLI_NODE_URL || "",
     },
     blastTestnet: {
       chainId: chainIds.blastTestnet,

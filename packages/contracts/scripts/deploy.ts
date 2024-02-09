@@ -14,7 +14,8 @@ import {
   Multicall3,
   PackAccount,
   PackMain,
-  PackRegistry
+  PackRegistry,
+  OnchainChroniclesNFT,
 } from "../types";
 
 import { SystemConfig } from "../utils/deployConfig";
@@ -54,7 +55,7 @@ export interface FullSystemDeployed extends SystemDeployed, MocksDeployed {
 export async function deployMocks(
   hre: HardhatRuntimeEnvironment,
   signer: Signer,
-  create2Factory: Create2Factory,
+  create2Factory: Create2Factory
 ): Promise<MocksDeployed> {
   info("Deploying Mocks");
   const deploymentOverrides = {
@@ -87,7 +88,7 @@ export async function deployMocks(
       create2Factory,
       "ERC20MockA",
       [],
-      withSalt("ERC20MockA"),
+      withSalt("ERC20MockA")
     );
     erc20MockB = await deployContractWithCreate2<ERC20Mock, ERC20Mock__factory>(
       hre,
@@ -95,7 +96,7 @@ export async function deployMocks(
       create2Factory,
       "ERC20MockB",
       [],
-      withSalt("ERC20MockB"),
+      withSalt("ERC20MockB")
     );
     erc721MockA = await deployContractWithCreate2<
       ERC721Mock,
@@ -106,7 +107,7 @@ export async function deployMocks(
       create2Factory,
       "ERC721MockA",
       [],
-      withSalt("ERC721MockA"),
+      withSalt("ERC721MockA")
     );
     erc721MockB = await deployContractWithCreate2<
       ERC721Mock,
@@ -117,7 +118,7 @@ export async function deployMocks(
       create2Factory,
       "ERC721MockB",
       [],
-      withSalt("ERC721MockB"),
+      withSalt("ERC721MockB")
     );
     //  Mock external dependencies
     registry = await deployContract<PackRegistry>(
@@ -125,14 +126,14 @@ export async function deployMocks(
       signer,
       "PackRegistry",
       [],
-      deploymentOverrides,
+      deploymentOverrides
     );
     multicall3 = await deployContract<Multicall3>(
       hre,
       signer,
       "Multicall3",
       [],
-      deploymentOverrides,
+      deploymentOverrides
     );
   } else {
     // Deploy mocks without create2
@@ -141,28 +142,28 @@ export async function deployMocks(
       signer,
       "ERC20MockA",
       [],
-      deploymentOverrides,
+      deploymentOverrides
     );
     erc20MockB = await deployContract<ERC20Mock>(
       hre,
       signer,
       "ERC20MockB",
       [],
-      deploymentOverrides,
+      deploymentOverrides
     );
     erc721MockA = await deployContract<ERC721Mock>(
       hre,
       signer,
       "ERC721MockA",
       [],
-      deploymentOverrides,
+      deploymentOverrides
     );
     erc721MockB = await deployContract<ERC721Mock>(
       hre,
       signer,
       "ERC721MockB",
       [],
-      deploymentOverrides,
+      deploymentOverrides
     );
   }
 
@@ -177,7 +178,7 @@ export async function deployMocks(
 }
 export async function deployFactory(
   hre: HardhatRuntimeEnvironment,
-  signer: Signer,
+  signer: Signer
 ): Promise<{ create2Factory: Create2Factory }> {
   info("Deploying deployFactory");
   const deploymentOverrides = {
@@ -189,7 +190,7 @@ export async function deployFactory(
     signer,
     "Create2Factory",
     [],
-    deploymentOverrides,
+    deploymentOverrides
   );
 
   return {
@@ -200,7 +201,7 @@ export async function deploySystem(
   hre: HardhatRuntimeEnvironment,
   signer: Signer,
   systemConfig: SystemConfig,
-  externalConfig: ExternalConfig,
+  externalConfig: ExternalConfig
 ): Promise<SystemDeployed> {
   info("Deploying System");
   const deploymentOverrides = {
@@ -212,14 +213,14 @@ export async function deploySystem(
     signer,
     "ERC20Module",
     [],
-    deploymentOverrides,
+    deploymentOverrides
   );
   const erc721Module = await deployContract<ERC721Module>(
     hre,
     signer,
     "ERC721Module",
     [],
-    deploymentOverrides,
+    deploymentOverrides
   );
 
   // Move to external dependency
@@ -229,7 +230,7 @@ export async function deploySystem(
     signer,
     "AccountGuardian",
     [await signer.getAddress()],
-    deploymentOverrides,
+    deploymentOverrides
   );
   // mint tokenId 1 during setup for accurate cold call gas measurement
   const packAccount = await deployContract<PackAccount>(
@@ -242,7 +243,7 @@ export async function deploySystem(
       externalConfig.registry,
       resolveAddress(guardian.target),
     ],
-    deploymentOverrides,
+    deploymentOverrides
   );
   // TODO - to test full AccountV3Upgradable
   // const upgradableImplementation = await deployContract<AccountV3Upgradable>(
@@ -283,7 +284,7 @@ export async function deploySystem(
       ethers.encodeBytes32String(systemConfig.packConfig.salt.toString()),
       [await erc20Module.getAddress(), await erc721Module.getAddress()],
     ],
-    deploymentOverrides,
+    deploymentOverrides
   );
   return {
     packAccount,
@@ -297,7 +298,7 @@ export async function deployFullSystem(
   hre: HardhatRuntimeEnvironment,
   signer: Signer,
   systemConfig: SystemConfig,
-  externalConfig?: ExternalConfig,
+  externalConfig?: ExternalConfig
 ): Promise<FullSystemDeployed> {
   const { create2Factory } = await deployFactory(hre, signer);
   const mocks = await deployMocks(hre, signer, create2Factory);
@@ -315,11 +316,34 @@ export async function deployFullSystem(
     hre,
     signer,
     systemConfig,
-    extConfig as ExternalConfig,
+    extConfig as ExternalConfig
   );
   return {
     create2Factory,
     ...mocks,
     ...system,
+  };
+}
+
+export async function deployOnchainChroniclesNFT(
+  hre: HardhatRuntimeEnvironment,
+  signer: Signer,
+  initialOwner: string
+): Promise<{ onchainChroniclesNFT: OnchainChroniclesNFT }> {
+  info("Deploying OnchainChroniclesNFT");
+  const deploymentOverrides = {
+    gasPrice: hre.ethers.parseUnits("1.0", "gwei"),
+  };
+
+  const onchainChroniclesNFT = await deployContract<OnchainChroniclesNFT>(
+    hre,
+    signer,
+    "OnchainChroniclesNFT",
+    ["Onchain Chronicles", "ONCHRON", initialOwner],
+    deploymentOverrides
+  );
+
+  return {
+    onchainChroniclesNFT,
   };
 }

@@ -7,6 +7,7 @@ import { chainIds } from "../utils/constants";
 import { getSystemConfig } from "../utils/deployConfig";
 import { logger } from "../utils/deployUtils";
 import { getDeployedAddress } from "../utils/saveAddress";
+import { deployOnchainChroniclesNFT } from "../scripts/deploy";
 const info = logger("info", "task");
 
 subtask(
@@ -97,4 +98,26 @@ task("fund:account", "Send ETH, ERC20Mocks, and NFTsMocks to an account")
         });
       }
     }
+  });
+
+task("deploy:onchain-chronicles-nft", "Deploy OnchainChroniclesNFT")
+  .addParam("owner", "The owner of the contract", undefined, types.string)
+  .setAction(async (args, hre) => {
+    if (!args.owner) {
+      throw new Error("owner is required");
+    }
+
+    info("deploy:onchain-chronicles-nft");
+    const signer = await hre.ethers.provider.getSigner();
+    const { onchainChroniclesNFT } = await deployOnchainChroniclesNFT(
+      hre,
+      signer,
+      args.owner
+    );
+
+    const onchainChroniclesNFTAddress = await onchainChroniclesNFT.getAddress();
+    info(`OnchainChroniclesNFT deployed at ${onchainChroniclesNFTAddress}`);
+    return {
+      onchainChroniclesNFT,
+    };
   });

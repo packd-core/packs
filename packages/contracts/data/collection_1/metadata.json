@@ -1,0 +1,40 @@
+{
+    "name": "Onchain Chronicles: Christmas Edition",
+    "description": "Christmas is onchain and we're celebrating with a special edition of Onchain Chronicles.",
+    "external_url": "https://app.packd.io",
+    "attributes": [
+        {
+            "trait_type": "Edition",
+            "value": "Christmas Edition"
+        },
+        {
+            "trait_type": "Rarity",
+            "value": "Legendary"
+        },
+        {
+            "trait_type": "Volume",
+            "value": 1
+        },
+        {
+            "trait_type": "Collection",
+            "value": "Genesis Collection"
+        },
+        {
+            "trait_type": "Author",
+            "value": "PACKD"
+        },
+        {
+            "trait_type": "Year",
+            "value": 2023
+        },
+        {
+            "trait_type": "Month",
+            "value": "December"
+        },
+        {
+            "trait_type": "Number of Pages",
+            "value": 188
+        }
+    ],
+    "image": "https://bafybeicyvqzeqan5rtpuuiczvqpbdwx7tzcckcxxmjjmreak7v44hwuaze.ipfs.dweb.link/"
+}

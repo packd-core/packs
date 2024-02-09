@@ -25,7 +25,6 @@
         "verify": "hardhat verify",
         "task": "yarn hardhat",
         "typechain": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat typechain",
-        "preinstall": "mkdir types/generated &&  touch types/generated/index.ts",
         "postinstall": "yarn typechain"
     },
     "devDependencies": {
@@ -41,6 +40,7 @@
         "@typechain/ethers-v6": "^0.5.0",
         "@typechain/hardhat": "^9.0.0",
         "@types/chai": "^4.3.6",
+        "@types/debug": "^4.1.12",
         "@types/mocha": "^10.0.0",
         "@types/node": "^18.11.9",
         "@typescript-eslint/eslint-plugin": "^5.44.0",
@@ -53,6 +53,7 @@
         "eslint": "^8.28.0",
         "eslint-config-prettier": "^8.5.0",
         "ethers": "^6.7.1",
+        "form-data": "^4.0.0",
         "hardhat": "^2.19.1",
         "hardhat-deploy": "^0.11.29",
         "hardhat-gas-reporter": "^1.0.9",
