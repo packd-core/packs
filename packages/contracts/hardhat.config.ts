@@ -76,6 +76,16 @@ const config: HardhatUserConfig = {
       accounts: accounts,
       url: process.env.BASE_GOERLI_NODE_URL || "",
     },
+    blastTestnet: {
+      chainId: chainIds.blastTestnet,
+      accounts: accounts,
+      url: process.env.NODE_URL || "https://sepolia.blast.io",
+    },
+    blast: {
+      chainId: chainIds.blast,
+      accounts: accounts,
+      url: process.env.NODE_URL || "https://blast.io",
+    },
   },
   etherscan: {
     apiKey: {
@@ -84,6 +94,7 @@ const config: HardhatUserConfig = {
       polygonZkEVMTestnet: process.env.ETHERSCAN_POLYGON_ZKEVM || "",
       "base-mainnet": process.env.ETHERSCAN_BASE_MAINNET || "",
       "base-goerli": process.env.ETHERSCAN_BASE_GOERLI || "",
+      "blastTestnet": process.env.ETHERSCAN_API_KEY || "",
     },
     customChains: [
       {
@@ -124,6 +135,14 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL: "https://api-goerli.basescan.org/api",
           browserURL: "https://goerli.basescan.org/",
+        },
+      },
+      {
+        network: "blastTestnet",
+        chainId: chainIds.blastTestnet,
+        urls: {
+          apiURL: "https://api.routescan.io/v2/network/testnet/evm/168587773/etherscan",
+          browserURL: "https://testnet.blastscan.io"
         },
       },
     ],

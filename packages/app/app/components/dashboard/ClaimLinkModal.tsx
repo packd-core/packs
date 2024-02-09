@@ -22,7 +22,6 @@ function LinkGenerated(props: { onClick: () => void, claimPrivateKey: string, to
     );
 
     useEffect(() => {
-        console.log('urlEncoded', urlEncoded);
     }, [urlEncoded]);
 
 
@@ -74,7 +73,6 @@ export default function ClaimLinkModal({tokenId, isOpen, setIsOpen}: { tokenId: 
                 args: [address!],
                 blockNumber: creationBlock - 1n,
             })
-            console.log({creationBlock, data});
 
             setNonce(data);
 
