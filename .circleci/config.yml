@@ -33,6 +33,9 @@ jobs:
           name: Copying ecosystem.config.js
           command: cp -r ecosystem.config.js .next/standalone/
       - run:
+          name: Copying ecosystem.staging.config.js
+          command: cp -r ecosystem.staging.config.js .next/standalone/
+      - run:
           name: Archiving...
           command: |
             cd .next/standalone
@@ -55,6 +58,18 @@ jobs:
           command: |
             scp release.tar.gz $SSH_USER@$SSH_HOST:/opt/nodejs/packd/
             ssh $SSH_USER@$SSH_HOST "tar -xf /opt/nodejs/packd/release.tar.gz -C /opt/nodejs/packd/; cd /opt/nodejs/packd/; pm2 restart ecosystem.config.js"
+  deploy-staging:
+    machine:
+      enabled: true
+    working_directory: ~/repo/packages/app
+    steps:
+      - attach_workspace:
+          at: ~/repo/packages/app
+      - run:
+          name: Deploy Over SSH
+          command: |
+            scp release.tar.gz $SSH_USER@$SSH_HOST:/opt/nodejs/packd-staging/
+            ssh $SSH_USER@$SSH_HOST "tar -xf /opt/nodejs/packd-staging/release.tar.gz -C /opt/nodejs/packd-staging/; cd /opt/nodejs/packd-staging/; pm2 restart ecosystem.staging.config.js"
 
 workflows:
   build-and-deploy:
@@ -63,7 +78,14 @@ workflows:
           filters:
             branches:
               only: main
+      - build-staging:
+          filters:
+            branches:
+              only: staging
       - deploy:
           requires:
             - build # only deploy once build job has completed
+      - deploy-staging:
+          requires:
+            - build-staging # only deploy once build job has completed
 
