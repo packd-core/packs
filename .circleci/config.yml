@@ -84,10 +84,10 @@ workflows:
 
   build-and-deploy-staging:
     jobs:
-      - build-staging:
+      - build:
           filters:
             branches:
               only: staging
-      - deploy-staging:
+      - deploy:
           requires:
-            - build-staging # only deploy once build job has completed
+            - build # only deploy once build job has completed
