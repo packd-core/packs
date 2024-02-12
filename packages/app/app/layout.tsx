@@ -11,7 +11,7 @@ import {Confetti} from "@/app/components/Confetti";
 
 const manrope = Manrope({subsets: ["latin"]});
 export const metadata: Metadata = {
-    title: "Packd",
+    title: "Packd - test",
     description:
         "Simplify Onboarding with Onchain Packs. Create and distribute Packs effortlessly. Enable your users to claim their essentials without worrying about gas fees.",
 };
