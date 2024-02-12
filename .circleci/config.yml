@@ -78,14 +78,16 @@ workflows:
           filters:
             branches:
               only: main
+      - deploy:
+          requires:
+            - build # only deploy once build job has completed
+
+  build-and-deploy-staging:
+    jobs:
       - build-staging:
           filters:
             branches:
               only: staging
-      - deploy:
-          requires:
-            - build # only deploy once build job has completed
       - deploy-staging:
           requires:
             - build-staging # only deploy once build job has completed
-
