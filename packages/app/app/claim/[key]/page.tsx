@@ -22,7 +22,36 @@ import useEnsOrFormattedAddress from "@/src/hooks/useEnsOrAddress";
 import Button from "@/app/components/button/Button";
 import Blockies from "react-blockies";
 import Present from "~/present.svg";
-import {useFullPackDetail} from "@/src/lib/useFullPackDetail";
+import { useFullPackDetail } from "@/src/lib/useFullPackDetail";
+
+import { Frame, getFrameFlattened } from "frames.js";
+import type { Metadata } from "next";
+
+const initialFrame: Frame = {
+  image: "https://picsum.photos/seed/frames.js/1146/600",
+  version: "vNext",
+  buttons: [
+    {
+      label: "Random image",
+      action: "link",
+      target: "https://picsum.photos/seed/frames.js/1146/600",
+    },
+  ],
+  postUrl: `${process.env.NEXT_PUBLIC_HOST}/frames`,
+};
+
+export const metadata: Metadata = {
+  title: "Random Image Frame",
+  description: "This is an example of a simple frame using frames.js",
+  openGraph: {
+    images: [
+      {
+        url: "https://picsum.photos/seed/frames.js/600",
+      },
+    ],
+  },
+  other: getFrameFlattened(initialFrame),
+};
 
 export default function ClaimPage({ params: { key } }: any) {
   const { isConnected, isConnecting, address } = useAccount();
@@ -31,16 +60,16 @@ export default function ClaimPage({ params: { key } }: any) {
   const resetStepper = useClaimState((state) => state.reset);
   const setFullPackDetails = useClaimState((state) => state.setFullPackDetails);
   const goToInitialStep = useClaimState((state) => state.initialStep);
-  const {data: tokenData, isLoading: isTokenDataLoading, isError: isTokenDataError} = useFullPackDetail({key});
+  const {
+    data: tokenData,
+    isLoading: isTokenDataLoading,
+    isError: isTokenDataError,
+  } = useFullPackDetail({ key });
   useEffect(() => {
     resetStepper();
     if (tokenData == undefined) return;
     setFullPackDetails(tokenData);
-  }, [
-    tokenData,
-    resetStepper,
-    setFullPackDetails,
-  ]);
+  }, [tokenData, resetStepper, setFullPackDetails]);
 
   useEffect(() => {
     if (chain?.id !== tokenData?.chainId) {
@@ -48,7 +77,7 @@ export default function ClaimPage({ params: { key } }: any) {
     }
   }, [chain?.id, goToInitialStep, tokenData?.chainId]);
   useEffect(() => {
-      goToInitialStep();
+    goToInitialStep();
   }, [address, goToInitialStep]);
 
   const isLoaded = useHydrated();
@@ -106,7 +135,7 @@ export default function ClaimPage({ params: { key } }: any) {
       <div className="flex flex-col items-center gap-2">
         <div className="p-3 gap-1.5 rounded-full bg-gray-800 flex justify-center items-center">
           <Blockies
-            seed={(owner??'') as string}
+            seed={(owner ?? "") as string}
             size={8}
             scale={3}
             className="rounded-full h-6 w-6"

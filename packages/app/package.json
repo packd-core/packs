@@ -26,6 +26,7 @@
     "eslint": "8.49.0",
     "eslint-config-next": "13.5.6",
     "ethers": "^6.7.1",
+    "frames.js": "^0.5.0",
     "moralis": "^2.23.2",
     "next": "14.1.0",
     "postcss": "8.4.30",
