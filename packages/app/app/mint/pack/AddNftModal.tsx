@@ -1,4 +1,4 @@
-import {Address, erc721ABI, useAccount, usePublicClient} from "wagmi";
+import {Address, erc721ABI, useAccount} from "wagmi";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import Modal from "@/app/components/dialog/Modal";
 import {BsSearch, BsX} from "react-icons/bs";
@@ -56,17 +56,55 @@ export default function AddNftModal({isOpen, setIsOpen, onAdd}: {
             functionName: 'name',
         });
 
-        const items = await pc.getContractEvents({
+
+        const balance = await pc.readContract({
             address: contractAddress,
             abi: erc721ABI,
-            eventName: 'Transfer',
-            fromBlock: 0n,
-            toBlock: 'latest',
-            args: {
-                to: address
+            functionName: 'balanceOf',
+            args: [address]
+        });
+
+        if (balance === 0n) {
+            return [];
+        }
+        async function getTokenIds(address: Address){
+            try {
+                // check if contract is enumerable
+                const first = await pc.readContract({
+                    address: contractAddress,
+                    abi: erc721EnumerableABI,
+                    functionName: 'tokenOfOwnerByIndex',
+                    args: [address, 0n]
+                })
+
+                const rem = Array.from({length: Number(balance - 1n)}, (_, i) => i + 1).map(async (i) =>
+                    pc.readContract({
+                        address: contractAddress,
+                        abi: erc721EnumerableABI,
+                        functionName: 'tokenOfOwnerByIndex',
+                        args: [address, BigInt(i)]
+                    }))
+
+                return [first, ...await Promise.all(rem)]
+            } catch (e) {
+                return (await pc.getContractEvents({
+                    address: contractAddress,
+                    abi: erc721ABI,
+                    eventName: 'Transfer',
+                    fromBlock: 0n,
+                    toBlock: 'latest',
+                    args: {
+                        to: address
+                    }
+                })).map((event) => event.args.tokenId)
             }
-        }).then((res) => {
-            return Promise.all(res.map((event) => event.args.tokenId).map(async (tokenId) => {
+
+        }
+
+
+      return getTokenIds(address).then((res) => {
+          console.log(' --- ids: ', res)
+            return Promise.all(res.map(async (tokenId) => {
                 return pc.readContract({
                     address: contractAddress,
                     abi: erc721ABI,
@@ -85,7 +123,7 @@ export default function AddNftModal({isOpen, setIsOpen, onAdd}: {
                             token_address: contractAddress,
                             token_id: tokenId?.toString(),
                             contract_type: 'ERC721',
-                            media: res.image ? { original_media_url : res.image } : undefined,
+                            media: res.image ? {original_media_url: res.image} : undefined,
                         } as NftListItem;
 
                     })
@@ -93,7 +131,7 @@ export default function AddNftModal({isOpen, setIsOpen, onAdd}: {
 
             }));
         })
-        return items;
+
 
 
     }, [address]);
