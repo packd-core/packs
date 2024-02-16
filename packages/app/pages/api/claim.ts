@@ -3,6 +3,7 @@ import { PackMain__factory } from "@/app/abi/types/factories/contracts/PackMain_
 import { z } from "zod";
 import { PackMain } from "@/app/abi/types/contracts/PackMain";
 import { JsonRpcProvider, JsonRpcSigner, Wallet } from "ethers";
+import {blastRpc} from "@/src/chains/blast";
 
 export type ResponseData =
   | {
@@ -150,6 +151,8 @@ export function getRpcUrl({chainId}:{chainId: number}) {
       return "https://goerli.base.org";
     case 8453:
       return "https://mainnet.base.org";
+    case 168587773:
+      return blastRpc;
     default:
       throw new Error(`Unsupported chainId: ${chainId}`);
   }

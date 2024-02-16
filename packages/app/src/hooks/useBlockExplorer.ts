@@ -16,6 +16,8 @@ export function useBlockExplorer() {
             return 'https://basescan.org'
         } else if (chain?.id === 84531) {
             return 'https://goerli.basescan.org'
+        } else if (chain?.id === 168587773) {
+            return 'https://testnet.blastscan.io'
         }
     }, [chain?.id])
 }
