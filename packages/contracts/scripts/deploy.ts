@@ -7,6 +7,8 @@ import {
   ERC20Mock,
   ERC20Mock__factory,
   ERC20Module,
+  ERC721EnumerableMock,
+  ERC721EnumerableMock__factory,
   ERC721Mock,
   ERC721Mock__factory,
   ERC721Module,
@@ -30,6 +32,7 @@ export interface MocksDeployed {
   erc20MockB: ERC20Mock;
   erc721MockA: ERC721Mock;
   erc721MockB: ERC721Mock;
+  erc721EnumerableMock?: ERC721EnumerableMock;
   registry?: IERC6551Registry;
   multicall3?: Multicall3;
 }
@@ -65,6 +68,7 @@ export async function deployMocks(
   let erc20MockB: ERC20Mock;
   let erc721MockA: ERC721Mock;
   let erc721MockB: ERC721Mock;
+  let erc721EnumerableMock: ERC721EnumerableMock;
   let registry = undefined;
   let multicall3 = undefined;
   // Test mocks
@@ -119,6 +123,19 @@ export async function deployMocks(
       [],
       withSalt("ERC721MockB"),
     );
+
+    erc721EnumerableMock = await deployContractWithCreate2<
+    ERC721EnumerableMock,
+      ERC721EnumerableMock__factory
+    >(
+      hre,
+      new ERC721EnumerableMock__factory(signer),
+      create2Factory,
+      "ERC721EnumerableMock",
+      [],
+      withSalt("ERC721EnumerableMock"),
+    );    
+    
     //  Mock external dependencies
     registry = await deployContract<PackRegistry>(
       hre,
@@ -164,6 +181,14 @@ export async function deployMocks(
       [],
       deploymentOverrides,
     );
+    erc721EnumerableMock = await deployContract<ERC721EnumerableMock>(
+      hre,
+      signer,
+      "ERC721EnumerableMock",
+      [],
+      deploymentOverrides,
+    );
+    
   }
 
   return {
@@ -171,6 +196,7 @@ export async function deployMocks(
     erc20MockB,
     erc721MockA,
     erc721MockB,
+    erc721EnumerableMock,
     registry,
     multicall3,
   };
