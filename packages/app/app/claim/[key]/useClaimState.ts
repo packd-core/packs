@@ -37,7 +37,7 @@ type ClaimState = {
 }
 
 export const useClaimState = create<ClaimState>()((set) => ({
-    step: -1,
+    step: 0,
     error: false,
     hash: undefined,
     controls: null,

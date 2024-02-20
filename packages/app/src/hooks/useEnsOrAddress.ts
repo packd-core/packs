@@ -7,7 +7,7 @@ import { mainnet } from 'viem/chains'
 
 const client = createPublicClient({ chain: mainnet, transport: http() });
 export default function useEnsOrFormattedAddress(address?: Address) {
-    const [ensName, setEnsName] = useState<string | null | undefined>(undefined);
+    const [ensName, setEnsName] = useState<string | null | undefined>(address ? formatAddress(address) : null);
     useEffect(() => {
         if (!address) {
             setEnsName(null);

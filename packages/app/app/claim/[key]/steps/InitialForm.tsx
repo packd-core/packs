@@ -8,15 +8,16 @@ import {usePackMainPackState} from "@/app/abi/generated";
 import usePackdAddresses from "@/src/hooks/usePackdAddresses";
 import clsxm from "@/src/lib/clsxm";
 import {useAccount, useNetwork, useSwitchNetwork} from "wagmi";
+import {PackInitData} from "@/app/claim/[key]/ClaimForm";
 
-export default function InitialForm() {
+export default function InitialForm({initData}: {initData: PackInitData}) {
     const nextStep = useClaimState((state) => state.nextStep);
     const previousStep = useClaimState((state) => state.previousStep);
     const setControls = useClaimState((state) => state.setControls);
-    const tokenId = useClaimState((state) => state.mintedTokenId);
-    const rawState = useClaimState((state) => state.tokenState);
-    const packData = useClaimState((state) => state.packData);
-    const chainId = useClaimState((state) => state.chainId);
+    const tokenId = initData?.tokenId;
+    const rawState = initData?.stateBlock; //useClaimState((state) => state.tokenState);
+    const packData = initData?.content;// useClaimState((state) => state.packData);
+    const chainId = initData?.chainId // useClaimState((state) => state.chainId);
     const {chain, chains} = useNetwork();
     const { isConnected } = useAccount()
     const {switchNetwork} = useSwitchNetwork({chainId})
