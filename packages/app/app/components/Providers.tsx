@@ -10,14 +10,15 @@ import { base } from "wagmi/chains";
 
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
+import {blast} from "@/src/chains/blast";
 
 const testnets = [baseGoerli]
-const mainnets = [base, baseGoerli] //scroll not yet live
+const mainnets = [base, baseGoerli, blast]
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [
     ...(process.env.NEXT_PUBLIC_ENVIRONMENT == 'development' ? ([hardhat]) : []),
-    ...(process.env.NEXT_PUBLIC_ENVIRONMENT == 'development' || process.env.NEXT_PUBLIC_ENVIRONMENT == 'testnet' ? (testnets) : []),
+    ...(process.env.NEXT_PUBLIC_ENVIRONMENT == 'development' || process.env.NEXT_PUBLIC_ENVIRONMENT == 'testnet' ? (mainnets) : []),
     ...(process.env.NEXT_PUBLIC_ENVIRONMENT == 'production' ? (mainnets) : [])
   ],
   [
