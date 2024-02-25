@@ -11,39 +11,21 @@
   }
 }
 
-@keyframes zoomIn {
-  0% {
-    transform: scale(1);
-    z-index: 1;
-  }
-  100% {
-    transform: scale(2);
-    border-radius: 4px;
-    z-index: 9999;
-  }
-}
 
-@keyframes zoomOut {
-  0% {
-    transform: scale(2);
-    border-radius: 4px;
-    z-index: 9999;
-  }
-  100% {
-    transform: scale(1);
-    z-index: 1;
-  }
-}
 
 .zoom-on-hover {
   position: relative;
   transform-origin: left top;
+  scale: 1;
+  transition: all 0.5s ease-in-out;
+  background: black;
+  z-index: 100;
+  font-size: 16px;
 }
 
 .zoom-on-hover:hover {
-  animation: zoomIn 0.5s forwards;
+  scale: 2;
+  font-size: 8px;
+
 }
 
-.zoom-on-hover:not(:hover) {
-  animation: zoomOut 0.5s forwards;
-}

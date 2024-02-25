@@ -7,6 +7,7 @@ import clsxm from "@/src/lib/clsxm";
 import {TokenData, useFilteredTokenList, useTokenList} from "@/src/hooks/useTokenList";
 import {isAddress} from "viem";
 import Image from "next/image";
+import {useHydrated} from "@/src/hooks/useHydrated";
 
 export default function TokenInput({token, value, onTokenSelected, onValueChanged, autoOpenModal, chainId}: {
     token?: Address,
@@ -16,6 +17,7 @@ export default function TokenInput({token, value, onTokenSelected, onValueChange
     autoOpenModal?: boolean,
     chainId?: number
 }) {
+    const isHydrated = useHydrated()
     const {address} = useAccount()
     const [isOpen, setIsOpen] = useState(false);
     useEffect(() => {
@@ -61,13 +63,13 @@ export default function TokenInput({token, value, onTokenSelected, onValueChange
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return <div>
-        <TokenSelectorDialog isOpen={isOpen} setIsOpen={setIsOpen} onAdd={(t) => {
+        {isHydrated && <TokenSelectorDialog isOpen={isOpen} setIsOpen={setIsOpen} onAdd={(t) => {
             setIsOpen(false);
             onTokenSelected?.(t.address);
             if (t.address != token) {
                 onValueChanged?.(0n, false);
             }
-        }}/>
+        }}/>}
         <div className='relative w-full'>
             {isEditable && <div className="absolute -top-6 right-6 z-10 text-xs">
                 Balance: {formatUnits(balance?.value ?? 0n, tokenData?.decimals ?? 18)}
@@ -78,12 +80,12 @@ export default function TokenInput({token, value, onTokenSelected, onValueChange
                 </button>
             </div>}
 
-            <button onClick={() => onValueChanged && setIsOpen(true)}
-                    className='absolute pl-2 left-0 bottom-0 top-0 flex items-center justify-center text-sm font-semibold'>
+            {isHydrated && <button onClick={() => onValueChanged && setIsOpen(true)}
+                     className='absolute pl-2 left-0 bottom-0 top-0 flex items-center justify-center text-sm font-semibold'>
                 {token ? <>{icon} {tokenData?.name}</> : 'Select token'}
                 {onTokenSelected && <BsChevronDown
                     className='text-base ml-1 shrink-0'/>}
-            </button>
+            </button>}
 
             <input
                 ref={inputRef}

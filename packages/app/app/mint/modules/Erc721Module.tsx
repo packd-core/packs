@@ -8,6 +8,7 @@ import { CgSpinner } from "react-icons/cg";
 import { useNetwork } from "wagmi";
 import { ExternalLink } from "@/app/components/links/ExternalLink";
 import clsxm from "@/src/lib/clsxm";
+import {useHydrated} from "@/src/hooks/useHydrated";
 
 export default function Erc721Card({
   onClick,
@@ -18,6 +19,7 @@ export default function Erc721Card({
   module: Module;
   chainId?: number;
 }) {
+  const isHydrated = useHydrated();
   const { data: tokenName } = useErc721Name({ address: module.address });
   const { nftData, isLoading } = useNftData({
     address: module.address!,
@@ -29,12 +31,14 @@ export default function Erc721Card({
     tokenId: module.value!,
     chainId: chainId
   });
+
+  const loading = isLoading || !isHydrated;
   // const {nftData, isLoading} = useNftData({tokenId: 5n, address: '0x5b90d70e55c6c2e45d969bacf0335916df7a2009', chainId: 1})
   const isVideo = nftData?.contentType?.includes("video") ?? false;
   return (
     <ContentCard className="self-stretch">
       <div className="flex gap-2 relative">
-        {isLoading && (
+        {loading && (
           <div className="absolute inset-0 bg-gray-800 bg-opacity-50 z-10 flex items-center justify-center">
             {" "}
             <CgSpinner className="h-8 w-8 animate-spin" />
@@ -56,11 +60,11 @@ export default function Erc721Card({
             <img
               src={nftData?.image}
               alt={nftData?.name}
-              className="rounded-lg zoom-on-hover"
+              className="rounded-lg zoom-on-hover w-full h-full"
             />
           )}
         </div>
-        {!isLoading && (
+        {!loading && (
           <div className="flex flex-col items-start relative grow">
             {onClick && (
               <button
